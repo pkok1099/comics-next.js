@@ -1,0 +1,31 @@
+import React from "react";
+
+const Pagination = ({ currentPage, pagination, setCurrentPage }) => (
+  <div className="flex justify-center mt-5 flex-wrap">
+    <button
+      className={`bg-blue-500 text-white px-4 py-2 rounded mr-2 mb-2 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+      onClick={() => setCurrentPage(currentPage - 1)}
+      disabled={currentPage === 1}
+    >
+      Previous
+    </button>
+    {pagination.map((page, index) => (
+      <button
+        key={index}
+        className={`px-4 py-2 rounded mr-2 mb-2 ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 border border-blue-500'}`}
+        onClick={() => setCurrentPage(page)}
+      >
+        {page}
+      </button>
+    ))}
+    <button
+      className={`bg-blue-500 text-white px-4 py-2 rounded ml-2 mb-2 ${currentPage === pagination[pagination.length - 1] ? 'opacity-50 cursor-not-allowed' : ''}`}
+      onClick={() => setCurrentPage(currentPage + 1)}
+      disabled={currentPage === pagination[pagination.length - 1]}
+    >
+      Next
+    </button>
+  </div>
+);
+
+export default Pagination;
