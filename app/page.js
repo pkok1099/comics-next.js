@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Pagination from "./components/Pagination";
-import "./page.css"
+import "./page.css";
 const KomikList = () => {
   const [komikList, setKomikList] = useState([]);
   const [pagination, setPagination] = useState([]);
@@ -54,20 +54,18 @@ const KomikList = () => {
   }, [currentPage]);
 
   useEffect(() => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}, [currentPage]);
-const SkeletonLoader = () => (
-  <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center">
-    {/* Thumbnail Skeleton */}
-    <div className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3 animate-pulse"></div>
-    {/* Title Skeleton */}
-    <div className="w-full h-6 bg-gray-600 rounded mb-2 animate-pulse"></div>
-    {/* Subtitle Placeholder */}
-    <div className="w-3/4 h-6 bg-gray-600 rounded animate-pulse"></div>
-  </div>
-);
-
-
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+  const SkeletonLoader = () => (
+    <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center">
+      {/* Thumbnail Skeleton */}
+      <div className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3 animate-pulse"></div>
+      {/* Title Skeleton */}
+      <div className="w-full h-6 bg-gray-600 rounded mb-2 animate-pulse"></div>
+      {/* Subtitle Placeholder */}
+      <div className="w-3/4 h-6 bg-gray-600 rounded animate-pulse"></div>
+    </div>
+  );
 
   const handleSearchSubmit = (event) => {
     if (event.key === "Enter") {
@@ -76,88 +74,87 @@ const SkeletonLoader = () => (
   };
 
   return (
-<div className="min-h-screen flex flex-col items-center bg-gray-800 text-white p-5">
-  {/* Search Bar */}
-  <div className="w-full max-w-lg mb-5">
-    <input
-      type="text"
-      placeholder="Cari Komik"
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      onKeyPress={handleSearchSubmit}
-      className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none placeholder-gray-400"
-    />
-    {/* Search Suggestions */}
-    {searchQuery && (
-      <div className="absolute z-50 max-h-52 overflow-y-auto bg-gray-700 w-full mt-2 p-3 rounded-lg shadow-lg">
-        <ul className="space-y-2">
-          {searchResults.slice(0, 5).map((komik) => (
-            <li
-              key={komik.link}
-              onClick={() =>
-                window.location.href =`/komik/${komik.link.replace(
-                    /https:\/\/[^]+\/komik\/([^]+)\//,
-                    "$1"
-                  )}/chapters`
-              }
-              className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
-            >
-              <Image
-                src={komik.image}
-                alt={komik.title}
-                width={48}
-                height={48}
-                className="rounded-lg"
-              />
-              <span className="text-sm">{komik.title}</span>
-            </li>
-          ))}
-        </ul>
+    <div className="min-h-screen flex flex-col items-center bg-gray-800 text-white p-5">
+      {/* Search Bar */}
+      <div className="w-full max-w-lg mb-5">
+        <input
+          type="text"
+          placeholder="Cari Komik"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyPress={handleSearchSubmit}
+          className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none placeholder-gray-400"
+        />
+        {/* Search Suggestions */}
+        {searchQuery && (
+          <div className="absolute z-50 max-h-52 overflow-y-auto bg-gray-700 w-full mt-2 p-3 rounded-lg shadow-lg">
+            <ul className="space-y-2">
+              {searchResults.slice(0, 5).map((komik) => (
+                <li
+                  key={komik.link}
+                  onClick={() =>
+                    (window.location.href = `/komik/${komik.link.replace(
+                      /https:\/\/[^]+\/komik\/([^]+)\//,
+                      "$1",
+                    )}/chapters`)
+                  }
+                  className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
+                >
+                  <Image
+                    src={komik.image}
+                    alt={komik.title}
+                    width={48}
+                    height={48}
+                    className="rounded-lg"
+                  />
+                  <span className="text-sm">{komik.title}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
-    )}
-  </div>
 
-  {/* Komik Grid */}
-  <div className="grid grid-cols-4 lg:grid-cols-5 gap-5 w-full mt-5">
-    {isLoading ? (
-      Array.from({ length: 12 }).map((_, index) => (
-        <SkeletonLoader key={index} />
-      ))
-    ) : (
-      komikList.map((komik) => (
-        <div
-          key={komik.judul}
-          className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center card"  // Menambahkan class 'card' di sini
-              onClick={() =>
-                window.location.href = `/komik/${komik.link.replace(
+      {/* Komik Grid */}
+      <div className="grid grid-cols-4 lg:grid-cols-5 gap-1 w-full mt-5">
+        {isLoading
+          ? Array.from({ length: 12 }).map((_, index) => (
+              <SkeletonLoader key={index} />
+            ))
+          : komikList.map((komik) => (
+              <div
+                key={komik.judul}
+                className="bg-gray-700 p-2 rounded-lg flex flex-col items-center justify-center card" // Menambahkan class 'card' di sini
+                onClick={() =>
+                  (window.location.href = `/komik/${komik.link.replace(
                     /https:\/\/[^]+\/komik\/([^]+)\//,
-                    "$1"
-                  )}/chapters`
-              }
-        >
-          <Image
-            src={komik.thumbnail}
-            alt={komik.judul}
-            width={200}
-            height={250}
-            className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3"
-          />
-          <h3 className="text-lg font-semibold text-center line-clamp-2">{komik.judul}</h3>
-        </div>
-      ))
-    )}
-  </div>
+                    "$1",
+                  )}/chapters`)
+                }
+              >
+                <Image
+                  src={komik.thumbnail}
+                  alt={komik.judul}
+                  width={200}
+                  height={250}
+                  className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3"
+                />
+                <h3 className="text-sm font-semibold text-center line-clamp-2">
+                  {komik.judul}
+                </h3>
+              </div>
+            ))}
+      </div>
 
-  {/* Pagination */}
-  {!isLoading && (
-    <Pagination
-      currentPage={currentPage}
-      pagination={pagination}
-      setCurrentPage={setCurrentPage}
-    />
-  )}
-</div>
-
+      {/* Pagination */}
+      {!isLoading && (
+        <Pagination
+          currentPage={currentPage}
+          pagination={pagination}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+    </div>
   );
 };
 

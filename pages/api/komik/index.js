@@ -1,8 +1,8 @@
 // pages/api/komik/index.js
-import { fetchKomikData } from '../../../function/index.js';
+import { fetchKomikData } from "@/app/function/index.js";
 
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     try {
       // Ambil parameter `page` dari query string, jika tidak ada, default ke halaman 1
       const page = parseInt(req.query.page) || 1;
@@ -17,10 +17,10 @@ export default async function handler(req, res) {
       console.error(error);
       return res
         .status(500)
-        .json({ message: 'Error scraping data komik: ' + error.message });
+        .json({ message: "Error scraping data komik: " + error.message });
     }
   } else {
     // Jika metode selain GET, kembalikan status error 405
-    return res.status(405).json({ message: 'Method Not Allowed' });
+    return res.status(405).json({ message: "Method Not Allowed" });
   }
 }

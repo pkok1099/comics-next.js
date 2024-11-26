@@ -28,3 +28,87 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.animate-fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+
+.fixed-buttons {
+  position: fixed;
+  right: 2rem; /* Jarak dari kanan */
+  top: 50%; /* Tengah secara vertikal */
+  transform: translateY(-50%); /* Koreksi posisi vertikal */
+  display: flex;
+  flex-direction: column; /* Susun vertikal */
+  gap: 1rem; /* Jarak antar tombol */
+  z-index: 50;
+}
+
+.button-vertical {
+  writing-mode: vertical-lr; /* Teks vertikal dengan bagian atas mengarah ke kanan */
+  transform: rotate(0deg); /* Tidak ada rotasi awal */
+  background-color: rgba(0, 0, 255, 0.8); /* Warna tombol */
+  color: white; /* Warna teks */
+  padding: 1rem;
+  border-radius: 50%; /* Membuat tombol berbentuk bulat */
+  width: 4rem; /* Lebar tombol */
+  height: 4rem; /* Tinggi tombol sama dengan lebar */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan */
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Animasi hover */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem; /* Ukuran font */
+  text-align: center; /* Pusatkan teks */
+}
+
+.button-vertical:hover {
+  transform: rotate(360deg); /* Rotasi penuh 360° saat di-hover */
+  opacity: 0.8; /* Sedikit transparan saat di-hover */
+}
+
+
+.hidden {
+  opacity: 0; /* Sembunyi */
+  pointer-events: none; /* Nonaktifkan interaksi */
+}
+
+@keyframes assemble {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chapter-item {
+  animation: assemble 0.5s ease-out forwards;
+}
