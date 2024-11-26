@@ -79,7 +79,9 @@ body {
   width: 4rem; /* Lebar tombol */
   height: 4rem; /* Tinggi tombol sama dengan lebar */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan */
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Animasi hover */
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out; /* Animasi hover */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,7 +93,6 @@ body {
   transform: rotate(360deg); /* Rotasi penuh 360° saat di-hover */
   opacity: 0.8; /* Sedikit transparan saat di-hover */
 }
-
 
 .hidden {
   opacity: 0; /* Sembunyi */
@@ -111,4 +112,37 @@ body {
 
 .chapter-item {
   animation: assemble 0.5s ease-out forwards;
+}
+@keyframes skeleton-loading {
+  0% {
+    background-color: #3d3d3d; /* Warna awal */
+  }
+  50% {
+    background-color: #4a4a4a; /* Warna transisi */
+  }
+  100% {
+    background-color: #3d3d3d; /* Warna akhir */
+  }
+}
+
+.skeleton {
+  animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+@keyframes particleToCard {
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.card {
+  animation: particleToCard 1000ms ease-out;
 }

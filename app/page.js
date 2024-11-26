@@ -1,26 +1,25 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import Pagination from "./components/Pagination";
-import "./page.css";
+'use client';
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Pagination from './components/Pagination';
 const KomikList = () => {
   const [komikList, setKomikList] = useState([]);
   const [pagination, setPagination] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
   const fetchKomik = async (page) => {
     setIsLoading(true);
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || "";
+      const apiUrl = process.env.REACT_APP_API_URL || '';
       const response = await fetch(`${apiUrl}/api/komik?page=${page}`);
       const data = await response.json();
       setKomikList(data.komikList || []);
       setPagination(data.pagination || []);
     } catch (error) {
-      console.error("Error fetching komik data:", error);
+      console.error('Error fetching komik data:', error);
     } finally {
       setTimeout(() => setIsLoading(false), 500);
     }
@@ -29,12 +28,12 @@ const KomikList = () => {
   const fetchSearchResults = async (query) => {
     if (query) {
       try {
-        const apiUrl = process.env.REACT_APP_API_URL || "";
+        const apiUrl = process.env.REACT_APP_API_URL || '';
         const response = await fetch(`${apiUrl}/api/komik/search/${query}/1`);
         const data = await response.json();
         setSearchResults(data.comics || []);
       } catch (error) {
-        console.error("Error fetching search results:", error);
+        console.error('Error fetching search results:', error);
       }
     } else {
       setSearchResults([]);
@@ -54,7 +53,7 @@ const KomikList = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
   const SkeletonLoader = () => (
     <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center">
@@ -68,7 +67,7 @@ const KomikList = () => {
   );
 
   const handleSearchSubmit = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       window.location.href = `/search/${searchQuery}`;
     }
   };
@@ -95,18 +94,12 @@ const KomikList = () => {
                   onClick={() =>
                     (window.location.href = `/komik/${komik.link.replace(
                       /https:\/\/[^]+\/komik\/([^]+)\//,
-                      "$1",
+                      '$1',
                     )}/chapters`)
                   }
                   className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
                 >
-                  <Image
-                    src={komik.image}
-                    alt={komik.title}
-                    width={48}
-                    height={48}
-                    className="rounded-lg"
-                  />
+                  <Image src={komik.image} alt={komik.title} width={48} height={48} className="rounded-lg" />
                   <span className="text-sm">{komik.title}</span>
                 </li>
               ))}
@@ -118,9 +111,7 @@ const KomikList = () => {
       {/* Komik Grid */}
       <div className="grid grid-cols-4 lg:grid-cols-5 gap-1 w-full mt-5">
         {isLoading
-          ? Array.from({ length: 12 }).map((_, index) => (
-              <SkeletonLoader key={index} />
-            ))
+          ? Array.from({ length: 12 }).map((_, index) => <SkeletonLoader key={index} />)
           : komikList.map((komik) => (
               <div
                 key={komik.judul}
@@ -128,7 +119,7 @@ const KomikList = () => {
                 onClick={() =>
                   (window.location.href = `/komik/${komik.link.replace(
                     /https:\/\/[^]+\/komik\/([^]+)\//,
-                    "$1",
+                    '$1',
                   )}/chapters`)
                 }
               >
@@ -139,21 +130,13 @@ const KomikList = () => {
                   height={250}
                   className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3"
                 />
-                <h3 className="text-sm font-semibold text-center line-clamp-2">
-                  {komik.judul}
-                </h3>
+                <h3 className="text-sm font-semibold text-center line-clamp-2">{komik.judul}</h3>
               </div>
             ))}
       </div>
 
       {/* Pagination */}
-      {!isLoading && (
-        <Pagination
-          currentPage={currentPage}
-          pagination={pagination}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
+      {!isLoading && <Pagination currentPage={currentPage} pagination={pagination} setCurrentPage={setCurrentPage} />}
     </div>
   );
 };
