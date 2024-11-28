@@ -1,21 +1,18 @@
-// File: data.js
-const BaseUrlK = process.env.URL_KOMIK || 'https://komikindo.wtf';
-exports.BaseUrlK = BaseUrlK;
+const komikuModules = {
+  fetchKomikData: require('./komiku/fetchKomikData'),
+  getChapters: require('./komiku/getChapters'),
+};
 
-// Mengimpor dan mengekspor fungsi atau objek
-const getChapterImages = require('./getChapterImages');
-const getImageByIndex = require('./getImageByIndex');
-const fetchKomikData = require('./fetchKomikData');
-const getChapters = require('./getChapters');
-const scrapeComicInfo = require('./scrapeComicInfo');
-const SearchComicsPage = require('./SearchComicsPage');
+const komikindoModules = {
+  getChapterImages: require('./komikindo/getChapterImages'),
+  getImageByIndex: require('./komikindo/getImageByIndex'),
+  fetchKomikData: require('./komikindo/fetchKomikData'),
+  getChapters: require('./komikindo/getChapters'),
+  scrapeComicInfo: require('./komikindo/scrapeComicInfo'),
+  SearchComicsPage: require('./komikindo/SearchComicsPage'),
+};
 
-// Mengekspor semua fungsi dan variabel dengan nama yang sesuai
 module.exports = {
-  getChapterImages,
-  getImageByIndex,
-  fetchKomikData,
-  getChapters,
-  scrapeComicInfo,
-  SearchComicsPage,
+  komiku: komikuModules,
+  komikindo: komikindoModules,
 };

@@ -15,8 +15,7 @@ const ChapterList = () => {
   useEffect(() => {
     const fetchKomikData = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-        const response = await fetch(`${apiUrl}/api/komik/info/${decodeURIComponent(id)}`);
+        const response = await fetch(`/api/komik/komikindo/info/${decodeURIComponent(id)}`);
         const komik = await response.json();
         setKomikData(komik);
       } catch (error) {
@@ -26,8 +25,7 @@ const ChapterList = () => {
 
     const fetchChapters = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-        const response = await fetch(`${apiUrl}/api/komik/${id}/chapters`);
+        const response = await fetch(`/api/komik/komikindo/${id}/chapters`);
         const data = await response.json();
         setChapters(data);
         setLoading(false);
@@ -162,13 +160,13 @@ const ChapterList = () => {
       <div className="mt-4 text-center">
         <div className="flex justify-between items-center mb-2">
           <Link
-            href={`/komik/${id}/chapters/${chapter1Url}`}
+            href={`/komik/komikindo/${id}/chapters/${chapter1Url}`}
             className="bg-gray-800 px-6 py-3 rounded-lg text-gray-400 text-left w-1/2 mr-2 hover:bg-gray-700"
           >
             Chapter 1
           </Link>
           <Link
-            href={`/komik/${id}/chapters/${lastChapterUrl}`}
+            href={`/komik/komikindo/${id}/chapters/${lastChapterUrl}`}
             className="bg-gray-800 px-6 py-3 rounded-lg text-gray-400 text-right w-1/2 ml-2 hover:bg-gray-700"
           >
             Chapter {chapters.length}
@@ -190,7 +188,7 @@ const ChapterList = () => {
 
                 {/* Tombol Baca Chapter */}
                 {/* Tombol Baca Chapter dengan Border */}
-                <Link href={`/komik/${id}/chapters/${chapterNumber}`} className="inline-block mt-2">
+                <Link href={`/komik/komikindo/${id}/chapters/${chapterNumber}`} className="inline-block mt-2">
                   <button className="border-2 border-blue-600 hover:border-blue-700 text-blue-600 hover:text-blue-700 py-2 px-4 rounded-lg w-full transition duration-200 ease-in-out transform hover:scale-105">
                     Baca Chapter
                   </button>

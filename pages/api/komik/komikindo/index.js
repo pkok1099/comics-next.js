@@ -1,5 +1,5 @@
 // pages/api/komik/index.js
-import { fetchKomikData } from '@/app/function/index.js';
+import { komikindo } from '@/app/function/index.js';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       const page = parseInt(req.query.page) || 1;
 
       // Ambil data komik berdasarkan halaman
-      const { komikList, pagination } = await fetchKomikData(page);
+      const { komikList, pagination } = await komikindo.fetchKomikData(page);
 
       // Kirimkan data komik dan pagination
       return res.status(200).json({ komikList, pagination });

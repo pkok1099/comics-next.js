@@ -4,6 +4,7 @@ const nextConfig = {
   images: {
     domains: ['komikindo.wtf', '127.0.0.1'], // Tambahkan domain di sini
   },
+
 };
 
 export default nextConfig;

@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('./commonHeaders');
-const { BaseUrlK } = require('./index');
+const { commonHeaders } = require('../commonHeaders');
+const { BaseUrlK } = require('@/f/url');
 
 async function getChapterImages(komik, chapter) {
   const chapterUrl = `${BaseUrlK}/${komik}-chapter-${chapter}/`;

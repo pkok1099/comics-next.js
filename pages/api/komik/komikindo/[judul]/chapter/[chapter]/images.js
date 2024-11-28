@@ -1,5 +1,5 @@
 // pages/api/komik/[komik]/[chapter]/images.js
-import { getChapterImages } from '@/app/function/index'; // sesuaikan dengan lokasi function
+import { komikindo } from '@/app/function/index'; // sesuaikan dengan lokasi function
 
 export default async function handler(req, res) {
   const {
@@ -12,13 +12,13 @@ export default async function handler(req, res) {
       // Menghapus angka 6 digit di depan judul jika ada
       const cleanedTitle = judul.replace(/^\d{6}-/, '');
 
-      const imageUrls = await getChapterImages(cleanedTitle, chapter); // Gunakan judul yang sudah dibersihkan
+      const imageUrls = await komikindo.getChapterImages(cleanedTitle, chapter); // Gunakan judul yang sudah dibersihkan
       const protocol = req.headers['x-forwarded-proto'] || 'http'; // HTTP atau HTTPS
       const host = req.headers['host']; // Host, termasuk domain atau localhost dengan port
       const baseUrl = `${protocol}://${host}`; // URL lengkap
 
       const imageLinks = imageUrls.map((imgUrl, index) => {
-        return `${baseUrl}/api/komik/images/${cleanedTitle}/${chapter}/${index + 1}`;
+        return `${baseUrl}/api/komik/komikindo/images/${cleanedTitle}/${chapter}/${index + 1}`;
       });
 
       console.log(imageLinks);

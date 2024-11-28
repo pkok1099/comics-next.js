@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('./commonHeaders');
-const { BaseUrlK } = require('./index');
+const { commonHeaders } = require('../commonHeaders');
+const { BaseUrlK } = require('@/f/url');
 
 async function scrapeComicInfo(komik) {
   const url = `${BaseUrlK}/komik/${komik}/`;

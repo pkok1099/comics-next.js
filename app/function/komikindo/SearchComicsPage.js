@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const { BaseUrlK } = require('./index');
+const { BaseUrlK } = require('@/f/url');
 
 // Fungsi untuk menunggu selama ms milidetik
 async function fetchComicsFromPage(query = '', page = 1) {

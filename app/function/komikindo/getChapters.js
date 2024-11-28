@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('./commonHeaders');
-const { BaseUrlK } = require('./index');
+const { commonHeaders } = require('../commonHeaders');
+const { BaseUrlK } = require('@/f/url');
 
 const getChapters = async (judul) => {
   const baseUrl = `${BaseUrlK}/komik/${decodeURIComponent(judul)}/`;

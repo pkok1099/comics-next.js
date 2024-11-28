@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('./commonHeaders');
-const { BaseUrlK } = require('./index');
+const { commonHeaders } = require('../commonHeaders');
+const { BaseUrlK } = require('@/f/url');
 
 // Fungsi untuk mengambil gambar berdasarkan chapter dan index
 

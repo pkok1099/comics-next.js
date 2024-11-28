@@ -1,144 +1,75 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Pagination from './components/Pagination';
-const KomikList = () => {
-  const [komikList, setKomikList] = useState([]);
-  const [pagination, setPagination] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+'use client'
+import { useState, useEffect, useMemo } from "react";
+import KomikIndo from "./komik/komikindo/page";
+import Komiku from "./komik/komiku/page"; // Perbaikan impor dengan nama yang benar
 
-  const fetchKomik = async (page) => {
-    setIsLoading(true);
-    try {
-      const apiUrl = process.env.REACT_APP_API_URL || '';
-      const response = await fetch(`${apiUrl}/api/komik?page=${page}`);
-      const data = await response.json();
-      setKomikList(data.komikList || []);
-      setPagination(data.pagination || []);
-    } catch (error) {
-      console.error('Error fetching komik data:', error);
-    } finally {
-      setTimeout(() => setIsLoading(false), 500);
-    }
-  };
+export default function Home() {
+  const [activeTab, setActiveTab] = useState("komikindo");
+  const [isTabVisible, setIsTabVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
-  const fetchSearchResults = async (query) => {
-    if (query) {
-      try {
-        const apiUrl = process.env.REACT_APP_API_URL || '';
-        const response = await fetch(`${apiUrl}/api/komik/search/${query}/1`);
-        const data = await response.json();
-        setSearchResults(data.comics || []);
-      } catch (error) {
-        console.error('Error fetching search results:', error);
-      }
-    } else {
-      setSearchResults([]);
-    }
-  };
+  // Cache tab untuk menyimpan komponen yang sudah dirender
+  const [tabCache, setTabCache] = useState({
+    komikindo: <KomikIndo />,
+    komiku: <Komiku />, // Nama konsisten
+    tab3: null,
+  });
 
-  useEffect(() => {
-    if (searchQuery) {
-      fetchSearchResults(searchQuery);
-    } else {
-      setSearchResults([]);
-    }
-  }, [searchQuery]);
-
-  useEffect(() => {
-    fetchKomik(currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentPage]);
-  const SkeletonLoader = () => (
-    <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center">
-      {/* Thumbnail Skeleton */}
-      <div className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3 animate-pulse"></div>
-      {/* Title Skeleton */}
-      <div className="w-full h-6 bg-gray-600 rounded mb-2 animate-pulse"></div>
-      {/* Subtitle Placeholder */}
-      <div className="w-3/4 h-6 bg-gray-600 rounded animate-pulse"></div>
-    </div>
+  // Data tab: nama dan komponen terkait
+  const tabs = useMemo(
+    () => [
+      { name: "KomikIndo", route: "komikindo", component: <KomikIndo /> },
+      { name: "Komiku", route: "komiku", component: <Komiku /> }, // Nama konsisten
+      { name: "Tab 3", route: "tab3", component: <div>Ini adalah konten Tab 3</div> },
+    ],
+    []
   );
 
-  const handleSearchSubmit = (event) => {
-    if (event.key === 'Enter') {
-      window.location.href = `/search/${searchQuery}`;
+  // Handle visibility of tab bar during scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsTabVisible(currentScrollY <= lastScrollY);
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
+  // Load tab baru hanya jika belum ada di cache
+  useEffect(() => {
+    const activeTabData = tabs.find((tab) => tab.route === activeTab);
+    if (activeTabData && !tabCache[activeTab]) {
+      setTabCache((prev) => ({ ...prev, [activeTab]: activeTabData.component }));
     }
-  };
+  }, [activeTab, tabCache, tabs]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-800 text-white p-5">
-      {/* Search Bar */}
-      <div className="w-full max-w-lg mb-5">
-        <input
-          type="text"
-          placeholder="Cari Komik"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyPress={handleSearchSubmit}
-          className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none placeholder-gray-400"
-        />
-        {/* Search Suggestions */}
-        {searchQuery && (
-          <div className="absolute z-50 max-h-52 overflow-y-auto bg-gray-700 w-full mt-2 p-3 rounded-lg shadow-lg">
-            <ul className="space-y-2">
-              {searchResults.slice(0, 5).map((komik) => (
-                <li
-                  key={komik.link}
-                  onClick={() =>
-                    (window.location.href = `/komik/${komik.link.replace(
-                      /https:\/\/[^]+\/komik\/([^]+)\//,
-                      '$1',
-                    )}/chapters`)
-                  }
-                  className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
-                >
-                  <Image src={komik.image} alt={komik.title} width={48} height={48} className="rounded-lg" />
-                  <span className="text-sm">{komik.title}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+    <div className="min-h-screen bg-gray-100">
+      {/* Render konten tab aktif dari cache */}
+      <div className="flex-grow">{tabCache[activeTab]}</div>
 
-      {/* Komik Grid */}
-      <div className="grid grid-cols-4 lg:grid-cols-5 gap-1 w-full mt-5">
-        {isLoading
-          ? Array.from({ length: 12 }).map((_, index) => <SkeletonLoader key={index} />)
-          : komikList.map((komik) => (
-              <div
-                key={komik.judul}
-                className="bg-gray-700 p-2 rounded-lg flex flex-col items-center justify-center card" // Menambahkan class 'card' di sini
-                onClick={() =>
-                  (window.location.href = `/komik/${komik.link.replace(
-                    /https:\/\/[^]+\/komik\/([^]+)\//,
-                    '$1',
-                  )}/chapters`)
-                }
-              >
-                <Image
-                  src={komik.thumbnail}
-                  alt={komik.judul}
-                  width={200}
-                  height={250}
-                  className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3"
-                />
-                <h3 className="text-sm font-semibold text-center line-clamp-2">{komik.judul}</h3>
-              </div>
-            ))}
+      {/* Tab navigasi */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 transition-transform duration-300 ${
+          isTabVisible ? "translate-y-0" : "translate-y-full"
+        } bg-white shadow-t border-t border-gray-700`}
+      >
+        <div className="flex justify-around items-center h-10 bg-gray-700">
+          {tabs.map((tab) => (
+            <button
+              key={tab.route}
+              className={`flex-1 text-center py-2 ${
+                activeTab === tab.route ? "text-blue-500 font-bold" : "text-white-500"
+              }`}
+              onClick={() => setActiveTab(tab.route)}
+            >
+              {tab.name}
+            </button>
+          ))}
+        </div>
       </div>
-
-      {/* Pagination */}
-      {!isLoading && <Pagination currentPage={currentPage} pagination={pagination} setCurrentPage={setCurrentPage} />}
     </div>
   );
-};
-
-export default KomikList;
+}
