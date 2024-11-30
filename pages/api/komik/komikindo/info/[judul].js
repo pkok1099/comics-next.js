@@ -1,5 +1,5 @@
 // pages/api/komik/[judul]/info.js
-import { komikindo } from '@/app/function/index.js';
+import { komikindo } from '@/f/index.js';
 
 export default async function handler(req, res) {
   const { judul } = req.query; // Mengambil parameter `judul` dari URL

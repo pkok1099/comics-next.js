@@ -19,4 +19,4 @@ const commonHeaders = {
   Referer: 'https://www.google.com/',
   'Referrer-Policy': 'origin',
 };
-exports.commonHeaders = commonHeaders;
+module.exports = commonHeaders;

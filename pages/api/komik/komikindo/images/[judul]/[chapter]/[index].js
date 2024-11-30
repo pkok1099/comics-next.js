@@ -1,5 +1,5 @@
 // pages/api/images/[judul]/[chapter]/[index].js
-import { komikindo } from '@/app/function/index.js';
+import { komikindo } from '@/f/index.js';
 
 export default async function handler(req, res) {
   const { judul, chapter, index } = req.query; // Mengambil parameter judul, chapter, dan index dari query

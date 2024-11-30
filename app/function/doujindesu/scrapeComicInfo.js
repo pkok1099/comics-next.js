@@ -1,12 +1,13 @@
 const cheerio = require('cheerio');
-const { BaseUrlK } = require('@/f/url');
+const headers2 = require('@/f/doujinHeaders');
+const { BaseUrlDd } = require('@/f/url');
 
 async function scrapeComicInfo(komik) {
-  const url = `${BaseUrlK}/komik/${komik}/`;
-  console.log;
+  const url = `${BaseUrlDd}/manga/${komik}/`;
   try {
     const response = await fetch(url, {
       method: 'GET',
+      headers: headers2,
     });
 
     if (!response.ok) {
@@ -18,17 +19,23 @@ async function scrapeComicInfo(komik) {
 
     // Data object to store scraped information
     const data = {};
+    const Thumbnail = $('.thumbnail img').attr('src') || 'Thumbnail not found';
+    // Judul
+    data.title = $('h1.title').text().split(' <')[0].trim() || 'Title not found';
 
-    // Extracting information based on the provided HTML structure
-    // data.title = $('h2.animetitle-episode').text().trim() || 'Title not found';
-    data.title = $('.entry-title[itemprop="name"]').text().trim(); // Judul
-    data.thumbnail = $('.thumb img').attr('src'); // Thumbnail
-    data.chapterAwal = $('.chapter-awal a').attr('href'); // Link Chapter Awal
-    data.chapterBaru = $('.epsbaru .epsbr:not(.chapter-awal) a').attr('href'); // Link Chapter Baru
-    data.rating = $('i[itemprop="ratingValue"]').text().trim(); // Rating
+    // Thumbnail
+    data.thumbnail = `/api/proxy?url=${encodeURIComponent(Thumbnail)}`;
 
-    // Alternative titles
+    // Link Chapter Awal
+    data.chapterAwal = $('#chapter_list ul li').first().find('.lchx a').attr('href') || 'Chapter awal not found';
 
+    // Link Chapter Baru
+    data.chapterBaru = $('#chapter_list ul li').last().find('.lchx a').attr('href') || 'Chapter baru not found';
+
+    // Rating
+    data.rating = $('.rating-prc').text().trim() || 'Rating not found';
+
+    // Judul Alternatif
     data.alternativeTitles = $('.spe span')
       .first()
       .text()
@@ -38,16 +45,18 @@ async function scrapeComicInfo(komik) {
       .map((title) => title.trim()) || ['No alternative title found'];
 
     // Status
-    data.status = $('.spe span').eq(1).text().replace('Status:', '').trim() || 'Status not found';
+    data.status = $('td:contains("Status")').next().text().trim() || 'Status not found';
 
-    // Author and Illustrator
-    data.author = $('.spe span').eq(2).text().replace('Pengarang:', '').trim() || 'Author not found';
+    // Pengarang
+    data.author = $('td:contains("Author")').next().text().trim() || 'Author not found';
+
+    // Ilustrator
     data.illustrator = $('.spe span').eq(3).text().replace('Ilustrator:', '').trim() || 'Illustrator not found';
 
-    // Graphics
+    // Grafis
     data.graphics = $('.spe span').eq(4).text().replace('Grafis:', '').trim() || 'Graphics not found';
 
-    // Themes
+    // Tema
     data.theme = $('.spe span')
       .eq(5)
       .text()
@@ -56,22 +65,22 @@ async function scrapeComicInfo(komik) {
       .split(',')
       .map((theme) => theme.trim()) || ['No theme found'];
 
-    // Comic type
-    data.type = $('.spe span').eq(6).text().replace('Jenis Komik:', '').trim() || 'Comic type not found';
+    // Jenis Komik
+    data.type = $('td:contains("Type")').next().text().trim() || 'Comic type not found';
 
-    // Official source
-    data.officialSource = $('.spe span').eq(7).find('a').attr('href') || 'Not available';
+    // Sumber Resmi
+    data.officialSource = $('.spe span').eq(7).find('a').attr('href') || 'Official source not found';
 
-    // Last updated date
+    // Update Terakhir
     data.lastUpdated =
       $('.shortcsc.sht2 p')
         .text()
         .match(/Update chapter terbaru komik.*?adalah tanggal (.*?)/)?.[1] || 'Last updated date not found';
 
-    // Synopsis
-    data.synopsis = $('#sinopsis .entry-content').text().trim() || 'Synopsis not found';
+    // Sinopsis
+    data.synopsis = $(".pb-2 strong:contains('Sinopsis:')").next().text().trim() || 'Synopsis not found';
 
-    // Recommendations
+    // Rekomendasi
     data.recommendations = $('.relatedpost .widget-post.miripmanga .serieslist li')
       .map((_, el) => {
         const title = $(el).find('.leftseries h4 a').text().trim();
@@ -80,17 +89,14 @@ async function scrapeComicInfo(komik) {
       })
       .get() || ['No recommendations found'];
 
-    // Spoiler images
-    data.spoilerImages = $('.spoiler .spoiler-img img')
-      .map((_, img) => $(img).attr('src'))
-      .get()
-      .filter(Boolean) || ['No spoiler images found'];
+    // Spoiler Images (Tidak tersedia di struktur ini)
+    data.spoilerImages = ['Spoiler images not available in the new structure'];
 
-    // Output the scraped data
+    // Output data yang diambil
     return data;
   } catch (error) {
     console.error(`An error occurred: ${error.message}`);
   }
 }
-// scrapeComicInfo("cold")
+
 module.exports = scrapeComicInfo;

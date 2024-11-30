@@ -1,29 +1,28 @@
-'use client'
-import { useState, useEffect, useMemo } from "react";
-import KomikIndo from "./komik/komikindo/page";
-import Komiku from "./komik/komiku/page"; // Perbaikan impor dengan nama yang benar
+'use client';
+import { useState, useEffect, useMemo } from 'react';
+import KomikIndo from '@/p/komikindo/page';
+import Komiku from '@/p/komiku/page';
+import Doujindesu from '@/p/doujindesu/page';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("komikindo");
+  const [activeTab, setActiveTab] = useState('komikindo');
   const [isTabVisible, setIsTabVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-
-  // Cache tab untuk menyimpan komponen yang sudah dirender
-  const [tabCache, setTabCache] = useState({
-    komikindo: <KomikIndo />,
-    komiku: <Komiku />, // Nama konsisten
-    tab3: null,
-  });
 
   // Data tab: nama dan komponen terkait
   const tabs = useMemo(
     () => [
-      { name: "KomikIndo", route: "komikindo", component: <KomikIndo /> },
-      { name: "Komiku", route: "komiku", component: <Komiku /> }, // Nama konsisten
-      { name: "Tab 3", route: "tab3", component: <div>Ini adalah konten Tab 3</div> },
+      { name: 'KomikIndo', route: 'komikindo', component: <KomikIndo /> },
+      { name: 'Komiku', route: 'komiku', component: <Komiku /> },
+      { name: 'Doujindesu', route: 'doujindesu', component: <Doujindesu /> },
     ],
-    []
+    [],
   );
+
+  // Cache tab untuk menyimpan komponen yang sudah dirender
+  const [tabCache, setTabCache] = useState(() => ({
+    komikindo: <KomikIndo />,
+  }));
 
   // Handle visibility of tab bar during scroll
   useEffect(() => {
@@ -33,15 +32,17 @@ export default function Home() {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
   // Load tab baru hanya jika belum ada di cache
   useEffect(() => {
-    const activeTabData = tabs.find((tab) => tab.route === activeTab);
-    if (activeTabData && !tabCache[activeTab]) {
-      setTabCache((prev) => ({ ...prev, [activeTab]: activeTabData.component }));
+    if (!tabCache[activeTab]) {
+      const activeTabData = tabs.find((tab) => tab.route === activeTab);
+      if (activeTabData) {
+        setTabCache((prev) => ({ ...prev, [activeTab]: activeTabData.component }));
+      }
     }
   }, [activeTab, tabCache, tabs]);
 
@@ -53,7 +54,7 @@ export default function Home() {
       {/* Tab navigasi */}
       <div
         className={`fixed bottom-0 left-0 right-0 transition-transform duration-300 ${
-          isTabVisible ? "translate-y-0" : "translate-y-full"
+          isTabVisible ? 'translate-y-0' : 'translate-y-full'
         } bg-white shadow-t border-t border-gray-700`}
       >
         <div className="flex justify-around items-center h-10 bg-gray-700">
@@ -61,7 +62,7 @@ export default function Home() {
             <button
               key={tab.route}
               className={`flex-1 text-center py-2 ${
-                activeTab === tab.route ? "text-blue-500 font-bold" : "text-white-500"
+                activeTab === tab.route ? 'text-blue-500 font-bold' : 'text-gray-500'
               }`}
               onClick={() => setActiveTab(tab.route)}
             >

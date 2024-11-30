@@ -16,7 +16,7 @@ const KomikList = () => {
   const fetchKomik = async (page) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/komik/komikindo?page=${page}`);
+      const response = await fetch(`/api/komik/doujindesu?page=${page}`);
       const data = await response.json();
       setKomikList(data.komikList || []);
       setPagination(data.pagination || []);
@@ -30,7 +30,7 @@ const KomikList = () => {
   const fetchSearchResults = async (query) => {
     if (query) {
       try {
-        const response = await fetch(`/api/komik/komikindo/search/${query}/1`);
+        const response = await fetch(`/api/komik/doujindesu/search/${query}/1`);
         const data = await response.json();
         setSearchResults(data.comics || []);
       } catch (error) {
@@ -76,7 +76,7 @@ const KomikList = () => {
     setIsLoading(true);
     try {
       // Navigasi ke halaman komik yang dipilih tanpa refresh
-      await router.push(`/komik/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`);
+      await router.push(`/komik/doujindesu/${komikLink.replace(/^\/manga\//, '')}/chapters`);
     } catch (error) {
       console.error('Error navigating to komik page:', error);
     } finally {

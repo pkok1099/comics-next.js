@@ -1,5 +1,5 @@
 // pages/api/komik/index.js
-import { komikindo } from '@/f/index.js';
+import { Doujindesu } from '@/f/index';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -8,8 +8,13 @@ export default async function handler(req, res) {
       const page = parseInt(req.query.page) || 1;
 
       // Ambil data komik berdasarkan halaman
-      const { komikList, pagination } = await komikindo.fetchKomikData(page);
+      // const { komikList, pagination } = await Doujindesu.fetchKomikData(page);
 
+      const result = await Doujindesu.fetchKomikData(page);
+      if (!result || typeof result !== 'object') {
+        throw new Error('Invalid response from Doujindesu API');
+      }
+      const { komikList, pagination } = result;
       // Kirimkan data komik dan pagination
       return res.status(200).json({ komikList, pagination });
     } catch (error) {

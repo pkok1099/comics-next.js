@@ -30,8 +30,7 @@ const KomikList = () => {
   // Infinite Scroll Handler
   const handleScroll = useCallback(() => {
     if (isFetching) return; // Cegah fetch jika sedang fetching
-    const bottom =
-      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100; // Dekati bagian bawah
+    const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100; // Dekati bagian bawah
     if (bottom) {
       setCurrentPage((prevPage) => prevPage + 1); // Tambah halaman
     }

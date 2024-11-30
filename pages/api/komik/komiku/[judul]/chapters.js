@@ -1,5 +1,5 @@
 // pages/api/komik/[judul]/chapters.js
-import { komiku } from '@/app/function/index.js';
+import { komiku } from '@/f/index.js';
 
 export default async function handler(req, res) {
   const { judul } = req.query; // Mengambil parameter `judul` dari URL
@@ -15,10 +15,10 @@ export default async function handler(req, res) {
       }
 
       console.log(`Mendapatkan chapter untuk judul: ${decodedJudul}`);
-console.log(decodedJudul)
+      console.log(decodedJudul);
       // Ambil data chapters dari fungsi getChapters
       const chapters = await komiku.getChapters(decodedJudul);
-console.log(chapters)
+      console.log(chapters);
       // Jika tidak ditemukan chapter
       if (!chapters || chapters.length === 0) {
         return res.status(404).json({

@@ -1,14 +1,12 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('../commonHeaders');
 const { BaseUrlKk } = require('@/f/url');
 
 const getChapters = async (judul) => {
   const baseUrl = `${BaseUrlKk}/manga/${decodeURIComponent(judul)}/`;
-console.log(baseUrl)
+  console.log(baseUrl);
   try {
     const response = await fetch(decodeURIComponent(baseUrl), {
       method: 'GET',
-      headers: commonHeaders,
     });
 
     if (!response.ok) {
@@ -29,17 +27,16 @@ console.log(baseUrl)
       // Menyimpan data chapter ke dalam array jika chapterTitle ada
       if (chapterTitle && chapterUrl) {
         chapters.push({
-          title: chapterTitle,    // Judul Chapter
-          url: chapterUrl,        // URL Chapter
-          pembaca: pembacaCount,  // Jumlah Pembaca
-          tanggal: tanggal       // Tanggal Rilis
+          title: chapterTitle, // Judul Chapter
+          url: chapterUrl, // URL Chapter
+          pembaca: pembacaCount, // Jumlah Pembaca
+          tanggal: tanggal, // Tanggal Rilis
         });
       }
     });
 
     // Mengurutkan chapter berdasarkan tanggal rilis terbaru
     return chapters.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
-
   } catch (error) {
     throw new Error(`Error scraping komik chapters: ${error.message}`);
   }

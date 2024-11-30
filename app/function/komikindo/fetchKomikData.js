@@ -1,14 +1,11 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('../commonHeaders');
 const { BaseUrlK } = require('@/f/url');
 
 async function fetchKomikData(page = 1) {
   const url = `${BaseUrlK}/komik-terbaru/page/${page}/`;
-
   try {
     const response = await fetch(url, {
       method: 'GET',
-      headers: commonHeaders,
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

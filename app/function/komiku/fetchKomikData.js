@@ -1,5 +1,4 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('../commonHeaders');
 const { BaseUrlKc } = require('@/f/url');
 
 async function fetchKomikData(page = 1) {
@@ -7,7 +6,6 @@ async function fetchKomikData(page = 1) {
   try {
     const response = await fetch(url, {
       method: 'GET',
-      // headers: commonHeaders,
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -16,7 +14,7 @@ async function fetchKomikData(page = 1) {
     const html = await response.text();
     const $ = cheerio.load(html);
     const komikList = [];
-    const pagination = [1,2,3,20]; // Selalu kosong
+    const pagination = [1, 2, 3, 20]; // Selalu kosong
 
     // Memproses data komik
     $('.bge').each((_, element) => {

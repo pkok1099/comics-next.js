@@ -1,5 +1,5 @@
 // pages/api/komik/[judul]/chapters.js
-import { komikindo } from '@/f/index.js';
+import { Doujindesu } from '@/f/index.js';
 
 export default async function handler(req, res) {
   const { judul } = req.query; // Mengambil parameter `judul` dari URL
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       console.log(`Mendapatkan chapter untuk judul: ${decodedJudul}`);
 
       // Ambil data chapters dari fungsi getChapters
-      const chapters = await komikindo.getChapters(decodedJudul);
+      const chapters = await Doujindesu.getChapters(decodedJudul);
 
       // Jika tidak ditemukan chapter
       if (!chapters || chapters.length === 0) {

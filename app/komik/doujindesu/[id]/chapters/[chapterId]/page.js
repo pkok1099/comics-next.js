@@ -18,7 +18,7 @@ const ChapterDetail = () => {
   const fetchChapterImages = useCallback(
     async (chapterId) => {
       try {
-        const response = await fetch(`/api/komik/komikindo/${decodeURIComponent(id)}/chapter/${chapterId}/images`);
+        const response = await fetch(`/api/komik/doujindesu/${decodeURIComponent(id)}/chapter/${chapterId}/images`);
         if (!response.ok) throw new Error('Failed to fetch images');
 
         const data = await response.json();
@@ -73,7 +73,7 @@ const ChapterDetail = () => {
   // Fetch the list of chapters
   const fetchChapterList = useCallback(async () => {
     try {
-      const response = await fetch(`/api/komik/komikindo/${decodeURIComponent(id)}/chapters`);
+      const response = await fetch(`/api/komik/doujindesu/${decodeURIComponent(id)}/chapters`);
       if (!response.ok) throw new Error('Failed to fetch chapters');
 
       const data = await response.json();
@@ -85,7 +85,7 @@ const ChapterDetail = () => {
 
   // Navigate to the next chapter
   const goToNextChapter = () => {
-    router.push(`/komik/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) + 1}`);
+    router.push(`/komik/doujindesu/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) + 1}`);
   };
 
   // useEffect(() => {
@@ -155,7 +155,7 @@ const ChapterDetail = () => {
         <div className="fixed right-2 sm:right-4 md:right-8 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-50">
           <button
             onClick={() =>
-              router.push(`/komik/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) - 1}`)
+              router.push(`/komik/doujindesu/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) - 1}`)
             }
             className={`opacity-75 w-6 h-10 sm:w-8 sm:h-12 md:w-10 md:h-14 rounded-lg bg-gray-700 text-white flex items-center justify-center shadow-lg transform transition-transform duration-500 hover:rotate-360 hover:opacity-80 ${
               isFetching ? 'hidden' : ''

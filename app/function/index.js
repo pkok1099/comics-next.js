@@ -2,6 +2,12 @@ const komikuModules = {
   fetchKomikData: require('./komiku/fetchKomikData'),
   getChapters: require('./komiku/getChapters'),
 };
+const DoujindesuModules = {
+  fetchKomikData: require('./doujindesu/fetchKomikData'),
+  getChapters: require('./doujindesu/getChapters'),
+  scrapeComicInfo: require('./doujindesu/scrapeComicInfo'),
+  getChapterImages: require('./doujindesu/getChapterImages'),
+};
 
 const komikindoModules = {
   getChapterImages: require('./komikindo/getChapterImages'),
@@ -15,4 +21,5 @@ const komikindoModules = {
 module.exports = {
   komiku: komikuModules,
   komikindo: komikindoModules,
+  Doujindesu: DoujindesuModules,
 };

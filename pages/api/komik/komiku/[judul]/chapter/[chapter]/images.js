@@ -1,5 +1,5 @@
 // pages/api/komik/[komik]/[chapter]/images.js
-import { getChapterImages } from '@/app/function/index'; // sesuaikan dengan lokasi function
+import { getChapterImages } from '@/f/index'; // sesuaikan dengan lokasi function
 
 export default async function handler(req, res) {
   const {

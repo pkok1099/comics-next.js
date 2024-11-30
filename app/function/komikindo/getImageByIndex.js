@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('../commonHeaders');
+// const commonHeaders = require('../commonHeaders');
 const { BaseUrlK } = require('@/f/url');
 
 // Fungsi untuk mengambil gambar berdasarkan chapter dan index
@@ -9,7 +9,7 @@ async function getImageByIndex(judul, chapter, index) {
   try {
     const response = await fetch(chapterUrl, {
       method: 'GET',
-      headers: commonHeaders,
+      // headers: commonHeaders,
     });
 
     const html = await response.text();

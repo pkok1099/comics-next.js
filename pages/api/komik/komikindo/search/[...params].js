@@ -1,5 +1,5 @@
 // pages/api/komik/[...params].js
-import { komikindo } from '@/app/function/index'; // Pastikan path ini sesuai
+import { komikindo } from '@/f/index'; // Pastikan path ini sesuai
 
 export default async function handler(req, res) {
   const { params } = req.query; // Mengambil parameter dari query string

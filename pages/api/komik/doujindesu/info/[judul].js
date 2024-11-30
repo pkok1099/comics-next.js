@@ -1,5 +1,5 @@
 // pages/api/komik/[judul]/info.js
-import { scrapeComicInfo } from '@/f/index.js';
+import { Doujindesu } from '@/f/index.js';
 
 export default async function handler(req, res) {
   const { judul } = req.query; // Mengambil parameter `judul` dari URL
@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       // Memanggil fungsi scrapeComicInfo untuk mendapatkan informasi komik
-      const chapters = await scrapeComicInfo(judul);
+      const chapters = await Doujindesu.scrapeComicInfo(judul);
 
       // Jika chapters tidak ditemukan
       if (!chapters || chapters.length === 0) {

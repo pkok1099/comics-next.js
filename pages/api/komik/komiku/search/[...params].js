@@ -1,5 +1,5 @@
 // pages/api/komik/[...params].js
-import { SearchComicsPage } from '@/app/function/index'; // Pastikan path ini sesuai
+import { SearchComicsPage } from '@/f/index'; // Pastikan path ini sesuai
 
 export default async function handler(req, res) {
   const { params } = req.query; // Mengambil parameter dari query string

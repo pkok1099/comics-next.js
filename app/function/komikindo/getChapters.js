@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const { commonHeaders } = require('../commonHeaders');
+// const commonHeaders = require('../commonHeaders');
 const { BaseUrlK } = require('@/f/url');
 
 const getChapters = async (judul) => {
@@ -8,7 +8,7 @@ const getChapters = async (judul) => {
   try {
     const response = await fetch(decodeURIComponent(baseUrl), {
       method: 'GET',
-      headers: commonHeaders,
+      // headers: commonHeaders,
     });
 
     if (!response.ok) {
