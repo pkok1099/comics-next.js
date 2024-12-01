@@ -3,7 +3,7 @@ const headers2 = require('@/f/doujinHeaders');
 const { BaseUrlDd } = require('@/f/url');
 
 async function scrapeComicInfo(komik) {
-  const url = `${BaseUrlDd}/manga/${komik}/`;
+  const url = `${BaseUrlDd}/komik/${komik}/`;
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -21,14 +21,18 @@ async function scrapeComicInfo(komik) {
 
     // Data object to store scraped information
     const data = {};
-    const Thumbnail =
-      $('.thumbnail img').attr('src') ||
-      'Thumbnail not found';
+    const Tthumbnail = $(
+      '.bigbanner.img-blur',
+    ).css('background-image');
+
+    const Thumbnail = Tthumbnail.replace(
+      /^url\(['"]?/,
+      '',
+    ).replace(/['"]?\)$/, '');
     // Judul
     data.title =
-      $('h1.title')
+      $('.entry-title[itemprop="name"]')
         .text()
-        .split(' <')[0]
         .trim() || 'Title not found';
 
     // Thumbnail
@@ -36,45 +40,38 @@ async function scrapeComicInfo(komik) {
 
     // Link Chapter Awal
     data.chapterAwal =
-      $('#chapter_list ul li')
-        .first()
-        .find('.lchx a')
+      $('.eplister ul.clstyle li')
+        .last()
+        .find('a')
         .attr('href') || 'Chapter awal not found';
 
     // Link Chapter Baru
     data.chapterBaru =
-      $('#chapter_list ul li')
-        .last()
-        .find('.lchx a')
+      $('.eplister ul.clstyle li')
+        .first()
+        .find('a')
         .attr('href') || 'Chapter baru not found';
 
     // Rating
     data.rating =
-      $('.rating-prc').text().trim() ||
-      'Rating not found';
+      $('.num[itemprop="ratingValue"]')
+        .text()
+        .trim() || 'Rating not found';
 
     // Judul Alternatif
-    data.alternativeTitles = $('.spe span')
-      .first()
+    data.alternativeTitles = $('.alternative')
       .text()
-      .replace('Judul Alternatif:', '')
-      .trim()
-      .split(',')
-      .map((title) => title.trim()) || [
-      'No alternative title found',
-    ];
+      .trim() || ['No alternative title found'];
 
     // Status
     data.status =
-      $('td:contains("Status")')
-        .next()
+      $('.imptdt:contains("Status") i')
         .text()
         .trim() || 'Status not found';
 
     // Pengarang
     data.author =
-      $('td:contains("Author")')
-        .next()
+      $('.imptdt:contains("Author") i')
         .text()
         .trim() || 'Author not found';
 
@@ -95,20 +92,13 @@ async function scrapeComicInfo(komik) {
         .trim() || 'Graphics not found';
 
     // Tema
-    data.theme = $('.spe span')
-      .eq(5)
-      .text()
-      .replace('Tema:', '')
-      .trim()
-      .split(',')
-      .map((theme) => theme.trim()) || [
-      'No theme found',
-    ];
+    data.theme = $('.mgen a')
+      .map((i, el) => $(el).text().trim())
+      .get() || ['No theme found'];
 
     // Jenis Komik
     data.type =
-      $('td:contains("Type")')
-        .next()
+      $('.imptdt:contains("Type") a')
         .text()
         .trim() || 'Comic type not found';
 
@@ -130,8 +120,9 @@ async function scrapeComicInfo(komik) {
 
     // Sinopsis
     data.synopsis =
-      $(".pb-2 strong:contains('Sinopsis:')")
-        .next()
+      $(
+        '.entry-content[itemprop="description"] p',
+      )
         .text()
         .trim() || 'Synopsis not found';
 
@@ -150,6 +141,28 @@ async function scrapeComicInfo(komik) {
         return { title, link };
       })
       .get() || ['No recommendations found'];
+
+    // Tambahan dari Struktur HTML
+    data.chapters = $('.eplister ul.clstyle li')
+      .map((_, el) => {
+        const chapterNumber = $(el)
+          .find('.chapternum')
+          .text()
+          .trim();
+        const chapterDate = $(el)
+          .find('.chapterdate')
+          .text()
+          .trim();
+        const chapterLink = $(el)
+          .find('a')
+          .attr('href');
+        return {
+          title: chapterNumber,
+          url: chapterDate,
+          lastUpdated: chapterLink,
+        };
+      })
+      .get();
 
     // Spoiler Images (Tidak tersedia di struktur ini)
     data.spoilerImages = [

@@ -99,7 +99,7 @@ const KomikList = () => {
     try {
       // Navigasi ke halaman komik yang dipilih tanpa refresh
       await router.push(
-        `/komik/doujindesu/${komikLink.replace(/^\/manga\//, '')}/chapters`,
+        `/komik/doujindesu/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
       );
     } catch (error) {
       console.error(

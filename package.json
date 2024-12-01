@@ -17,7 +17,7 @@
     "useTabs": false
   },
   "eslintConfig": {
-  "extends": "next/core-web-vitals"
+    "extends": "next/core-web-vitals"
   },
   "dependencies": {
     "cheerio": "^1.0.0",

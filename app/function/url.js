@@ -9,7 +9,7 @@ const BaseUrlKk =
   process.env.URL_KOMIKK || 'https://komiku.id';
 const BaseUrlDd =
   process.env.URL_KOMIKK ||
-  'https://doujindesu.tv';
+  'https://manhwadesu.asia';
 
 module.exports = {
   BaseUrlK,
