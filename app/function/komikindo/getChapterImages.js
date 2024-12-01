@@ -24,8 +24,13 @@ async function getChapterImages(komik, chapter) {
     console.log(imageUrls);
     return imageUrls;
   } catch (error) {
-    console.error('Error fetching chapter images:', error);
-    throw new Error('Failed to fetch chapter images.');
+    console.error(
+      'Error fetching chapter images:',
+      error,
+    );
+    throw new Error(
+      'Failed to fetch chapter images.',
+    );
   }
 }
 module.exports = getChapterImages;

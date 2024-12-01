@@ -1,26 +1,51 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 
 const KomikList = () => {
   const [komikList, setKomikList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isFetching, setIsFetching] = useState(false);
+  const [currentPage, setCurrentPage] =
+    useState(1);
+  const [isLoading, setIsLoading] =
+    useState(true);
+  const [isFetching, setIsFetching] =
+    useState(false);
 
   const fetchKomik = async (page) => {
     setIsFetching(true);
     try {
-      const response = await fetch(`/api/komik/komiku?page=${page}`, {
-        headers: { 'Cache-Control': 'no-store' }, // Hindari respons cache
-      });
+      const response = await fetch(
+        `/api/komik/komiku?page=${page}`,
+        {
+          headers: {
+            'Cache-Control': 'no-store',
+          }, // Hindari respons cache
+        },
+      );
       const data = await response.json();
       setKomikList((prevList) => {
         // Gabungkan data lama dan baru, hapus duplikat berdasarkan `judul`
-        const newList = [...prevList, ...(data.komikList || [])];
-        return Array.from(new Map(newList.map((item) => [item.judul, item])).values());
+        const newList = [
+          ...prevList,
+          ...(data.komikList || []),
+        ];
+        return Array.from(
+          new Map(
+            newList.map((item) => [
+              item.judul,
+              item,
+            ]),
+          ).values(),
+        );
       });
     } catch (error) {
-      console.error('Error fetching komik data:', error);
+      console.error(
+        'Error fetching komik data:',
+        error,
+      );
     } finally {
       setIsFetching(false);
       setIsLoading(false);
@@ -30,7 +55,9 @@ const KomikList = () => {
   // Infinite Scroll Handler
   const handleScroll = useCallback(() => {
     if (isFetching) return; // Cegah fetch jika sedang fetching
-    const bottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100; // Dekati bagian bawah
+    const bottom =
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 100; // Dekati bagian bawah
     if (bottom) {
       setCurrentPage((prevPage) => prevPage + 1); // Tambah halaman
     }
@@ -41,9 +68,15 @@ const KomikList = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener(
+      'scroll',
+      handleScroll,
+    );
     return () => {
-      window.removeEventListener('scroll', handleScroll); // Hapus listener saat komponen di-unmount
+      window.removeEventListener(
+        'scroll',
+        handleScroll,
+      ); // Hapus listener saat komponen di-unmount
     };
   }, [handleScroll]);
 
@@ -60,7 +93,11 @@ const KomikList = () => {
       {/* Komik Grid */}
       <div className="grid grid-cols-4 lg:grid-cols-5 gap-1 w-full mt-5">
         {isLoading
-          ? Array.from({ length: 12 }).map((_, index) => <SkeletonLoader key={index} />)
+          ? Array.from({ length: 12 }).map(
+              (_, index) => (
+                <SkeletonLoader key={index} />
+              ),
+            )
           : komikList.map((komik, index) => (
               <div
                 key={`${komik.judul}-${index}`} // Kombinasi key untuk menghindari duplikat
@@ -71,7 +108,9 @@ const KomikList = () => {
                   alt={komik.judul}
                   className="w-full aspect-[3/4] object-cover bg-gray-600 rounded-lg mb-3"
                 />
-                <h3 className="text-sm font-semibold text-center line-clamp-2">{komik.judul}</h3>
+                <h3 className="text-sm font-semibold text-center line-clamp-2">
+                  {komik.judul}
+                </h3>
               </div>
             ))}
       </div>
@@ -79,9 +118,11 @@ const KomikList = () => {
       {/* Skeleton Loader untuk Infinite Scroll */}
       {isFetching && (
         <div className="mt-5 grid grid-cols-4 lg:grid-cols-5 gap-1 w-full">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <SkeletonLoader key={index} />
-          ))}
+          {Array.from({ length: 12 }).map(
+            (_, index) => (
+              <SkeletonLoader key={index} />
+            ),
+          )}
         </div>
       )}
     </div>

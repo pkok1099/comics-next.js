@@ -10,20 +10,31 @@ export default async function handler(req, res) {
       // Ambil data komik berdasarkan halaman
       // const { komikList, pagination } = await Doujindesu.fetchKomikData(page);
 
-      const result = await Doujindesu.fetchKomikData(page);
+      const result =
+        await Doujindesu.fetchKomikData(page);
       if (!result || typeof result !== 'object') {
-        throw new Error('Invalid response from Doujindesu API');
+        throw new Error(
+          'Invalid response from Doujindesu API',
+        );
       }
       const { komikList, pagination } = result;
       // Kirimkan data komik dan pagination
-      return res.status(200).json({ komikList, pagination });
+      return res
+        .status(200)
+        .json({ komikList, pagination });
     } catch (error) {
       // Menangani error jika terjadi masalah dalam scraping
       console.error(error);
-      return res.status(500).json({ message: 'Error scraping data komik: ' + error.message });
+      return res.status(500).json({
+        message:
+          'Error scraping data komik: ' +
+          error.message,
+      });
     }
   } else {
     // Jika metode selain GET, kembalikan status error 405
-    return res.status(405).json({ message: 'Method Not Allowed' });
+    return res
+      .status(405)
+      .json({ message: 'Method Not Allowed' });
   }
 }

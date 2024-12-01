@@ -8,7 +8,9 @@ async function fetchKomikData(page = 1) {
       method: 'GET',
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}`,
+      );
     }
 
     const html = await response.text();
@@ -18,25 +20,43 @@ async function fetchKomikData(page = 1) {
 
     // Memproses data komik
     $('.animepost').each((_, element) => {
-      const judul = $(element).find('h4').text().trim();
-      const thumbnail = $(element).find('img').attr('src');
-      const link = $(element).find('a').attr('href');
+      const judul = $(element)
+        .find('h4')
+        .text()
+        .trim();
+      const thumbnail = $(element)
+        .find('img')
+        .attr('src');
+      const link = $(element)
+        .find('a')
+        .attr('href');
       if (judul && thumbnail && link) {
-        komikList.push({ judul, thumbnail, link });
+        komikList.push({
+          judul,
+          thumbnail,
+          link,
+        });
       }
     });
 
     // Memproses data pagination
-    $('.pagination .page-numbers').each((_, element) => {
-      const pageNumber = $(element).text().trim();
-      if (!isNaN(pageNumber)) {
-        pagination.push(parseInt(pageNumber));
-      }
-    });
+    $('.pagination .page-numbers').each(
+      (_, element) => {
+        const pageNumber = $(element)
+          .text()
+          .trim();
+        if (!isNaN(pageNumber)) {
+          pagination.push(parseInt(pageNumber));
+        }
+      },
+    );
 
     return { komikList, pagination };
   } catch (error) {
-    console.error('Error fetching komik data:', error.message);
+    console.error(
+      'Error fetching komik data:',
+      error.message,
+    );
     throw error;
   }
 }

@@ -14,7 +14,8 @@ async function getChapterImages(komik, chapter) {
           'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'accept-language': 'en-US,en;q=0.9',
         'cache-control': 'max-age=0',
-        'sec-ch-ua': '"Chromium";v="125", "Not.A/Brand";v="24"',
+        'sec-ch-ua':
+          '"Chromium";v="125", "Not.A/Brand";v="24"',
         'sec-ch-ua-mobile': '?0',
         'sec-ch-ua-platform': '"Linux"',
         'sec-fetch-dest': 'document',
@@ -23,14 +24,18 @@ async function getChapterImages(komik, chapter) {
         'sec-fetch-user': '?1',
         'upgrade-insecure-requests': '1',
         cookie: kuki,
-        Referer: 'https://doujindesu.tv/manga/the-owner-of-a-building/',
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        Referer:
+          'https://doujindesu.tv/manga/the-owner-of-a-building/',
+        'Referrer-Policy':
+          'strict-origin-when-cross-origin',
       },
     });
 
     // Mengecek jika halaman berhasil dimuat
     if (!response.ok) {
-      throw new Error(`Failed to fetch page: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch page: ${response.statusText}`,
+      );
     }
 
     // Ambil HTML dari halaman
@@ -44,30 +49,38 @@ async function getChapterImages(komik, chapter) {
     const postBody = `id=${dataId}`;
 
     // Ambil gambar berdasarkan data-id
-    const postResponse = await fetch('https://doujindesu.tv/themes/ajax/ch.php', {
-      method: 'POST',
-      headers: {
-        accept: '*/*',
-        'accept-language': 'en-US,en;q=0.9',
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        priority: 'u=1, i',
-        'sec-ch-ua': '"Chromium";v="125", "Not.A/Brand";v="24"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Linux"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-        'x-requested-with': 'XMLHttpRequest',
-        cookie: kuki,
-        Referer: `https://doujindesu.tv/the-owner-of-a-building-chapter-143/`,
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
+    const postResponse = await fetch(
+      'https://doujindesu.tv/themes/ajax/ch.php',
+      {
+        method: 'POST',
+        headers: {
+          accept: '*/*',
+          'accept-language': 'en-US,en;q=0.9',
+          'content-type':
+            'application/x-www-form-urlencoded; charset=UTF-8',
+          priority: 'u=1, i',
+          'sec-ch-ua':
+            '"Chromium";v="125", "Not.A/Brand";v="24"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Linux"',
+          'sec-fetch-dest': 'empty',
+          'sec-fetch-mode': 'cors',
+          'sec-fetch-site': 'same-origin',
+          'x-requested-with': 'XMLHttpRequest',
+          cookie: kuki,
+          Referer: `https://doujindesu.tv/the-owner-of-a-building-chapter-143/`,
+          'Referrer-Policy':
+            'strict-origin-when-cross-origin',
+        },
+        body: postBody,
       },
-      body: postBody,
-    });
+    );
 
     // Mengecek jika request POST berhasil
     if (!postResponse.ok) {
-      throw new Error(`Failed to fetch image URLs: ${postResponse.statusText}`);
+      throw new Error(
+        `Failed to fetch image URLs: ${postResponse.statusText}`,
+      );
     }
 
     // Ambil HTML dari response POST
@@ -85,8 +98,13 @@ async function getChapterImages(komik, chapter) {
 
     return imageUrls;
   } catch (error) {
-    console.error('Error fetching chapter images:', error);
-    throw new Error('Failed to fetch chapter images.');
+    console.error(
+      'Error fetching chapter images:',
+      error,
+    );
+    throw new Error(
+      'Failed to fetch chapter images.',
+    );
   }
 }
 module.exports = getChapterImages;

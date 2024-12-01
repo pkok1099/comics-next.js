@@ -12,7 +12,9 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: var(--dark-mode-primary-color);
-    --foreground: var(--dark-mode-secondary-color);
+    --foreground: var(
+      --dark-mode-secondary-color
+    );
   }
 }
 
@@ -62,7 +64,9 @@ body {
   position: fixed;
   right: 2rem; /* Jarak dari kanan */
   top: 50%; /* Tengah secara vertikal */
-  transform: translateY(-50%); /* Koreksi posisi vertikal */
+  transform: translateY(
+    -50%
+  ); /* Koreksi posisi vertikal */
   display: flex;
   flex-direction: column; /* Susun vertikal */
   gap: 1rem; /* Jarak antar tombol */
@@ -71,8 +75,15 @@ body {
 
 .button-vertical {
   writing-mode: vertical-lr; /* Teks vertikal dengan bagian atas mengarah ke kanan */
-  transform: rotate(0deg); /* Tidak ada rotasi awal */
-  background-color: rgba(0, 0, 255, 0.8); /* Warna tombol */
+  transform: rotate(
+    0deg
+  ); /* Tidak ada rotasi awal */
+  background-color: rgba(
+    0,
+    0,
+    255,
+    0.8
+  ); /* Warna tombol */
   color: white; /* Warna teks */
   padding: 1rem;
   border-radius: 50%; /* Membuat tombol berbentuk bulat */
@@ -90,7 +101,9 @@ body {
 }
 
 .button-vertical:hover {
-  transform: rotate(360deg); /* Rotasi penuh 360° saat di-hover */
+  transform: rotate(
+    360deg
+  ); /* Rotasi penuh 360° saat di-hover */
   opacity: 0.8; /* Sedikit transparan saat di-hover */
 }
 
@@ -126,7 +139,8 @@ body {
 }
 
 .skeleton {
-  animation: skeleton-loading 1.5s infinite ease-in-out;
+  animation: skeleton-loading 1.5s infinite
+    ease-in-out;
 }
 @keyframes particleToCard {
   0% {

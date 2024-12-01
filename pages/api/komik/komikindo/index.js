@@ -8,17 +8,26 @@ export default async function handler(req, res) {
       const page = parseInt(req.query.page) || 1;
 
       // Ambil data komik berdasarkan halaman
-      const { komikList, pagination } = await komikindo.fetchKomikData(page);
+      const { komikList, pagination } =
+        await komikindo.fetchKomikData(page);
 
       // Kirimkan data komik dan pagination
-      return res.status(200).json({ komikList, pagination });
+      return res
+        .status(200)
+        .json({ komikList, pagination });
     } catch (error) {
       // Menangani error jika terjadi masalah dalam scraping
       console.error(error);
-      return res.status(500).json({ message: 'Error scraping data komik: ' + error.message });
+      return res.status(500).json({
+        message:
+          'Error scraping data komik: ' +
+          error.message,
+      });
     }
   } else {
     // Jika metode selain GET, kembalikan status error 405
-    return res.status(405).json({ message: 'Method Not Allowed' });
+    return res
+      .status(405)
+      .json({ message: 'Method Not Allowed' });
   }
 }

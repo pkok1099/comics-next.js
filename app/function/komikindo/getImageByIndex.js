@@ -4,7 +4,11 @@ const { BaseUrlK } = require('@/f/url');
 
 // Fungsi untuk mengambil gambar berdasarkan chapter dan index
 
-async function getImageByIndex(judul, chapter, index) {
+async function getImageByIndex(
+  judul,
+  chapter,
+  index,
+) {
   const chapterUrl = `${BaseUrlK}/${judul}-chapter-${chapter}/#page_${index}`;
   try {
     const response = await fetch(chapterUrl, {
@@ -14,7 +18,9 @@ async function getImageByIndex(judul, chapter, index) {
 
     const html = await response.text();
     const $ = cheerio.load(html);
-    const imgSrc = $(`.img-landmine img:nth-child(${index})`).attr('src');
+    const imgSrc = $(
+      `.img-landmine img:nth-child(${index})`,
+    ).attr('src');
 
     if (imgSrc) {
       return imgSrc;

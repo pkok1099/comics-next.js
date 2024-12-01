@@ -8,6 +8,14 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "semi": true,
+    "printWidth": 50,
+    "tabWidth": 2,
+    "useTabs": false
+  },
   "dependencies": {
     "cheerio": "^1.0.0",
     "firebase": "^11.0.2",

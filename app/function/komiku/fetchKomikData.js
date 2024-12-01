@@ -8,7 +8,9 @@ async function fetchKomikData(page = 1) {
       method: 'GET',
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}`,
+      );
     }
 
     const html = await response.text();
@@ -18,15 +20,40 @@ async function fetchKomikData(page = 1) {
 
     // Memproses data komik
     $('.bge').each((_, element) => {
-      const judul = $(element).find('h3').text().trim();
-      const thumbnail = $(element).find('.sd.rd').attr('src');
-      const link = $(element).find('a').attr('href');
-      const genre = $(element).find('.tpe1_inf b').text().trim();
-      const up = $(element).find('.up').text().trim();
-      const pembaca = $(element).find('.judul2').text().trim();
-      const description = $(element).find('p').text().trim();
-      const firstChapterLink = $(element).find('.new1 a').first().attr('href');
-      const latestChapterLink = $(element).find('.new1 a').last().attr('href');
+      const judul = $(element)
+        .find('h3')
+        .text()
+        .trim();
+      const thumbnail = $(element)
+        .find('.sd.rd')
+        .attr('src');
+      const link = $(element)
+        .find('a')
+        .attr('href');
+      const genre = $(element)
+        .find('.tpe1_inf b')
+        .text()
+        .trim();
+      const up = $(element)
+        .find('.up')
+        .text()
+        .trim();
+      const pembaca = $(element)
+        .find('.judul2')
+        .text()
+        .trim();
+      const description = $(element)
+        .find('p')
+        .text()
+        .trim();
+      const firstChapterLink = $(element)
+        .find('.new1 a')
+        .first()
+        .attr('href');
+      const latestChapterLink = $(element)
+        .find('.new1 a')
+        .last()
+        .attr('href');
 
       if (judul && thumbnail && link) {
         komikList.push({
@@ -46,7 +73,10 @@ async function fetchKomikData(page = 1) {
     // Pagination tetap kosong
     return { komikList, pagination };
   } catch (error) {
-    console.error('Error fetching komik data:', error.message);
+    console.error(
+      'Error fetching komik data:',
+      error.message,
+    );
     throw error;
   }
 }

@@ -7,30 +7,45 @@ import Link from 'next/link';
 const ChapterList = () => {
   const { id } = useParams(); // Ambil parameter id menggunakan useParams()
   const [chapters, setChapters] = useState([]);
-  const [komikData, setKomikData] = useState(null);
+  const [komikData, setKomikData] =
+    useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('judul');
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [activeTab, setActiveTab] =
+    useState('judul');
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     const fetchKomikData = async () => {
       try {
-        const response = await fetch(`/api/komik/komikindo/info/${decodeURIComponent(id)}`);
+        const response = await fetch(
+          `/api/komik/komikindo/info/${decodeURIComponent(id)}`,
+        );
         const komik = await response.json();
         setKomikData(komik);
       } catch (error) {
-        console.error('Error fetching komik data:', error);
+        console.error(
+          'Error fetching komik data:',
+          error,
+        );
       }
     };
 
     const fetchChapters = async () => {
       try {
-        const response = await fetch(`/api/komik/komikindo/${id}/chapters`);
+        const response = await fetch(
+          `/api/komik/komikindo/${id}/chapters`,
+        );
         const data = await response.json();
         setChapters(data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching chapters:', error);
+        console.error(
+          'Error fetching chapters:',
+          error,
+        );
         setLoading(false);
       }
     };
@@ -77,8 +92,14 @@ const ChapterList = () => {
     return match ? match[1] : 'unknown';
   };
 
-  const lastChapterUrl = chapters[0] ? getChapterUrl(chapters[0]) : null;
-  const chapter1Url = chapters[chapters.length - 1] ? getChapterUrl(chapters[chapters.length - 1]) : null;
+  const lastChapterUrl = chapters[0]
+    ? getChapterUrl(chapters[0])
+    : null;
+  const chapter1Url = chapters[
+    chapters.length - 1
+  ]
+    ? getChapterUrl(chapters[chapters.length - 1])
+    : null;
 
   return (
     <div className="p-4 bg-gray-900 text-white">
@@ -112,7 +133,10 @@ const ChapterList = () => {
       </div>
 
       {/* Judul */}
-      <h1 className="mt-8 text-3xl font-bold text-center mb-4">{komikData?.title || 'Judul Komik Tidak Tersedia'}</h1>
+      <h1 className="mt-8 text-3xl font-bold text-center mb-4">
+        {komikData?.title ||
+          'Judul Komik Tidak Tersedia'}
+      </h1>
 
       {/* Tombol Tab */}
       <div className="text-center mb-4">
@@ -138,22 +162,34 @@ const ChapterList = () => {
 
       {/* Konten Tab */}
       <div className="text-center mb-4 text-gray-300">
-        {activeTab === 'judul' && <h2 className="text-xl font-bold">{komikData?.title}</h2>}
-        {activeTab === 'sinopsis' && <p className="italic">{komikData?.synopsis || 'Sinopsis tidak ditemukan.'}</p>}
-        {activeTab === 'spoiler' && komikData?.spoilerImages && (
-          <div className="flex flex-wrap justify-center">
-            {komikData.spoilerImages.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                width={300}
-                height={400}
-                alt={`spoiler ${index}`}
-                className="w-64 h-64 m-2 rounded-lg"
-              />
-            ))}
-          </div>
+        {activeTab === 'judul' && (
+          <h2 className="text-xl font-bold">
+            {komikData?.title}
+          </h2>
         )}
+        {activeTab === 'sinopsis' && (
+          <p className="italic">
+            {komikData?.synopsis ||
+              'Sinopsis tidak ditemukan.'}
+          </p>
+        )}
+        {activeTab === 'spoiler' &&
+          komikData?.spoilerImages && (
+            <div className="flex flex-wrap justify-center">
+              {komikData.spoilerImages.map(
+                (img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    width={300}
+                    height={400}
+                    alt={`spoiler ${index}`}
+                    className="w-64 h-64 m-2 rounded-lg"
+                  />
+                ),
+              )}
+            </div>
+          )}
       </div>
 
       {/* Tombol untuk Chapter 1 dan Chapter Terakhir */}
@@ -176,19 +212,33 @@ const ChapterList = () => {
 
       {/* Daftar Chapter dalam Scrollable Box */}
       <div className="bg-gray-800 p-4 rounded-lg mt-4 shadow-lg max-h-96 overflow-y-scroll transition-all duration-300">
-        <h2 className="text-xl font-bold text-center mb-4">Daftar Chapter</h2>
+        <h2 className="text-xl font-bold text-center mb-4">
+          Daftar Chapter
+        </h2>
         <div className="space-y-4">
           {chapters.map((chapter, index) => {
-            const chapterNumber = getChapterUrl(chapter);
+            const chapterNumber =
+              getChapterUrl(chapter);
 
             return (
-              <div key={index} className="transition-all duration-300 hover:bg-gray-700 p-4 rounded-lg chapter-item">
-                <h3 className="text-lg font-bold">{chapter.title}</h3>
-                <p className="text-sm text-gray-400">Last Updated: {chapter.lastUpdated}</p>
+              <div
+                key={index}
+                className="transition-all duration-300 hover:bg-gray-700 p-4 rounded-lg chapter-item"
+              >
+                <h3 className="text-lg font-bold">
+                  {chapter.title}
+                </h3>
+                <p className="text-sm text-gray-400">
+                  Last Updated:{' '}
+                  {chapter.lastUpdated}
+                </p>
 
                 {/* Tombol Baca Chapter */}
                 {/* Tombol Baca Chapter dengan Border */}
-                <Link href={`/komik/komikindo/${id}/chapters/${chapterNumber}`} className="inline-block mt-2">
+                <Link
+                  href={`/komik/komikindo/${id}/chapters/${chapterNumber}`}
+                  className="inline-block mt-2"
+                >
                   <button className="border-2 border-blue-600 hover:border-blue-700 text-blue-600 hover:text-blue-700 py-2 px-4 rounded-lg w-full transition duration-200 ease-in-out transform hover:scale-105">
                     Baca Chapter
                   </button>
