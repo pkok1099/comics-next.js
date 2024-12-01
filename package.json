@@ -16,6 +16,9 @@
     "tabWidth": 2,
     "useTabs": false
   },
+  "eslintConfig": {
+  "extends": "next/core-web-vitals"
+  },
   "dependencies": {
     "cheerio": "^1.0.0",
     "firebase": "^11.0.2",
