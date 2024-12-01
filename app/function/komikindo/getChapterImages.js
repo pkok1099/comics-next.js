@@ -21,7 +21,7 @@ async function getChapterImages(komik, chapter) {
         imageUrls.push(src);
       }
     });
-console.log(imageUrls)
+    console.log(imageUrls);
     return imageUrls;
   } catch (error) {
     console.error('Error fetching chapter images:', error);

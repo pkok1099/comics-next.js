@@ -3,7 +3,8 @@ const { BaseUrlDd } = require('@/f/url');
 const headers2 = require('@/f/doujinHeaders');
 async function getChapterImages(komik, chapter) {
   const chapterUrl = `${BaseUrlDd}/${komik}-chapter-${chapter}/`;
-      const kuki = 'PHPSESSID=dp87i03iq0j31ptif8ifio0p1h; __PPU_tuid=7442939330546749471; cf_clearance=yYK4CaqmAoCs4fQ7nyfPOsuuFWIuDp2fjYK6BzU38Qk-1732947658-1.2.1.1-4qwupk0ZlIgjvTwB2Q9aU.lIUGlErYle1khinyKp.DnNgUN41bMO1E0T1TnTRdJY8UXxN1HIlf_Nx.8DOpMvcPGV_fC4LH8_5y.VySbMnJ5B9VdBRghvtKK_9E4U4KpoIiRo6oBmaDfx4y.Qcxx1UzDwV360MFEvxzj4yr2EuhFHtUAz5e8O07.6c.eukZs_fUPUqIvBwyJHFX78CwH9D8PiwC9c7CKv4lXvRUMtXQegd8RYXkvkLMeqiCy1QBg46hbdGaw8QNUuJw1QtyiLoE.EQmit5yrR4b53iSPnF4beGSrX9fdmCEhO.EKNON1Ob.UrpO8I.904L75RFAZ63awkfXt4Pmvd7adpWAeJyR1pfYA6puu.CHiCHx5983Ij'
+  const kuki =
+    'PHPSESSID=dp87i03iq0j31ptif8ifio0p1h; __PPU_tuid=7442939330546749471; cf_clearance=yYK4CaqmAoCs4fQ7nyfPOsuuFWIuDp2fjYK6BzU38Qk-1732947658-1.2.1.1-4qwupk0ZlIgjvTwB2Q9aU.lIUGlErYle1khinyKp.DnNgUN41bMO1E0T1TnTRdJY8UXxN1HIlf_Nx.8DOpMvcPGV_fC4LH8_5y.VySbMnJ5B9VdBRghvtKK_9E4U4KpoIiRo6oBmaDfx4y.Qcxx1UzDwV360MFEvxzj4yr2EuhFHtUAz5e8O07.6c.eukZs_fUPUqIvBwyJHFX78CwH9D8PiwC9c7CKv4lXvRUMtXQegd8RYXkvkLMeqiCy1QBg46hbdGaw8QNUuJw1QtyiLoE.EQmit5yrR4b53iSPnF4beGSrX9fdmCEhO.EKNON1Ob.UrpO8I.904L75RFAZ63awkfXt4Pmvd7adpWAeJyR1pfYA6puu.CHiCHx5983Ij';
 
   try {
     const response = await fetch(chapterUrl, {
@@ -89,4 +90,3 @@ async function getChapterImages(komik, chapter) {
   }
 }
 module.exports = getChapterImages;
-
