@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       // Generate link melalui proxy
       const imageLinks = imageUrls.map(
         (imgUrl, index) => {
-          return `${baseUrl}/api/proxy?url=${encodeURIComponent(imgUrl)}&head=komikindo`;
+          return `${baseUrl}/api/proxy?url=${decodeURIComponent(imgUrl)}&head=komikindo`;
         },
       );
 

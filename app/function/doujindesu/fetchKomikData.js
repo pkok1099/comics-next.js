@@ -1,21 +1,22 @@
-const cheerio = require('cheerio'); // Pastikan cheerio terinstall
+const cheerio = require('cheerio');
 
-async function fetchAndParseManhwa(page = '1') {
+/**
+ * Fetch dan parse data manhwa dari situs manhwadesu.asia
+ * @param {string} page - Nomor halaman (default: 1)
+ * @returns {Promise<{ komikList: object[], pagination: number[]}>}
+ */
+async function fetchAndParseManhwa(page = 1) {
   try {
     const response = await fetch(
       `https://manhwadesu.asia/komik/?page=${page}&order=update`,
-      {
-        method: 'GET',
-      },
+      { method: 'GET' },
     );
 
     if (!response.ok) {
-      throw new Error(
-        'Network response was not ok.',
-      );
+      throw new Error('Network response was not ok.');
     }
 
-    const html = await response.text(); // Mengambil respons sebagai teks (HTML)
+    const html = await response.text();
     const $ = cheerio.load(html);
 
     const komikList = [];
@@ -62,10 +63,7 @@ async function fetchAndParseManhwa(page = '1') {
 
     return { komikList, pagination };
   } catch (error) {
-    console.error(
-      'There was a problem with the fetch operation:',
-      error,
-    );
+    console.error('There was a problem with the fetch operation:', error);
   }
 }
 
