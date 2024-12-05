@@ -1,4 +1,4 @@
-// pages/api/komik/[judul]/info.js
+// pages/api/doujindesu/komik/info/[judul]/
 import { Doujindesu } from '@/f/index.js';
 
 export default async function handler(req, res) {

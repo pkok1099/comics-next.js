@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Pagination from '@/app/components/Pagination';
+import Pagination from '@/components/ui/Pagination';
 import { useRouter } from 'next/navigation';
 
 const KomikList = () => {
@@ -12,7 +12,7 @@ const KomikList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const router = useRouter();
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const fetchKomik = async (page) => {
     setIsLoading(true);
     try {
@@ -62,7 +62,16 @@ const KomikList = () => {
       window.location.href = `/search/${searchQuery}`;
     }
   };
+useEffect(() => {
+    const cookies = document.cookie;
+    const userCookie = cookies && cookies.split(';').find(cookie => cookie.trim().startsWith('user='));
 
+    if (userCookie) {
+      setIsLoggedIn(true);
+    } else {
+      router.push('/login');
+    }
+  }, [router]);
   const handleKomikClick = async (komikLink) => {
     setIsLoading(true);
     try {

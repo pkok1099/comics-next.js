@@ -1,5 +1,5 @@
 // pages/api/komik/[komik]/[chapter]/images.js
-import { Doujindesu } from '@/app/function/index'; // Sesuaikan lokasi function
+import { Doujindesu } from '@/f/index'; // Sesuaikan lokasi function
 
 export default async function handler(req, res) {
   const {
@@ -14,14 +14,12 @@ export default async function handler(req, res) {
         /^\d{6}-/,
         '',
       );
-
       // Dapatkan URL gambar asli menggunakan function dari `komikindo`
       const imageUrls =
         await Doujindesu.getChapterImages(
           cleanedTitle,
           chapter,
         );
-
       // Gunakan proxy endpoint untuk mengarahkan permintaan gambar
       const protocol =
         req.headers['x-forwarded-proto'] ||
@@ -36,10 +34,6 @@ export default async function handler(req, res) {
         },
       );
 
-      console.log(
-        'Generated Proxy Image Links:',
-        imageLinks,
-      );
 
       res.status(200).json(imageLinks);
     } catch (error) {

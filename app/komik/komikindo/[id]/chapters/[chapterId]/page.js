@@ -1,5 +1,4 @@
 'use client';
-
 import React, {
   useEffect,
   useState,
@@ -9,7 +8,7 @@ import {
   useParams,
   useRouter,
 } from 'next/navigation';
-
+import Image from "next/image";
 const ChapterDetail = () => {
   const { id, chapterId } = useParams(); // Get id and chapterId from URL
   const router = useRouter(); // For navigation
@@ -25,6 +24,8 @@ const ChapterDetail = () => {
     useState(false); // For fetching state
   const [lastScrollY, setLastScrollY] =
     useState(0); // Menyimpan posisi scroll terakhir
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // Fetch images for the chapter
   const fetchChapterImages = useCallback(
@@ -66,6 +67,35 @@ const ChapterDetail = () => {
     },
     [fetchChapterImages],
   ); // Menambahkan fetchChapterImages sebagai dependensi
+
+const saveHistory = async (chapterId, title) => {
+  const response = await fetch('/api/history', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ chapterId, title }),
+  });
+
+  const data = await response.json();
+  if (response.ok) {
+    // console.log('History saved:', data.message);
+  } else {
+    // console.error('Failed to save history:', data.message);
+  }
+};
+
+// cek login
+  useEffect(() => {
+    const cookies = document.cookie;
+    const userCookie = cookies && cookies.split(';').find(cookie => cookie.trim().startsWith('user='));
+
+    if (userCookie) {
+      setIsLoggedIn(true);
+    } else {
+      router.push('/login');
+    }
+  }, [router]);
 
   // Handle scroll to hide/show the next button
   useEffect(() => {
@@ -129,6 +159,7 @@ const ChapterDetail = () => {
   useEffect(() => {
     if (chapterId) {
       loadChapterImages(chapterId);
+      saveHistory(chapterId, id)
     }
   }, [id, chapterId, loadChapterImages]); // Menambahkan loadChapterImages
 
@@ -136,7 +167,6 @@ const ChapterDetail = () => {
     fetchChapterList();
   }, [id, fetchChapterList]); // Menambahkan fetchChapterList
 
-  console.log(id, chapterId);
   // Fetch chapter list once when the component mounts
   // useEffect(() => {
   // fetchChapterList();
@@ -159,7 +189,6 @@ const ChapterDetail = () => {
       </div>
     );
   }
-  console.log(pages);
   return (
     <div className="chapter-container relative">
       <h2 className="text-center font-bold text-2xl py-4 truncate ">
@@ -176,7 +205,7 @@ const ChapterDetail = () => {
           </p>
         ) : (
           pages.map((img, imgIndex) => (
-            <img
+            <Image
               key={imgIndex}
               src={img}
               alt={`Page ${imgIndex + 1} of Chapter ${chapterId}`}

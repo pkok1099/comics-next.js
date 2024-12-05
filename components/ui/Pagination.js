@@ -18,15 +18,16 @@ const Pagination = ({
     </button>
 
     {/* Tombol Halaman */}
-    {pagination.map((page, index) => (
-      <button
-        key={index}
-        className={`px-4 py-2 rounded mr-2 mb-2 ${page === currentPage ? 'bg-gray-700 text-white' : 'bg-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white transition'}`}
-        onClick={() => setCurrentPage(page)}
-      >
-        {page}
-      </button>
-    ))}
+    {pagination.length >= 4 &&
+      pagination.map((page, index) => (
+        <button
+          key={index}
+          className={`px-4 py-2 rounded mr-2 mb-2 ${page === currentPage ? 'bg-gray-700 text-white' : 'bg-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white transition'}`}
+          onClick={() => setCurrentPage(page)}
+        >
+          {page}
+        </button>
+      ))}
 
     {/* Tombol Next */}
     <button

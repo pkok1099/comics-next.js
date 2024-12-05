@@ -18,10 +18,6 @@ export default async function handler(req, res) {
         });
       }
 
-      console.log(
-        `Mendapatkan chapter untuk judul: ${decodedJudul}`,
-      );
-
       // Ambil data chapters dari fungsi getChapters
       const chapters =
         await komikindo.getChapters(decodedJudul);

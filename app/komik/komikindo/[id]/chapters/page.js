@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; // Import useParams dari next/navigation
 import Link from 'next/link';
+import Image from "next/image";
+
 
 const ChapterList = () => {
   const { id } = useParams(); // Ambil parameter id menggunakan useParams()
@@ -116,7 +118,7 @@ const ChapterList = () => {
         >
           {komikData?.thumbnail ? (
             <div className="w-full h-full flex justify-center items-center rounded-lg overflow-hidden">
-              <img
+              <Image
                 src={komikData.thumbnail}
                 alt="Thumbnail"
                 width={300}
@@ -178,7 +180,7 @@ const ChapterList = () => {
             <div className="flex flex-wrap justify-center">
               {komikData.spoilerImages.map(
                 (img, index) => (
-                  <img
+                  <Image
                     key={index}
                     src={img}
                     width={300}

@@ -1,5 +1,5 @@
 // pages/api/komik/[komik]/[chapter]/images.js
-import { komikindo } from '@/app/function/index'; // Sesuaikan lokasi function
+import { komikindo } from '@/f/index'; // Sesuaikan lokasi function
 
 export default async function handler(req, res) {
   const {
@@ -34,11 +34,6 @@ export default async function handler(req, res) {
         (imgUrl, index) => {
           return `${baseUrl}/api/proxy?url=${decodeURIComponent(imgUrl)}&head=komikindo`;
         },
-      );
-
-      console.log(
-        'Generated Proxy Image Links:',
-        imageLinks,
       );
 
       res.status(200).json(imageLinks);

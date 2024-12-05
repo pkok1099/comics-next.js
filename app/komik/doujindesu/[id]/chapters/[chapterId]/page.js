@@ -9,7 +9,7 @@ import {
   useParams,
   useRouter,
 } from 'next/navigation';
-
+import Image from "next/image";
 const ChapterDetail = () => {
   const { id, chapterId } = useParams(); // Get id and chapterId from URL
   const router = useRouter(); // For navigation
@@ -99,7 +99,7 @@ const ChapterDetail = () => {
     useCallback(async () => {
       try {
         const response = await fetch(
-          `/api/komik/doujindesu/${decodeURIComponent(id)}/chapters`,
+          `/api/komik/doujindesu/info${decodeURIComponent(id)}/`,
         );
         if (!response.ok)
           throw new Error(
@@ -107,7 +107,8 @@ const ChapterDetail = () => {
           );
 
         const data = await response.json();
-        setChapterList(data); // Set chapter list
+        setChapterList(data?.chapters); // Set chapter list
+        console.log(data)
       } catch (err) {
         setError(err.message); // Handle error
       }
@@ -159,7 +160,7 @@ const ChapterDetail = () => {
       </div>
     );
   }
-  console.log(pages);
+
   return (
     <div className="chapter-container relative">
       <h2 className="text-center font-bold text-2xl py-4 truncate ">
@@ -176,7 +177,7 @@ const ChapterDetail = () => {
           </p>
         ) : (
           pages.map((img, imgIndex) => (
-            <img
+            <Image
               key={imgIndex}
               src={img}
               alt={`Page ${imgIndex + 1} of Chapter ${chapterId}`}

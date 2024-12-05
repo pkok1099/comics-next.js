@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from "next/image";
+
 
 const ChapterList = () => {
   const { id } = useParams();
@@ -17,22 +19,16 @@ const ChapterList = () => {
   };
 
   // Fetch Komik Info
-  const fetchKomikData = async (id) => {
+  const fetchKomikData = useCallback(async (id) => {
     try {
-      const response = await fetch(
-        `/api/komik/doujindesu/info/${decodeURIComponent(id)}`,
-      );
+      const response = await fetch(`/api/komik/doujindesu/info/${decodeURIComponent(id)}`);
       const data = await response.json();
       logData('Komik Data', data);
       return data;
     } catch (error) {
-      console.error(
-        'Error fetching komik data:',
-        error,
-      );
-      return null;
+      throw new Error('Error fetching komik data:', error);
     }
-  };
+  }, []);
 
   // Render Thumbnail
   const renderThumbnail = (thumbnail) => (
@@ -44,7 +40,9 @@ const ChapterList = () => {
       }}
     >
       {thumbnail ? (
-        <img
+        <Image
+          width={300}
+          height={400}
           src={thumbnail}
           alt="Thumbnail"
           className="w-full h-full object-cover rounded-md"
@@ -118,7 +116,7 @@ const ChapterList = () => {
     };
 
     loadData();
-  }, [id]);
+  }, [id, fetchKomikData]);
 
   // Loading State
   if (loading) {

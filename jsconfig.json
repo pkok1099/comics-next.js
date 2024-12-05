@@ -2,7 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"],
-      "@/f/*": ["./app/function/*"],
+      "@/f/*": ["./lib/*"],
       "@/p/*": ["./app/komik/*"]
     }
   }
