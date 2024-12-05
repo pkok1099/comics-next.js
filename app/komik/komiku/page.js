@@ -1,53 +1,87 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import Image from 'next/image';
 import SkeletonLoader from '@/components/ui/SkeletonLoader';
 import debounce from 'lodash.debounce'; // Import debounce
 
 const KomikList = () => {
   const [komikList, setKomikList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isFetching, setIsFetching] = useState(false);
+  const [currentPage, setCurrentPage] =
+    useState(1);
+  const [isLoading, setIsLoading] =
+    useState(true);
+  const [isFetching, setIsFetching] =
+    useState(false);
   const [hasMore, setHasMore] = useState(true); // Tambahkan state hasMore untuk mengecek apakah masih ada halaman berikutnya
 
-  const fetchKomik = useCallback(async (page) => {
-    if (!hasMore) return; // Jangan fetch jika tidak ada lagi halaman untuk dimuat
-    setIsFetching(true);
-    try {
-      const response = await fetch(`/api/komik/komiku?page=${page}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  const fetchKomik = useCallback(
+    async (page) => {
+      if (!hasMore) return; // Jangan fetch jika tidak ada lagi halaman untuk dimuat
+      setIsFetching(true);
+      try {
+        const response = await fetch(
+          `/api/komik/komiku?page=${page}`,
+        );
+        if (!response.ok) {
+          throw new Error(
+            `HTTP error! status: ${response.status}`,
+          );
+        }
+        const data = await response.json();
+        if (
+          data.komikList &&
+          data.komikList.length === 0
+        ) {
+          setHasMore(false); // Jika data kosong, set hasMore ke false
+        } else {
+          setKomikList((prevList) => {
+            const updatedList = [
+              ...prevList,
+              ...(data.komikList || []),
+            ];
+            const uniqueKomik = Array.from(
+              new Map(
+                updatedList.map((item) => [
+                  item.link,
+                  item,
+                ]),
+              ).values(),
+            );
+            return uniqueKomik;
+          });
+        }
+      } catch (error) {
+        console.error(
+          'Error fetching komik data:',
+          error,
+        );
+      } finally {
+        setIsFetching(false);
+        setIsLoading(false);
       }
-      const data = await response.json();
-      if (data.komikList && data.komikList.length === 0) {
-        setHasMore(false); // Jika data kosong, set hasMore ke false
-      } else {
-        setKomikList((prevList) => {
-          const updatedList = [...prevList, ...(data.komikList || [])];
-          const uniqueKomik = Array.from(new Map(updatedList.map((item) => [item.link, item])).values());
-          return uniqueKomik;
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching komik data:', error);
-    } finally {
-      setIsFetching(false);
-      setIsLoading(false);
-    }
-  }, [hasMore]);
+    },
+    [hasMore],
+  );
 
   // Menggunakan debounce untuk membatasi frekuensi pemanggilan handleScroll
   const handleScroll = useCallback(
     debounce(() => {
       if (isFetching || !hasMore) return; // Jangan lanjutkan jika sedang fetching atau sudah tidak ada halaman lagi
       if (
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight -
+          100
       ) {
-        setCurrentPage((prevPage) => prevPage + 1);
+        setCurrentPage(
+          (prevPage) => prevPage + 1,
+        );
       }
     }, 300), // 300ms debounce delay
-    [isFetching, hasMore] // Perhatikan dependencies untuk menangani state `hasMore`
+    [isFetching, hasMore], // Perhatikan dependencies untuk menangani state `hasMore`
   );
 
   useEffect(() => {
@@ -55,18 +89,28 @@ const KomikList = () => {
   }, [currentPage, fetchKomik]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener(
+      'scroll',
+      handleScroll,
+    );
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener(
+        'scroll',
+        handleScroll,
+      );
       handleScroll.cancel(); // Membersihkan debounce ketika komponen di-unmount
     };
   }, [handleScroll]);
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-800 text-white p-5">
-      <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 gap-1 w-full mt-5"> 
+      <div className="grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 gap-1 w-full mt-5">
         {isLoading
-          ? Array.from({ length: 12 }).map((_, index) => <SkeletonLoader key={index} />)
+          ? Array.from({ length: 12 }).map(
+              (_, index) => (
+                <SkeletonLoader key={index} />
+              ),
+            )
           : komikList.map((komik) => (
               <div
                 key={komik.link}
@@ -79,16 +123,20 @@ const KomikList = () => {
                   height={280}
                   className="w-full aspect-[2/3] object-cover bg-gray-600 rounded-lg mb-3"
                 />
-                <h3 className="text-sm font-semibold text-center line-clamp-2">{komik.judul}</h3>
+                <h3 className="text-sm font-semibold text-center line-clamp-2">
+                  {komik.judul}
+                </h3>
               </div>
             ))}
       </div>
 
       {isFetching && hasMore && (
         <div className="mt-5 grid grid-cols-4 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <SkeletonLoader key={index} />
-          ))}
+          {Array.from({ length: 12 }).map(
+            (_, index) => (
+              <SkeletonLoader key={index} />
+            ),
+          )}
         </div>
       )}
 

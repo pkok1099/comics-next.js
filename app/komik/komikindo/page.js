@@ -1,27 +1,42 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+} from 'react';
 import Image from 'next/image';
 import Pagination from '@/components/ui/Pagination';
 import { useRouter } from 'next/navigation';
 
 const KomikList = () => {
   const [komikList, setKomikList] = useState([]);
-  const [pagination, setPagination] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [pagination, setPagination] = useState(
+    [],
+  );
+  const [currentPage, setCurrentPage] =
+    useState(1);
+  const [isLoading, setIsLoading] =
+    useState(true);
+  const [searchQuery, setSearchQuery] =
+    useState('');
+  const [searchResults, setSearchResults] =
+    useState([]);
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] =
+    useState(false);
   const fetchKomik = async (page) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/komik/komikindo?page=${page}`);
+      const response = await fetch(
+        `/api/komik/komikindo?page=${page}`,
+      );
       const data = await response.json();
       setKomikList(data.komikList || []);
       setPagination(data.pagination || []);
     } catch (error) {
-      console.error('Error fetching komik data:', error);
+      console.error(
+        'Error fetching komik data:',
+        error,
+      );
     } finally {
       setIsLoading(false);
     }
@@ -30,11 +45,16 @@ const KomikList = () => {
   const fetchSearchResults = async (query) => {
     if (query) {
       try {
-        const response = await fetch(`/api/komik/komikindo/search/${query}/1`);
+        const response = await fetch(
+          `/api/komik/komikindo/search/${query}/1`,
+        );
         const data = await response.json();
         setSearchResults(data.comics || []);
       } catch (error) {
-        console.error('Error fetching search results:', error);
+        console.error(
+          'Error fetching search results:',
+          error,
+        );
       }
     } else {
       setSearchResults([]);
@@ -54,7 +74,10 @@ const KomikList = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }, [currentPage]);
 
   const handleSearchSubmit = (event) => {
@@ -62,9 +85,15 @@ const KomikList = () => {
       window.location.href = `/search/${searchQuery}`;
     }
   };
-useEffect(() => {
+  useEffect(() => {
     const cookies = document.cookie;
-    const userCookie = cookies && cookies.split(';').find(cookie => cookie.trim().startsWith('user='));
+    const userCookie =
+      cookies &&
+      cookies
+        .split(';')
+        .find((cookie) =>
+          cookie.trim().startsWith('user='),
+        );
 
     if (userCookie) {
       setIsLoggedIn(true);
@@ -75,9 +104,14 @@ useEffect(() => {
   const handleKomikClick = async (komikLink) => {
     setIsLoading(true);
     try {
-      await router.push(`/komik/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`);
+      await router.push(
+        `/komik/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
+      );
     } catch (error) {
-      console.error('Error navigating to komik page:', error);
+      console.error(
+        'Error navigating to komik page:',
+        error,
+      );
     } finally {
       setIsLoading(false);
     }
@@ -112,44 +146,58 @@ useEffect(() => {
           type="text"
           placeholder="Cari Komik"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) =>
+            setSearchQuery(e.target.value)
+          }
           onKeyPress={handleSearchSubmit}
           className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none placeholder-gray-400"
         />
         {searchQuery && (
           <div className="absolute z-50 max-h-52 overflow-y-auto bg-gray-700 w-full mt-2 p-3 rounded-lg shadow-lg">
             <ul className="space-y-2">
-              {searchResults.slice(0, 5).map((komik) => (
-                <li
-                  key={komik.link}
-                  onClick={() => handleKomikClick(komik.link)}
-                  className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
-                >
-                  <Image
-                    src={komik.image}
-                    alt={komik.title}
-                    width={48}
-                    height={48}
-                    className="rounded-lg"
-                  />
-                  <span className="text-sm">{komik.title}</span>
-                </li>
-              ))}
+              {searchResults
+                .slice(0, 5)
+                .map((komik) => (
+                  <li
+                    key={komik.link}
+                    onClick={() =>
+                      handleKomikClick(komik.link)
+                    }
+                    className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
+                  >
+                    <Image
+                      src={komik.image}
+                      alt={komik.title}
+                      width={48}
+                      height={48}
+                      className="rounded-lg"
+                    />
+                    <span className="text-sm">
+                      {komik.title}
+                    </span>
+                  </li>
+                ))}
             </ul>
           </div>
         )}
       </div>
 
       <div className="grid grid-cols-4 lg:grid-cols-5 gap-1 w-full mt-5">
-        {isLoading ? (
-          Array.from({ length: 12 }).map((_, index) => (
-            <SkeletonLoader key={index} />
-          ))
-        ) : (
-          komikList.map((komik) => (
-            <ListItems key={komik.judul} komik={komik} onClick={() => handleKomikClick(komik.link)} />
-          ))
-        )}
+        {isLoading
+          ? Array.from({ length: 12 }).map(
+              (_, index) => (
+                <SkeletonLoader key={index} />
+              ),
+            )
+          : komikList.map((komik) => (
+              <ListItems
+                key={komik.judul}
+                komik={komik}
+                onClick={() =>
+                  handleKomikClick(komik.link)
+                }
+              />
+            ))}
       </div>
 
       {!isLoading && (

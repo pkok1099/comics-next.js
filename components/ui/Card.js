@@ -14,7 +14,9 @@ const Card = ({ komik, onClick }) => (
       loading="lazy"
       className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3 object-cover"
     />
-    <h3 className="text-sm font-extrabold text-center line-clamp-2 ">{komik.judul}</h3>
+    <h3 className="text-sm font-extrabold text-center line-clamp-2 ">
+      {komik.judul}
+    </h3>
   </div>
 );
 

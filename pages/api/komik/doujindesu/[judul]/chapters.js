@@ -1,7 +1,6 @@
 // pages/api/komik/doujindesu/[judul]/chapters.js
 import { Doujindesu } from '@/f/index.js';
 
-
 export default async function handler(req, res) {
   const { judul } = req.query; // Mengambil parameter `judul` dari URL
 
@@ -31,8 +30,7 @@ export default async function handler(req, res) {
 
       // Jika tidak ditemukan chapter
       if (!chapters || chapters.length === 0) {
-
-        console.log(chapters)
+        console.log(chapters);
         return res.status(404).json({
           message: `Tidak ditemukan chapter untuk komik "${decodedJudul}".`,
         });

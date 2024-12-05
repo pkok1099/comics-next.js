@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; // Import useParams dari next/navigation
 import Link from 'next/link';
-import Image from "next/image";
-
+import Image from 'next/image';
 
 const ChapterList = () => {
   const { id } = useParams(); // Ambil parameter id menggunakan useParams()

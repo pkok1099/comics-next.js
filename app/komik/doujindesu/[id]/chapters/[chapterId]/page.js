@@ -9,7 +9,7 @@ import {
   useParams,
   useRouter,
 } from 'next/navigation';
-import Image from "next/image";
+import Image from 'next/image';
 const ChapterDetail = () => {
   const { id, chapterId } = useParams(); // Get id and chapterId from URL
   const router = useRouter(); // For navigation
@@ -108,7 +108,7 @@ const ChapterDetail = () => {
 
         const data = await response.json();
         setChapterList(data?.chapters); // Set chapter list
-        console.log(data)
+        console.log(data);
       } catch (err) {
         setError(err.message); // Handle error
       }

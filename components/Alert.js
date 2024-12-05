@@ -1,8 +1,13 @@
 // components/CustomAlert.js
 import { useState, useEffect } from 'react';
 
-const CustomAlert = ({ message, type, onClose }) => {
-  const [isVisible, setIsVisible] = useState(true);
+const CustomAlert = ({
+  message,
+  type,
+  onClose,
+}) => {
+  const [isVisible, setIsVisible] =
+    useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -16,7 +21,9 @@ const CustomAlert = ({ message, type, onClose }) => {
   if (!isVisible) return null; // Jika tidak terlihat, komponen tidak akan dirender
 
   return (
-    <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md shadow-lg ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+    <div
+      className={`fixed top-4 left-1/2 transform -translate-x-1/2 p-4 rounded-md shadow-lg ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`}
+    >
       <p>{message}</p>
     </div>
   );

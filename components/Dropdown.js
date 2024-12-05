@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+} from 'react';
 
-const Dropdown = ({ historyId, onDeleteHistory }) => {
+const Dropdown = ({
+  historyId,
+  onDeleteHistory,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = (event) => {
@@ -9,7 +15,9 @@ const Dropdown = ({ historyId, onDeleteHistory }) => {
   };
 
   const handleClickOutside = (event) => {
-    if (event.target.closest('.dropdown') === null) {
+    if (
+      event.target.closest('.dropdown') === null
+    ) {
       setIsOpen(false);
     }
   };
@@ -20,19 +28,33 @@ const Dropdown = ({ historyId, onDeleteHistory }) => {
   };
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener(
+      'click',
+      handleClickOutside,
+    );
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener(
+        'click',
+        handleClickOutside,
+      );
     };
   }, []);
 
   return (
-    <div className="relative dropdown z-10"> {/* Tambahkan z-index */}
+    <div className="relative dropdown z-10">
+      {' '}
+      {/* Tambahkan z-index */}
       <button
         className="text-white bg-gray-700 p-2 rounded-full"
         onClick={toggleDropdown}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-4 h-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          className="w-4 h-4"
+        >
           <circle cx="12" cy="12" r="1" />
           <circle cx="12" cy="16" r="1" />
           <circle cx="12" cy="8" r="1" />
@@ -46,7 +68,9 @@ const Dropdown = ({ historyId, onDeleteHistory }) => {
           >
             Delete History
           </button>
-          <p className="text-xs text-gray-400 mt-2">ID: {historyId}</p>
+          <p className="text-xs text-gray-400 mt-2">
+            ID: {historyId}
+          </p>
         </div>
       )}
     </div>

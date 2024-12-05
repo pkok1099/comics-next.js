@@ -8,7 +8,7 @@ import {
   useParams,
   useRouter,
 } from 'next/navigation';
-import Image from "next/image";
+import Image from 'next/image';
 const ChapterDetail = () => {
   const { id, chapterId } = useParams(); // Get id and chapterId from URL
   const router = useRouter(); // For navigation
@@ -25,7 +25,8 @@ const ChapterDetail = () => {
   const [lastScrollY, setLastScrollY] =
     useState(0); // Menyimpan posisi scroll terakhir
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] =
+    useState(false);
 
   // Fetch images for the chapter
   const fetchChapterImages = useCallback(
@@ -68,27 +69,36 @@ const ChapterDetail = () => {
     [fetchChapterImages],
   ); // Menambahkan fetchChapterImages sebagai dependensi
 
-const saveHistory = async (chapterId, title) => {
-  const response = await fetch('/api/history', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ chapterId, title }),
-  });
+  const saveHistory = async (
+    chapterId,
+    title,
+  ) => {
+    const response = await fetch('/api/history', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ chapterId, title }),
+    });
 
-  const data = await response.json();
-  if (response.ok) {
-    // console.log('History saved:', data.message);
-  } else {
-    // console.error('Failed to save history:', data.message);
-  }
-};
+    const data = await response.json();
+    if (response.ok) {
+      // console.log('History saved:', data.message);
+    } else {
+      // console.error('Failed to save history:', data.message);
+    }
+  };
 
-// cek login
+  // cek login
   useEffect(() => {
     const cookies = document.cookie;
-    const userCookie = cookies && cookies.split(';').find(cookie => cookie.trim().startsWith('user='));
+    const userCookie =
+      cookies &&
+      cookies
+        .split(';')
+        .find((cookie) =>
+          cookie.trim().startsWith('user='),
+        );
 
     if (userCookie) {
       setIsLoggedIn(true);
@@ -159,7 +169,7 @@ const saveHistory = async (chapterId, title) => {
   useEffect(() => {
     if (chapterId) {
       loadChapterImages(chapterId);
-      saveHistory(chapterId, id)
+      saveHistory(chapterId, id);
     }
   }, [id, chapterId, loadChapterImages]); // Menambahkan loadChapterImages
 

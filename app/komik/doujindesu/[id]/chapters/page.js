@@ -1,10 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import {
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import Image from "next/image";
-
+import Image from 'next/image';
 
 const ChapterList = () => {
   const { id } = useParams();
@@ -19,16 +22,24 @@ const ChapterList = () => {
   };
 
   // Fetch Komik Info
-  const fetchKomikData = useCallback(async (id) => {
-    try {
-      const response = await fetch(`/api/komik/doujindesu/info/${decodeURIComponent(id)}`);
-      const data = await response.json();
-      logData('Komik Data', data);
-      return data;
-    } catch (error) {
-      throw new Error('Error fetching komik data:', error);
-    }
-  }, []);
+  const fetchKomikData = useCallback(
+    async (id) => {
+      try {
+        const response = await fetch(
+          `/api/komik/doujindesu/info/${decodeURIComponent(id)}`,
+        );
+        const data = await response.json();
+        logData('Komik Data', data);
+        return data;
+      } catch (error) {
+        throw new Error(
+          'Error fetching komik data:',
+          error,
+        );
+      }
+    },
+    [],
+  );
 
   // Render Thumbnail
   const renderThumbnail = (thumbnail) => (

@@ -1,6 +1,10 @@
-import { useState, useMemo, useCallback } from 'react';
+import {
+  useState,
+  useMemo,
+  useCallback,
+} from 'react';
 import debounce from 'lodash.debounce';
-import Image from "next/image"
+import Image from 'next/image';
 
 interface SearchBarProps {
   placeholder: string;
@@ -28,19 +32,25 @@ const SearchBar = ({
       debounce((value) => {
         onSearch(value); // Panggil fungsi pencarian
       }, 500),
-    [onSearch]
+    [onSearch],
   );
 
-  const handleChange = useCallback((e) => {
-    const value = e.target.value;
-    setQuery(value);
-    handleSearch(value);
-  }, [handleSearch]);
+  const handleChange = useCallback(
+    (e) => {
+      const value = e.target.value;
+      setQuery(value);
+      handleSearch(value);
+    },
+    [handleSearch],
+  );
 
-  const handleSelect = useCallback((item: any) => {
-    setQuery('');
-    onSelect(item); // Pilih item
-  }, [onSelect]);
+  const handleSelect = useCallback(
+    (item: any) => {
+      setQuery('');
+      onSelect(item); // Pilih item
+    },
+    [onSelect],
+  );
 
   return (
     <div className="relative w-full max-w-lg mb-5">
@@ -61,12 +71,18 @@ const SearchBar = ({
         >
           <ul>
             {data
-              .filter((item) => item[displayProperty].toLowerCase().includes(query.toLowerCase()))
+              .filter((item) =>
+                item[displayProperty]
+                  .toLowerCase()
+                  .includes(query.toLowerCase()),
+              )
               .slice(0, maxResults)
               .map((item, index) => (
                 <li
                   key={index}
-                  onClick={() => handleSelect(item)}
+                  onClick={() =>
+                    handleSelect(item)
+                  }
                   className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
                   role="option"
                   aria-selected={false}
@@ -80,7 +96,9 @@ const SearchBar = ({
                       className="rounded-lg"
                     />
                   )}
-                  <span className="text-sm">{item[displayProperty]}</span>
+                  <span className="text-sm">
+                    {item[displayProperty]}
+                  </span>
                 </li>
               ))}
           </ul>

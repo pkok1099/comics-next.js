@@ -1,5 +1,5 @@
 import { Analytics } from '@vercel/analytics/react'; // Impor Analytics
-import { SpeedInsights } from "@vercel/speed-insights/next";  // Impor SpeedInsights
+import { SpeedInsights } from '@vercel/speed-insights/next'; // Impor SpeedInsights
 import localFont from 'next/font/local';
 import './globals.css';
 
@@ -26,8 +26,10 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Analytics /> {/* Tambahkan Analytics di sini */}
-        <SpeedInsights /> {/* Tambahkan SpeedInsights di sini */}
+        <Analytics />{' '}
+        {/* Tambahkan Analytics di sini */}
+        <SpeedInsights />{' '}
+        {/* Tambahkan SpeedInsights di sini */}
       </body>
     </html>
   );

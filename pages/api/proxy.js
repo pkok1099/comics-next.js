@@ -40,13 +40,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(decodeURIComponent(url), {
-      method: 'GET',
-      headers: {
-        ...selectedHeaders, // Gabungkan header yang dipilih
-        Accept: 'image/*', // Tambahkan header untuk menerima gambar
+    const response = await fetch(
+      decodeURIComponent(url),
+      {
+        method: 'GET',
+        headers: {
+          ...selectedHeaders, // Gabungkan header yang dipilih
+          Accept: 'image/*', // Tambahkan header untuk menerima gambar
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       throw new Error(
