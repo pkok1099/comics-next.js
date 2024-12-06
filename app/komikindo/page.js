@@ -2,18 +2,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
 import {
   Popover,
-  PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Pagination from '@/components/ui/Pagination';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { KomikCard } from '@/components/komikindo/KomikCard';
+import { SkeletonLoader } from '@/components/komikindo/SkeletonLoader';
 
 const KomikList = () => {
   const [komikList, setKomikList] = useState([]);
@@ -28,7 +26,7 @@ const KomikList = () => {
   const fetchKomik = async (page) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/komik/komikindo?page=${page}`);
+      const response = await fetch(`/api/komikindo?page=${page}`);
       const data = await response.json();
       setKomikList(data.komikList || []);
       setPagination(data.pagination || []);
@@ -95,7 +93,7 @@ const KomikList = () => {
     setIsLoading(true);
     try {
       await router.push(
-        `/komik/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
+        `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
       );
     } catch (error) {
       console.error('Error navigating to komik page:', error);
@@ -167,35 +165,5 @@ const KomikList = () => {
     </div>
   );
 };
-
-const KomikCard = ({ komik, onClick }) => (
-  <Card
-    key={komik.judul}
-    className='cursor-pointer hover:shadow-lg'
-    onClick={onClick}
-  >
-    <Image
-      src={komik.thumbnail}
-      alt={komik.judul}
-      width={200}
-      height={250}
-      loading='lazy'
-      className='aspect-[3/4] w-full rounded-lg'
-    />
-    <CardHeader className='p-2'>
-      <CardTitle className='line-clamp-2 text-center text-base font-semibold leading-tight'>
-        {komik.judul}
-      </CardTitle>
-    </CardHeader>
-  </Card>
-);
-
-const SkeletonLoader = () => (
-  <Card className='bg-gray-700 p-4'>
-    <Skeleton className='mb-3 aspect-[3/4] w-full rounded-lg bg-gray-600' />
-    <Skeleton className='mb-2 h-6 w-full bg-gray-600' />
-    <Skeleton className='h-6 w-3/4 bg-gray-600' />
-  </Card>
-);
 
 export default KomikList;

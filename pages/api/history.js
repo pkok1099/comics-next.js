@@ -1,4 +1,4 @@
-import { validateUser } from '@/middleware/validateUser';
+import { validateUser } from '@/services/validateUser';
 import { addOrUpdateHistory } from '@/services/historyService';
 
 export default async function handler(req, res) {

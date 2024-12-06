@@ -20,7 +20,7 @@ const ChapterDetail = () => {
     async (chapterId) => {
       try {
         const response = await fetch(
-          `/api/komik/komikindo/${decodeURIComponent(id)}/chapter/${chapterId}/images`,
+          `/api/komikindo/${decodeURIComponent(id)}/chapter/${chapterId}/images`,
         );
         if (!response.ok) throw new Error('Failed to fetch images');
 
@@ -108,7 +108,7 @@ const ChapterDetail = () => {
   const fetchChapterList = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/komik/komikindo/${decodeURIComponent(id)}/chapters`,
+        `/api/komikindo/${decodeURIComponent(id)}/chapters`,
       );
       if (!response.ok) throw new Error('Failed to fetch chapters');
 
@@ -122,7 +122,7 @@ const ChapterDetail = () => {
   // Navigate to the next chapter
   const goToNextChapter = () => {
     router.push(
-      `/komik/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) + 1}`,
+      `/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) + 1}`,
     );
   };
 
@@ -195,7 +195,7 @@ const ChapterDetail = () => {
           <button
             onClick={() =>
               router.push(
-                `/komik/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) - 1}`,
+                `/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) - 1}`,
               )
             }
             className={`hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10 ${isFetching ? 'hidden' : ''}`}

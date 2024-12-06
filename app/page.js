@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
-import KomikIndo from '@/p/komikindo/page';
+import KomikIndo from '@/app/komikindo/page';
 import Komiku from '@/p/komiku/page';
 import Doujindesu from './komik/doujindesu/page';
 import { ModeToggle } from './ModeToggle'; // Import ModeToggle
