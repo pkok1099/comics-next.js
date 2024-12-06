@@ -1,8 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-} from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import debounce from 'lodash.debounce';
 import Image from 'next/image';
 
@@ -53,21 +49,21 @@ const SearchBar = ({
   );
 
   return (
-    <div className="relative w-full max-w-lg mb-5">
+    <div className='relative mb-5 w-full max-w-lg'>
       <input
-        type="text"
+        type='text'
         placeholder={placeholder}
         value={query}
         onChange={handleChange}
-        className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none placeholder-gray-400"
+        className='w-full rounded-lg bg-gray-700 p-3 text-white placeholder-gray-400 outline-none'
         aria-label={placeholder}
-        aria-describedby="search-results"
+        aria-describedby='search-results'
       />
       {query && (
         <div
-          className="absolute z-50 max-h-52 overflow-y-auto bg-gray-700 w-full mt-2 p-3 rounded-lg shadow-lg"
-          id="search-results"
-          role="listbox"
+          className='absolute z-50 mt-2 max-h-52 w-full overflow-y-auto rounded-lg bg-gray-700 p-3 shadow-lg'
+          id='search-results'
+          role='listbox'
         >
           <ul>
             {data
@@ -80,11 +76,9 @@ const SearchBar = ({
               .map((item, index) => (
                 <li
                   key={index}
-                  onClick={() =>
-                    handleSelect(item)
-                  }
-                  className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
-                  role="option"
+                  onClick={() => handleSelect(item)}
+                  className='flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-gray-600'
+                  role='option'
                   aria-selected={false}
                 >
                   {item[imageProperty] && (
@@ -93,12 +87,10 @@ const SearchBar = ({
                       alt={item[displayProperty]}
                       width={48}
                       height={48}
-                      className="rounded-lg"
+                      className='rounded-lg'
                     />
                   )}
-                  <span className="text-sm">
-                    {item[displayProperty]}
-                  </span>
+                  <span className='text-sm'>{item[displayProperty]}</span>
                 </li>
               ))}
           </ul>

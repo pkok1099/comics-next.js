@@ -1,42 +1,39 @@
 'use client';
-import React, {
-  useState,
-  useEffect,
-} from 'react';
-import Image from 'next/image';
+
+import React, { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import Pagination from '@/components/ui/Pagination';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 const KomikList = () => {
   const [komikList, setKomikList] = useState([]);
-  const [pagination, setPagination] = useState(
-    [],
-  );
-  const [currentPage, setCurrentPage] =
-    useState(1);
-  const [isLoading, setIsLoading] =
-    useState(true);
-  const [searchQuery, setSearchQuery] =
-    useState('');
-  const [searchResults, setSearchResults] =
-    useState([]);
+  const [pagination, setPagination] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] =
-    useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const fetchKomik = async (page) => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `/api/komik/komikindo?page=${page}`,
-      );
+      const response = await fetch(`/api/komik/komikindo?page=${page}`);
       const data = await response.json();
       setKomikList(data.komikList || []);
       setPagination(data.pagination || []);
     } catch (error) {
-      console.error(
-        'Error fetching komik data:',
-        error,
-      );
+      console.error('Error fetching komik data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -45,16 +42,11 @@ const KomikList = () => {
   const fetchSearchResults = async (query) => {
     if (query) {
       try {
-        const response = await fetch(
-          `/api/komik/komikindo/search/${query}/1`,
-        );
+        const response = await fetch(`/api/komik/komikindo/search/${query}/1`);
         const data = await response.json();
         setSearchResults(data.comics || []);
       } catch (error) {
-        console.error(
-          'Error fetching search results:',
-          error,
-        );
+        console.error('Error fetching search results:', error);
       }
     } else {
       setSearchResults([]);
@@ -80,20 +72,11 @@ const KomikList = () => {
     });
   }, [currentPage]);
 
-  const handleSearchSubmit = (event) => {
-    if (event.key === 'Enter') {
-      window.location.href = `/search/${searchQuery}`;
-    }
-  };
   useEffect(() => {
     const cookies = document.cookie;
     const userCookie =
       cookies &&
-      cookies
-        .split(';')
-        .find((cookie) =>
-          cookie.trim().startsWith('user='),
-        );
+      cookies.split(';').find((cookie) => cookie.trim().startsWith('user='));
 
     if (userCookie) {
       setIsLoggedIn(true);
@@ -101,6 +84,13 @@ const KomikList = () => {
       router.push('/login');
     }
   }, [router]);
+
+  const handleSearchSubmit = (event) => {
+    if (event.key === 'Enter') {
+      window.location.href = `/search/${searchQuery}`;
+    }
+  };
+
   const handleKomikClick = async (komikLink) => {
     setIsLoading(true);
     try {
@@ -108,94 +98,61 @@ const KomikList = () => {
         `/komik/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
       );
     } catch (error) {
-      console.error(
-        'Error navigating to komik page:',
-        error,
-      );
+      console.error('Error navigating to komik page:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const ListItems = ({ komik, onClick }) => {
-    return (
-      <div
-        key={komik.judul}
-        className="bg-gray-700 p-2 rounded-lg flex flex-col items-center justify-center"
-        onClick={onClick}
-      >
-        <Image
-          src={komik.thumbnail}
-          alt={komik.judul}
-          width={200}
-          height={250}
-          loading="lazy"
-          className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3"
-        />
-        <h3 className="text-sm font-semibold text-center line-clamp-2">
-          {komik.judul}
-        </h3>
-      </div>
-    );
-  };
-
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-800 text-white p-5">
-      <div className="w-full max-w-lg mb-5">
-        <input
-          type="text"
-          placeholder="Cari Komik"
-          value={searchQuery}
-          onChange={(e) =>
-            setSearchQuery(e.target.value)
-          }
-          onKeyPress={handleSearchSubmit}
-          className="w-full p-3 rounded-lg bg-gray-700 text-white outline-none placeholder-gray-400"
-        />
-        {searchQuery && (
-          <div className="absolute z-50 max-h-52 overflow-y-auto bg-gray-700 w-full mt-2 p-3 rounded-lg shadow-lg">
-            <ul className="space-y-2">
-              {searchResults
-                .slice(0, 5)
-                .map((komik) => (
+    <div className='flex min-h-screen flex-col items-center bg-gray-800 p-5 text-white'>
+      <div className='absolute mb-5 w-full max-w-lg'>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Input
+              type='text'
+              placeholder='Cari Komik'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchSubmit}
+              className='w-full rounded-lg bg-gray-700 p-3 text-white placeholder-gray-400 outline-none'
+            />
+          </PopoverTrigger>
+          {searchQuery && (
+            <ScrollArea className='absolute z-50 mt-2 max-h-52 w-full overflow-y-auto rounded-lg bg-gray-700 p-3 shadow-lg'>
+              <ul className='space-y-2'>
+                {searchResults.slice(0, 5).map((komik) => (
                   <li
                     key={komik.link}
-                    onClick={() =>
-                      handleKomikClick(komik.link)
-                    }
-                    className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-600"
+                    onClick={() => handleKomikClick(komik.link)}
+                    className='flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-gray-600'
                   >
                     <Image
                       src={komik.image}
                       alt={komik.title}
                       width={48}
                       height={48}
-                      className="rounded-lg"
+                      className='rounded-lg'
                     />
-                    <span className="text-sm">
-                      {komik.title}
-                    </span>
+                    <span className='text-sm'>{komik.title}</span>
                   </li>
                 ))}
-            </ul>
-          </div>
-        )}
+              </ul>
+            </ScrollArea>
+          )}
+        </Popover>
       </div>
 
-      <div className="grid grid-cols-4 lg:grid-cols-5 gap-1 w-full mt-5">
+      <div className='mt-16 grid w-full grid-cols-4 gap-3 lg:grid-cols-5'>
         {isLoading
-          ? Array.from({ length: 12 }).map(
-              (_, index) => (
-                <SkeletonLoader key={index} />
-              ),
-            )
+          ? Array.from({ length: 12 }).map((_, index) => (
+              <SkeletonLoader key={index} />
+            ))
           : komikList.map((komik) => (
-              <ListItems
+              <KomikCard
                 key={komik.judul}
                 komik={komik}
-                onClick={() =>
-                  handleKomikClick(komik.link)
-                }
+                onClick={() => handleKomikClick(komik.link)}
               />
             ))}
       </div>
@@ -211,12 +168,34 @@ const KomikList = () => {
   );
 };
 
+const KomikCard = ({ komik, onClick }) => (
+  <Card
+    key={komik.judul}
+    className='cursor-pointer bg-gray-700 hover:shadow-lg'
+    onClick={onClick}
+  >
+    <Image
+      src={komik.thumbnail}
+      alt={komik.judul}
+      width={200}
+      height={250}
+      loading='lazy'
+      className='aspect-[3/4] w-full rounded-lg bg-gray-600'
+    />
+    <CardHeader className='p-2'>
+      <CardTitle className='line-clamp-2 text-center text-base font-semibold leading-tight'>
+        {komik.judul}
+      </CardTitle>
+    </CardHeader>
+  </Card>
+);
+
 const SkeletonLoader = () => (
-  <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center justify-center">
-    <div className="w-full aspect-[3/4] bg-gray-600 rounded-lg mb-3 animate-pulse"></div>
-    <div className="w-full h-6 bg-gray-600 rounded mb-2 animate-pulse"></div>
-    <div className="w-3/4 h-6 bg-gray-600 rounded animate-pulse"></div>
-  </div>
+  <Card className='bg-gray-700 p-4'>
+    <Skeleton className='mb-3 aspect-[3/4] w-full rounded-lg bg-gray-600' />
+    <Skeleton className='mb-2 h-6 w-full bg-gray-600' />
+    <Skeleton className='h-6 w-3/4 bg-gray-600' />
+  </Card>
 );
 
 export default KomikList;

@@ -7,8 +7,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       // Memanggil fungsi scrapeComicInfo untuk mendapatkan informasi komik
-      const chapters =
-        await Doujindesu.scrapeComicInfo(judul);
+      const chapters = await Doujindesu.scrapeComicInfo(judul);
 
       // Jika chapters tidak ditemukan
       if (!chapters || chapters.length === 0) {
@@ -21,10 +20,7 @@ export default async function handler(req, res) {
       return res.status(200).json(chapters);
     } catch (error) {
       // Menangani error jika terjadi masalah dalam scraping
-      console.error(
-        'Error scraping komik chapters:',
-        error,
-      );
+      console.error('Error scraping komik chapters:', error);
 
       return res.status(500).json({
         message: 'Error retrieving chapter list',
@@ -32,8 +28,6 @@ export default async function handler(req, res) {
     }
   } else {
     // Menangani request dengan metode selain GET
-    return res
-      .status(405)
-      .json({ message: 'Method Not Allowed' });
+    return res.status(405).json({ message: 'Method Not Allowed' });
   }
 }

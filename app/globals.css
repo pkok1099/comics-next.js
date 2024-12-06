@@ -9,15 +9,6 @@
   --dark-mode-secondary-color: #ededed;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--dark-mode-primary-color);
-    --foreground: var(
-      --dark-mode-secondary-color
-    );
-  }
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     --background: var(--primary-color);
@@ -27,137 +18,71 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.3rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263.4 70% 50.4%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out;
-}
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-    transform: translateY(0);
+@layer base {
+  * {
+    @apply border-border;
   }
-  to {
-    opacity: 0;
-    transform: translateY(10px);
+  body {
+    @apply bg-background text-foreground;
   }
-}
-
-.animate-fade-out {
-  animation: fadeOut 0.3s ease-out;
-}
-
-.fixed-buttons {
-  position: fixed;
-  right: 2rem; /* Jarak dari kanan */
-  top: 50%; /* Tengah secara vertikal */
-  transform: translateY(
-    -50%
-  ); /* Koreksi posisi vertikal */
-  display: flex;
-  flex-direction: column; /* Susun vertikal */
-  gap: 1rem; /* Jarak antar tombol */
-  z-index: 50;
-}
-
-.button-vertical {
-  writing-mode: vertical-lr; /* Teks vertikal dengan bagian atas mengarah ke kanan */
-  transform: rotate(
-    0deg
-  ); /* Tidak ada rotasi awal */
-  background-color: rgba(
-    0,
-    0,
-    255,
-    0.8
-  ); /* Warna tombol */
-  color: white; /* Warna teks */
-  padding: 1rem;
-  border-radius: 50%; /* Membuat tombol berbentuk bulat */
-  width: 4rem; /* Lebar tombol */
-  height: 4rem; /* Tinggi tombol sama dengan lebar */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan */
-  transition:
-    transform 0.5s ease-in-out,
-    opacity 0.5s ease-in-out; /* Animasi hover */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem; /* Ukuran font */
-  text-align: center; /* Pusatkan teks */
-}
-
-.button-vertical:hover {
-  transform: rotate(
-    360deg
-  ); /* Rotasi penuh 360° saat di-hover */
-  opacity: 0.8; /* Sedikit transparan saat di-hover */
-}
-
-.hidden {
-  opacity: 0; /* Sembunyi */
-  pointer-events: none; /* Nonaktifkan interaksi */
-}
-
-@keyframes assemble {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.chapter-item {
-  animation: assemble 0.5s ease-out forwards;
-}
-@keyframes skeleton-loading {
-  0% {
-    background-color: #3d3d3d; /* Warna awal */
-  }
-  50% {
-    background-color: #4a4a4a; /* Warna transisi */
-  }
-  100% {
-    background-color: #3d3d3d; /* Warna akhir */
-  }
-}
-
-.skeleton {
-  animation: skeleton-loading 1.5s infinite
-    ease-in-out;
-}
-@keyframes particleToCard {
-  0% {
-    transform: scale(0.1);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.card {
-  animation: particleToCard 1000ms ease-out;
 }

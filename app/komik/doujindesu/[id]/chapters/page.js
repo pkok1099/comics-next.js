@@ -1,18 +1,13 @@
 'use client';
 
-import {
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 const ChapterList = () => {
   const { id } = useParams();
-  const [komikData, setKomikData] =
-    useState(null);
+  const [komikData, setKomikData] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,29 +17,23 @@ const ChapterList = () => {
   };
 
   // Fetch Komik Info
-  const fetchKomikData = useCallback(
-    async (id) => {
-      try {
-        const response = await fetch(
-          `/api/komik/doujindesu/info/${decodeURIComponent(id)}`,
-        );
-        const data = await response.json();
-        logData('Komik Data', data);
-        return data;
-      } catch (error) {
-        throw new Error(
-          'Error fetching komik data:',
-          error,
-        );
-      }
-    },
-    [],
-  );
+  const fetchKomikData = useCallback(async (id) => {
+    try {
+      const response = await fetch(
+        `/api/komik/doujindesu/info/${decodeURIComponent(id)}`,
+      );
+      const data = await response.json();
+      logData('Komik Data', data);
+      return data;
+    } catch (error) {
+      throw new Error('Error fetching komik data:', error);
+    }
+  }, []);
 
   // Render Thumbnail
   const renderThumbnail = (thumbnail) => (
     <div
-      className="bg-gray-800 p-4 rounded-lg shadow-lg"
+      className='flex items-center justify-center rounded-lg bg-gray-800 p-4 shadow-lg'
       style={{
         width: '300px',
         height: `${(300 * 4) / 3}px`,
@@ -55,11 +44,11 @@ const ChapterList = () => {
           width={300}
           height={400}
           src={thumbnail}
-          alt="Thumbnail"
-          className="w-full h-full object-cover rounded-md"
+          alt='Thumbnail'
+          className='flex h-full w-full items-center justify-center rounded-md object-cover'
         />
       ) : (
-        <div className="bg-gray-700 text-gray-400 flex items-center justify-center h-full">
+        <div className='flex h-full items-center justify-center bg-gray-700 text-gray-400'>
           Thumbnail tidak tersedia
         </div>
       )}
@@ -69,14 +58,13 @@ const ChapterList = () => {
   // Render Komik Info
   const renderKomikInfo = (komikData) => (
     <>
-      <h1 className="mt-8 text-3xl font-bold text-center">
+      <h1 className='mt-8 text-center text-3xl font-bold'>
         {komikData?.title !== 'Title not found'
           ? komikData?.title
           : 'Judul Tidak Tersedia'}
       </h1>
-      <p className="text-gray-400 text-center mt-2">
-        {komikData?.synopsis !==
-        'Synopsis not found'
+      <p className='mt-2 text-center text-gray-400'>
+        {komikData?.synopsis !== 'Synopsis not found'
           ? komikData?.synopsis
           : 'Sinopsis tidak tersedia.'}
       </p>
@@ -88,25 +76,18 @@ const ChapterList = () => {
     chapters.map((chapter, index) => (
       <div
         key={index}
-        className="bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition-all"
+        className='rounded-lg bg-gray-700 p-4 transition-all hover:bg-gray-600'
       >
-        <h3 className="text-lg font-bold">
-          {chapter.title ||
-            'Judul Tidak Tersedia'}
+        <h3 className='text-lg font-bold'>
+          {chapter.title || 'Judul Tidak Tersedia'}
         </h3>
-        <p className="text-sm text-gray-400">
-          {chapter.url ||
-            'Tanggal Tidak Tersedia'}
+        <p className='text-sm text-gray-400'>
+          {chapter.url || 'Tanggal Tidak Tersedia'}
         </p>
         {chapter.lastUpdated && (
           <Link
-            href={`/komik/doujindesu/${id}/chapters/${encodeURIComponent(
-              chapter.lastUpdated.replace(
-                /.*chapter-(\d+).*/,
-                '$1',
-              ),
-            )}`}
-            className="block mt-2 text-blue-500 hover:underline"
+            href={`/komik/doujindesu/${id}/chapters/${encodeURIComponent(chapter.lastUpdated.replace(/.*chapter-(\d+).*/, '$1'))}`}
+            className='mt-2 block text-blue-500 hover:underline'
           >
             Baca Chapter
           </Link>
@@ -132,18 +113,18 @@ const ChapterList = () => {
   // Loading State
   if (loading) {
     return (
-      <div className="animate-pulse flex flex-col items-center space-y-6 mt-[40px]">
+      <div className='mt-[40px] flex animate-pulse flex-col items-center space-y-6'>
         <div
-          className="bg-gray-700 rounded-md"
+          className='rounded-md bg-gray-700'
           style={{
             width: '300px',
             aspectRatio: '3 / 4',
           }}
         />
-        <div className="bg-gray-700 h-8 w-64 rounded-md mt-4" />
-        <div className="bg-gray-700 p-4 rounded-lg mt-6 w-full max-w-md">
-          <div className="space-y-4">
-            <div className="bg-gray-700 h-6 w-full rounded-md" />
+        <div className='mt-4 h-8 w-64 rounded-md bg-gray-700' />
+        <div className='mt-6 w-full max-w-md rounded-lg bg-gray-700 p-4'>
+          <div className='space-y-4'>
+            <div className='h-6 w-full rounded-md bg-gray-700' />
           </div>
         </div>
       </div>
@@ -152,9 +133,9 @@ const ChapterList = () => {
 
   // Main Render
   return (
-    <div className="p-4 bg-gray-900 text-white">
+    <div className='bg-gray-900 p-4 text-white'>
       {/* Thumbnail */}
-      <div className="flex justify-center mt-[40px]">
+      <div className='mt-[40px] flex justify-center'>
         {renderThumbnail(komikData?.thumbnail)}
       </div>
 
@@ -162,13 +143,9 @@ const ChapterList = () => {
       {renderKomikInfo(komikData)}
 
       {/* Daftar Chapter */}
-      <div className="bg-gray-800 p-4 rounded-lg mt-6 shadow-lg max-h-96 overflow-y-scroll">
-        <h2 className="text-xl font-bold text-center mb-4">
-          Daftar Chapter
-        </h2>
-        <div className="space-y-4">
-          {renderChapters(chapters, id)}
-        </div>
+      <div className='mt-6 max-h-96 overflow-y-scroll rounded-lg bg-gray-800 p-4 shadow-lg'>
+        <h2 className='mb-4 text-center text-xl font-bold'>Daftar Chapter</h2>
+        <div className='space-y-4'>{renderChapters(chapters, id)}</div>
       </div>
     </div>
   );
