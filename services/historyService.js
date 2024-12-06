@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { connectToDatabase } from '@/utils/mongodb';
+import { connectToDatabase } from '@/services/mongodb';
 
 export async function getHistoryByUser(user) {
   const { db, client } = await connectToDatabase();

@@ -43,18 +43,28 @@ const KomikList = () => {
   );
 
   // Menggunakan debounce untuk membatasi frekuensi pemanggilan handleScroll
-  const handleScroll = useCallback(
-    debounce(() => {
-      if (isFetching || !hasMore) return; // Jangan lanjutkan jika sedang fetching atau sudah tidak ada halaman lagi
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 100
-      ) {
-        setCurrentPage((prevPage) => prevPage + 1);
-      }
-    }, 300), // 300ms debounce delay
-    [isFetching, hasMore], // Perhatikan dependencies untuk menangani state `hasMore`
-  );
+  // const handleScroll = debounce(
+  //   debounce(() => {
+  //     if (isFetching || !hasMore) return; // Jangan lanjutkan jika sedang fetching atau sudah tidak ada halaman lagi
+  //     if (
+  //       window.innerHeight + window.scrollY >=
+  //       document.documentElement.scrollHeight - 100
+  //     ) {
+  //       setCurrentPage((prevPage) => prevPage + 1);
+  //     }
+  //   }, 300), // 300ms debounce delay
+  //   [isFetching, hasMore], // Perhatikan dependencies untuk menangani state `hasMore`
+  // );
+
+  const debouncedHandleScroll = debounce(() => {
+    if (isFetching || !hasMore) return; // Jangan lanjutkan jika sedang fetching atau sudah tidak ada halaman lagi
+    if (
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 100
+    ) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  }, 300); // 300ms debounce delay
 
   useEffect(() => {
     fetchKomik(currentPage);
@@ -65,7 +75,7 @@ const KomikList = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [handleScroll]);
+  }, [debouncedHandleScroll]);
 
   return (
     <div className='flex min-h-screen flex-col items-center bg-gray-800 p-5 text-white'>

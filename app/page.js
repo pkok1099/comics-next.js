@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import KomikIndo from '@/p/komikindo/page';
 import Komiku from '@/p/komiku/page';
 import Doujindesu from './komik/doujindesu/page';
+import { ModeToggle } from './ModeToggle'; // Import ModeToggle
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('komikindo');
@@ -48,6 +49,10 @@ export default function Home() {
 
   return (
     <div className='z-999 min-h-screen bg-gray-100'>
+      <div className='flex justify-end bg-gray-700 p-4'>
+        <ModeToggle /> {/* Menambahkan ModeToggle */}
+      </div>
+
       <div className='flex-grow'>{ActiveComponent && <ActiveComponent />}</div>
 
       <div

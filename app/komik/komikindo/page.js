@@ -171,7 +171,7 @@ const KomikList = () => {
 const KomikCard = ({ komik, onClick }) => (
   <Card
     key={komik.judul}
-    className='cursor-pointer bg-gray-700 hover:shadow-lg'
+    className='cursor-pointer hover:shadow-lg'
     onClick={onClick}
   >
     <Image
@@ -180,7 +180,7 @@ const KomikCard = ({ komik, onClick }) => (
       width={200}
       height={250}
       loading='lazy'
-      className='aspect-[3/4] w-full rounded-lg bg-gray-600'
+      className='aspect-[3/4] w-full rounded-lg'
     />
     <CardHeader className='p-2'>
       <CardTitle className='line-clamp-2 text-center text-base font-semibold leading-tight'>

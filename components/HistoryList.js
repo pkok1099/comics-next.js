@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
+import Image from 'next/image';
 
 const HistoryList = ({ history, loading, onHistoryClick, onDeleteHistory }) => {
   return (
@@ -58,7 +59,7 @@ const HistoryList = ({ history, loading, onHistoryClick, onDeleteHistory }) => {
 
             {/* Konten Card */}
             <CardContent className='flex-grow p-2'>
-              <img
+              <Image
                 src={item.imageUrl || '/placeholder.jpg'}
                 alt={item.title}
                 className='h-full w-full rounded-lg object-cover'

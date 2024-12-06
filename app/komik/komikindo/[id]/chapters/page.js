@@ -158,7 +158,7 @@ const ChapterList = () => {
             className='h-18 ml-2 mr-2 rounded-full px-6 py-2'
             value='judul'
           >
-           Judul alternative
+            alternative
           </TabsTrigger>
           <TabsTrigger
             className='h-18 ml-2 mr-2 rounded-full px-6 py-2'
@@ -180,13 +180,15 @@ const ChapterList = () => {
           </TabsTrigger> */}
         </TabsList>
         <TabsContent value='judul'>
-          <div className='text-xl font-bold'>{komikData?.alternativeTitles?.length > 0 ? (
-      komikData.alternativeTitles.map((title, index) => (
-        <span key={index}>{title}</span>
-      ))
-    ) : (
-      <span>Sumber tidak tersedia</span>
-    )}</div>
+          <div className='text-xl font-bold'>
+            {komikData?.alternativeTitles?.length > 0 ? (
+              komikData.alternativeTitles.map((title, index) => (
+                <span key={index}>{title}</span>
+              ))
+            ) : (
+              <span>Sumber tidak tersedia</span>
+            )}
+          </div>
         </TabsContent>
         <TabsContent value='sinopsis'>
           <p className='italic'>
@@ -228,20 +230,20 @@ const ChapterList = () => {
         </TabsContent> */}
       </Tabs>
 
-        <div className='mb-2 flex items-center justify-between'>
-          <Link
-            href={`/komik/komikindo/${id}/chapters/${chapter1Url}`}
-            className='mr-2 w-1/2 rounded-lg bg-gray-800 px-6 py-3 text-left text-gray-400 hover:bg-gray-700'
-          >
-            Chapter 1
-          </Link>
-          <Link
-            href={`/komik/komikindo/${id}/chapters/${lastChapterUrl}`}
-            className='ml-2 w-1/2 rounded-lg bg-gray-800 px-6 py-3 text-right text-gray-400 hover:bg-gray-700'
-      >
-            Chapter {chapters.length - 1}
-          </Link>
-        </div>
+      <div className='mb-2 flex items-center justify-between'>
+        <Link
+          href={`/komik/komikindo/${id}/chapters/${chapter1Url}`}
+          className='mr-2 w-1/2 rounded-lg bg-gray-800 px-6 py-3 text-left text-gray-400 hover:bg-gray-700'
+        >
+          Chapter 1
+        </Link>
+        <Link
+          href={`/komik/komikindo/${id}/chapters/${lastChapterUrl}`}
+          className='ml-2 w-1/2 rounded-lg bg-gray-800 px-6 py-3 text-right text-gray-400 hover:bg-gray-700'
+        >
+          Chapter {chapters.length - 1}
+        </Link>
+      </div>
 
       {/* Chapter List - Collapsible + Scrollable */}
       <Collapsible className='mt-8'>
