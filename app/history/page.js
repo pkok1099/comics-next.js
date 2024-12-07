@@ -3,18 +3,16 @@
 import { useEffect, useState } from 'react';
 import Cookie from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import HistoryList from '@/components/HistoryList';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import HistoryList from '@/components/history/HistoryList';
 import Loader from '@/components/ui/loader';
-import { Button } from '@/components/ui/button';
-import { Terminal } from 'lucide-react';
+import { toast, useToast } from '@/hooks/use-toast'; // Import toast ShadCN
 
 const History = () => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false); // State untuk status loading penghapusan
-  const [alert, setAlert] = useState(null); // State untuk menyimpan alert
   const router = useRouter();
+  const { toast } = useToast(); // Menggunakan hook useToast
 
   useEffect(() => {
     const user = Cookie.get('user');
@@ -57,7 +55,7 @@ const History = () => {
   }, [router]);
 
   const handleHistoryClick = (komikId, chapterNumber) => {
-    router.push(`/komik/komikindo/${komikId}/chapters/${chapterNumber}`);
+    router.push(`/komikindo/${komikId}/chapters/${chapterNumber}`);
   };
 
   const handleDeleteHistory = async (historyId) => {
@@ -72,22 +70,25 @@ const History = () => {
       });
 
       if (response.ok) {
-        setAlert({
-          message: 'History deleted successfully',
-          type: 'success',
+        toast({
+          title: 'Success',
+          description: 'History deleted successfully',
+          variant: 'default',
         });
         setHistory(history.filter((item) => item._id !== historyId));
       } else {
-        setAlert({
-          message: 'Failed to delete history',
-          type: 'error',
+        toast({
+          title: 'Error',
+          description: 'Failed to delete history',
+          variant: 'destructive',
         });
       }
     } catch (error) {
       console.error('Error deleting history:', error);
-      setAlert({
-        message: 'Error deleting history',
-        type: 'error',
+      toast({
+        title: 'Error',
+        description: 'Error deleting history',
+        variant: 'destructive',
       });
     } finally {
       setDeleting(false);
@@ -97,16 +98,6 @@ const History = () => {
   return (
     <div className='min-h-screen bg-gray-900 p-5 text-white'>
       <h1 className='mb-4 text-2xl font-bold'>History of Read Chapters</h1>
-
-      {alert && (
-        <Alert variant={alert.type === 'error' ? 'destructive' : 'default'}>
-          <Terminal className='h-4 w-4' />
-          <AlertTitle>
-            {alert.type === 'error' ? 'Error' : 'Success'}
-          </AlertTitle>
-          <AlertDescription>{alert.message}</AlertDescription>
-        </Alert>
-      )}
 
       {deleting && (
         <div className='fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50'>

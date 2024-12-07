@@ -1,5 +1,5 @@
-import { validateUser } from '@/services/validateUser';
-import { addOrUpdateHistory } from '@/services/historyService';
+import { validateUser } from '@/lib/services/validateUser';
+import { addOrUpdateHistory } from '@/lib/services/historyService';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {

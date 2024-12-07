@@ -2,10 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverTrigger } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Pagination from '@/components/ui/Pagination';
 import Image from 'next/image';
@@ -21,7 +18,7 @@ const KomikList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const fetchKomik = async (page) => {
     setIsLoading(true);
@@ -70,18 +67,18 @@ const KomikList = () => {
     });
   }, [currentPage]);
 
-  useEffect(() => {
-    const cookies = document.cookie;
-    const userCookie =
-      cookies &&
-      cookies.split(';').find((cookie) => cookie.trim().startsWith('user='));
+  // useEffect(() => {
+  // const cookies = document.cookie;
+  // const userCookie =
+  // cookies &&
+  // cookies.split(';').find((cookie) => cookie.trim().startsWith('user='));
 
-    if (userCookie) {
-      setIsLoggedIn(true);
-    } else {
-      router.push('/login');
-    }
-  }, [router]);
+  // if (userCookie) {
+  // setIsLoggedIn(true);
+  // } else {
+  // router.push('/login');
+  // }
+  // }, [router]);
 
   const handleSearchSubmit = (event) => {
     if (event.key === 'Enter') {

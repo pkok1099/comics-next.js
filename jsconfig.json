@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./*"],
-      "@/f/*": ["./lib/*"],
-      "@/p/*": ["./app/komik/*"]
+      "@/*": ["*"],
+      "@/f/*": ["lib/*"],
+      "@/p/*": ["app/komik/*"],
+      "@/ChapterList/*": ["components/komikindo/ChapterList/*"]
     }
   }
 }

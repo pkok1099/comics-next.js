@@ -60,6 +60,8 @@ const HistoryList = ({ history, loading, onHistoryClick, onDeleteHistory }) => {
             {/* Konten Card */}
             <CardContent className='flex-grow p-2'>
               <Image
+                width={200}
+                height={200}
                 src={item.imageUrl || '/placeholder.jpg'}
                 alt={item.title}
                 className='h-full w-full rounded-lg object-cover'

@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
-import debounce from 'lodash.debounce';
+import debounce from 'lodash';
 import Image from 'next/image';
 
 interface SearchBarProps {

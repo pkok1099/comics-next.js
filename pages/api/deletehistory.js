@@ -1,5 +1,5 @@
-import { validateUser } from '@/services/validateUser';
-import { deleteHistoryById } from '@/services/historyService';
+import { validateUser } from '@/lib/services/validateUser';
+import { deleteHistoryById } from '@/lib/services/historyService';
 
 export default async function handler(req, res) {
   if (req.method === 'DELETE') {

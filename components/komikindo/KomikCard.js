@@ -15,7 +15,8 @@ export const KomikCard = ({ komik, onClick }) => (
       width={200}
       height={250}
       loading='lazy'
-      className='aspect-[3/4] w-full rounded-lg' />
+      className='aspect-[3/4] w-full rounded-lg'
+    />
     <CardHeader className='p-2'>
       <CardTitle className='line-clamp-2 text-center text-base font-semibold leading-tight'>
         {komik.judul}
