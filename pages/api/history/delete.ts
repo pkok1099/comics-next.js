@@ -16,7 +16,11 @@ export default async function handler(
       const result = await deleteHistory(user, historyId);
       res.status(200).json(result);
     } catch (error) {
-      res.status(401).json({ message: error.message });
+      if (error instanceof Error) {
+        res.status(401).json({ message: error.message });
+      } else {
+        res.status(401).json({ message: 'Unknown error occurred' });
+      }
     }
   } else {
     res.status(405).json({ message: 'Method not allowed' });

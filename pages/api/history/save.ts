@@ -10,10 +10,25 @@ export default async function handler(
     try {
       const user = validateUser(req);
       const { title, chapterId } = req.body;
-      const result = await addOrUpdateHistory(user, title, chapterId);
+      const result = await function addOrUpdateHistory(
+        user: string,
+        title: string,
+        chapterId: string | number,
+        thumbnailUrl?: string,
+      ): void {
+        if (typeof chapterId === 'string') {
+          console.log(`Chapter ID as string: ${chapterId}`);
+        } else if (typeof chapterId === 'number') {
+          console.log(`Chapter ID as number: ${chapterId}`);
+        }
+      };
       res.status(200).json(result);
     } catch (error) {
-      res.status(401).json({ message: error.message });
+      if (error instanceof Error) {
+        res.status(401).json({ message: error.message });
+      } else {
+        res.status(401).json({ message: 'Unknown error occurred' });
+      }
     }
   } else {
     res.status(405).json({ message: 'Method not allowed' });

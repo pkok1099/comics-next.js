@@ -5,23 +5,30 @@ import { useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import ComicGrid from '@/components/comic-grid';
+import ComicGrid from '../components/comic-grid';
+import { Comic } from '@/utils/types';
+
+export const dynamic = 'force-dynamic';
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
-  const initialQuery = searchParams.get('q') || '';
+  const initialQuery = searchParams?.get('q') || '';
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [searchResults, setSearchResults] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1); // State for the current page
-  const [totalPages, setTotalPages] = useState(1); // State for the total pages
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    if (searchQuery) {
-      performSearch(searchQuery, currentPage);
-    } else {
-      setSearchResults([]);
-    }
+    const handler = setTimeout(() => {
+      if (searchQuery) {
+        performSearch(searchQuery, currentPage);
+      } else {
+        setSearchResults([]);
+      }
+    }, 300); // Debounce 300ms untuk mengurangi beban API
+
+    return () => clearTimeout(handler);
   }, [searchQuery, currentPage]);
 
   const performSearch = async (query: string, page: number) => {
@@ -35,7 +42,7 @@ export default function SearchPage() {
       }
       const data = await response.json();
       setSearchResults(data.comics || []);
-      setTotalPages(data.totalPages || 1); // Set total pages from API response
+      setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Error searching comics:', error);
       setSearchResults([]);
@@ -46,7 +53,7 @@ export default function SearchPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentPage(1); // Reset to first page when a new search is performed
+    setCurrentPage(1);
     performSearch(searchQuery, 1);
   };
 
@@ -86,9 +93,12 @@ export default function SearchPage() {
           </Button>
         </div>
       </form>
-      <ComicGrid searchResults={searchResults} loading={loading} />
-
-      {/* Pagination Controls */}
+      <ComicGrid comics={searchResults} loading={loading} />
+      {!loading && searchResults.length === 0 && searchQuery && (
+        <div className='text-custom-pink'>
+          No results found for `{searchQuery}`.
+        </div>
+      )}
       <div className='mt-6 flex justify-between'>
         <Button
           onClick={() => handlePagination('prev')}

@@ -11,7 +11,11 @@ export default async function handler(
       const result = await registerUser(username, password);
       res.status(201).json(result);
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      if (error instanceof Error) {
+        res.status(401).json({ message: error.message });
+      } else {
+        res.status(401).json({ message: 'Unknown error occurred' });
+      }
     }
   } else {
     res.status(405).json({ message: 'Method not allowed' });

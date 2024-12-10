@@ -3,16 +3,8 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Star, Bookmark } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-
-type Comic = {
-  judul: string;
-  thumbnail: string;
-  endpoint: string;
-  rating: string;
-};
+import { Comic } from '@/utils/types';
 
 type ComicGridProps = {
   comics: Comic[];
@@ -20,20 +12,6 @@ type ComicGridProps = {
 };
 
 export default function ComicGrid({ comics, loading }: ComicGridProps) {
-  const router = useRouter();
-
-  const handleKomikClick = async (komikLink) => {
-    setIsLoading(true);
-    try {
-      await router.push(
-        `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
-      );
-    } catch (error) {
-      console.error('Error navigating to komik page:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   return (
     <div className='mt-16 grid w-full grid-cols-4 gap-3 lg:grid-cols-5'>
       {loading
@@ -52,7 +30,7 @@ export default function ComicGrid({ comics, loading }: ComicGridProps) {
           ))
         : comics.map((comic, index) => (
             <motion.div
-              key={handleKomikClick(comic.link)}
+              key={comic.endpoint}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -73,9 +51,7 @@ export default function ComicGrid({ comics, loading }: ComicGridProps) {
                   </h3>
                 </CardContent>
                 <CardFooter className='flex justify-between p-4 pt-0'>
-                  <Button variant='ghost' size='icon'>
-                    <Bookmark className='h-4 w-4 text-gray-700' />
-                  </Button>
+                  <Button variant='ghost' size='icon'></Button>
                 </CardFooter>
               </Card>
             </motion.div>

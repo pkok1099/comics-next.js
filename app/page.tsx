@@ -8,20 +8,36 @@ import { useRouter } from 'next/navigation';
 import { KomikCard } from '@/components/komikindo/KomikCard';
 import { SkeletonLoader } from '@/components/komikindo/SkeletonLoader';
 
-const KomikList = () => {
-  const [komikList, setKomikList] = useState([]);
-  const [pagination, setPagination] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+// Definisikan tipe untuk komik dan pagination
+interface Komik {
+  judul: string;
+  link: string;
+  // tambahkan properti lain sesuai kebutuhan
+}
+
+interface PaginationData {
+  currentPage: number;
+  totalPages: number;
+  // tambahkan properti lain sesuai kebutuhan
+}
+
+const KomikList: React.FC = () => {
+  const [komikList, setKomikList] = useState<Komik[]>([]);
+  const [pagination, setPagination] = useState<PaginationData>({
+    currentPage: 1,
+    totalPages: 1,
+  });
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  const fetchKomik = async (page) => {
+  const fetchKomik = async (page: number): Promise<void> => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/komikindo?page=${page}`);
       const data = await response.json();
       setKomikList(data.komikList || []);
-      setPagination(data.pagination || []);
+      setPagination(data.pagination || { currentPage: 1, totalPages: 1 });
     } catch (error) {
       console.error('Error fetching komik data:', error);
     } finally {
@@ -40,7 +56,7 @@ const KomikList = () => {
     });
   }, [currentPage]);
 
-  const handleKomikClick = async (komikLink) => {
+  const handleKomikClick = async (komikLink: string): Promise<void> => {
     setIsLoading(true);
     try {
       await router.push(
