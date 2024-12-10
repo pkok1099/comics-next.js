@@ -1,23 +1,21 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Menu } from 'lucide-react'
-import { useSidebar } from '../contexts/SidebarContext'
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
+import { useSidebar } from '../contexts/SidebarContext';
 
 export function SidebarToggle() {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar } = useSidebar();
 
   return (
     <Button
-      variant="ghost"
-      size="icon"
-      className="md:hidden ml-2 bg-gray-700 text-custom-pink"
+      variant='ghost'
+      size='icon'
+      className='text-custom-pink ml-2 bg-gray-700'
       onClick={toggleSidebar}
-      aria-label="Toggle Sidebar"
-      
+      aria-label='Toggle Sidebar'
     >
-      <Menu className="h-5 w-5" />
+      <Menu className='h-5 w-5' />
     </Button>
-  )
+  );
 }
-

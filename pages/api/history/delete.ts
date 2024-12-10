@@ -2,7 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { deleteHistory } from '../../../services/historyService';
 import { validateUser } from '../../../utils/validateUser';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   if (req.method === 'DELETE') {
     try {
       const user = validateUser(req);
@@ -19,4 +22,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).json({ message: 'Method not allowed' });
   }
 }
-

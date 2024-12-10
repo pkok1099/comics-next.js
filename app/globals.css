@@ -103,15 +103,13 @@ body {
   }
 }
 
-
 .bg-custom-pink {
-  background-color: #FBDEFF;
+  background-color: #fbdeff;
 }
 .text-custom-pink {
-  color: #FBDEFF;
+  color: #fbdeff;
 }
 
 .bg-custom-gray {
   background-color: #374151; /* This is tailwind's gray-700 */
 }
-

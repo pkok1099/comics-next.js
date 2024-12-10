@@ -1,4 +1,8 @@
-import { connectToDatabase, createUser, findUserByUsername } from '../utils/mongodb';
+import {
+  connectToDatabase,
+  createUser,
+  findUserByUsername,
+} from '../utils/mongodb';
 import bcrypt from 'bcryptjs';
 
 export async function registerUser(username: string, password: string) {
@@ -39,4 +43,3 @@ export async function loginUser(username: string, password: string) {
     await client.close();
   }
 }
-

@@ -2,7 +2,6 @@ import { MongoClient } from 'mongodb';
 
 const client = new MongoClient(process.env.MONGODB_URI);
 
-
 export async function createUser(collection, username, password) {
   const result = await collection.insertOne({ username, password });
   return result.insertedId;

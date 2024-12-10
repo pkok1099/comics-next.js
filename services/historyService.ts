@@ -14,14 +14,22 @@ export async function getHistoryByUser(user: string) {
   const { db, client } = await connectToDatabase();
   const collection = db.collection('history');
   try {
-    const history = await collection.find({ user }).sort({ timestamp: -1 }).toArray();
+    const history = await collection
+      .find({ user })
+      .sort({ timestamp: -1 })
+      .toArray();
     return history;
   } finally {
     await client.close();
   }
 }
 
-export async function addOrUpdateHistory(user: string, title: string, chapterId: string, thumbnailUrl: string) {
+export async function addOrUpdateHistory(
+  user: string,
+  title: string,
+  chapterId: string,
+  thumbnailUrl: string,
+) {
   const { db, client } = await connectToDatabase();
   const collection = db.collection('history');
   try {
@@ -53,7 +61,10 @@ export async function deleteHistory(user: string, historyId: string) {
   const { db, client } = await connectToDatabase();
   const collection = db.collection('history');
   try {
-    const result = await collection.deleteOne({ _id: new ObjectId(historyId), user });
+    const result = await collection.deleteOne({
+      _id: new ObjectId(historyId),
+      user,
+    });
     if (result.deletedCount === 0) {
       throw new Error('History not found or user not authorized');
     }
@@ -62,4 +73,3 @@ export async function deleteHistory(user: string, historyId: string) {
     await client.close();
   }
 }
-

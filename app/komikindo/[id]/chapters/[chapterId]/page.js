@@ -66,23 +66,6 @@ const ChapterDetail = () => {
     }
   };
 
-  const deleteHistory = async (historyId) => {
-    try {
-      const response = await fetch(`/api/history/delete?historyId=${historyId}`, {
-        method: 'DELETE',
-      });
-      const data = await response.json();
-      if (response.ok) {
-        console.log('History deleted:', data.message);
-        // You might want to update the UI or state here
-      } else {
-        console.error('Failed to delete history:', data.message);
-      }
-    } catch (error) {
-      console.error('Error deleting history:', error);
-    }
-  };
-
   // Handle scroll to hide/show the next button
   useEffect(() => {
     const handleScroll = () => {
@@ -208,4 +191,3 @@ const ChapterDetail = () => {
 };
 
 export default ChapterDetail;
-
