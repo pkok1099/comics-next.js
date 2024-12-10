@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+// import Image from 'next/image';
 const ChapterDetail = () => {
   const { id, chapterId } = useParams(); // Get id and chapterId from URL
   const router = useRouter(); // For navigation
@@ -12,15 +12,12 @@ const ChapterDetail = () => {
   const [buttonVisible, setButtonVisible] = useState(true); // For next button visibility
   const [isFetching, setIsFetching] = useState(false); // For fetching state
   const [lastScrollY, setLastScrollY] = useState(0); // Menyimpan posisi scroll terakhir
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   // Fetch images for the chapter
   const fetchChapterImages = useCallback(
     async (chapterId) => {
       try {
         const response = await fetch(
-          `/api/komikindo/${decodeURIComponent(id)}/chapter/${chapterId}/images`,
+          `/api/komikindo/${decodeURIComponent(id)}/${chapterId}/`,
         );
         if (!response.ok) throw new Error('Failed to fetch images');
 
@@ -53,7 +50,7 @@ const ChapterDetail = () => {
   ); // Menambahkan fetchChapterImages sebagai dependensi
 
   const saveHistory = async (chapterId, title) => {
-    const response = await fetch('/api/history', {
+    const response = await fetch('/api/history/save', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,19 +66,22 @@ const ChapterDetail = () => {
     }
   };
 
-  // cek login
-  useEffect(() => {
-    const cookies = document.cookie;
-    const userCookie =
-      cookies &&
-      cookies.split(';').find((cookie) => cookie.trim().startsWith('user='));
-
-    if (userCookie) {
-      setIsLoggedIn(true);
-    } else {
-      router.push('/login');
+  const deleteHistory = async (historyId) => {
+    try {
+      const response = await fetch(`/api/history/delete?historyId=${historyId}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log('History deleted:', data.message);
+        // You might want to update the UI or state here
+      } else {
+        console.error('Failed to delete history:', data.message);
+      }
+    } catch (error) {
+      console.error('Error deleting history:', error);
     }
-  }, [router]);
+  };
 
   // Handle scroll to hide/show the next button
   useEffect(() => {
@@ -108,7 +108,7 @@ const ChapterDetail = () => {
   const fetchChapterList = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/komikindo/${decodeURIComponent(id)}/chapters`,
+        `/api/komikindo/info/${decodeURIComponent(id)}`,
       );
       if (!response.ok) throw new Error('Failed to fetch chapters');
 
@@ -126,12 +126,6 @@ const ChapterDetail = () => {
     );
   };
 
-  // useEffect(() => {
-  // if (chapterId) {
-  // loadChapterImages(chapterId);
-  // }
-  // }, [id, chapterId]);
-
   useEffect(() => {
     if (chapterId) {
       loadChapterImages(chapterId);
@@ -142,11 +136,6 @@ const ChapterDetail = () => {
   useEffect(() => {
     fetchChapterList();
   }, [id, fetchChapterList]); // Menambahkan fetchChapterList
-
-  // Fetch chapter list once when the component mounts
-  // useEffect(() => {
-  // fetchChapterList();
-  // }, [id]);
 
   if (loading) {
     return (
@@ -167,7 +156,7 @@ const ChapterDetail = () => {
   }
   return (
     <div className='chapter-container relative'>
-      <h2 className='truncate py-4 text-center text-2xl font-bold'>
+      <h2 className='line-clamp-2 truncate py-4 text-center text-2xl font-bold'>
         {id && chapterId ? `${id} - Chapter ${chapterId}` : 'Chapter Not Found'}
       </h2>
 
@@ -177,7 +166,7 @@ const ChapterDetail = () => {
           <p>No images available for this chapter.</p>
         ) : (
           pages.map((img, imgIndex) => (
-            <Image
+            <img
               key={imgIndex}
               src={img}
               alt={`Page ${imgIndex + 1} of Chapter ${chapterId}`}
@@ -219,3 +208,4 @@ const ChapterDetail = () => {
 };
 
 export default ChapterDetail;
+

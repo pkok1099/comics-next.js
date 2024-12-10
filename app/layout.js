@@ -5,6 +5,15 @@ import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import ClientLoginChecker from '@/components/ClientLoginChecker'; // Impor komponen login checker
 import { Toaster } from '@/components/ui/toaster';
+import Sidebar from './components/sidebar'
+import Header from './components/header'
+import { SidebarProvider } from './contexts/SidebarContext'
+import { SidebarToggle } from './components/sidebar-toggle'
+
+
+
+
+
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -33,7 +42,7 @@ export const generateViewport = () => ({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <head>
         <meta name='description' content={metadata.description} />
         <meta name='keywords' content={metadata.keywords} />
@@ -50,7 +59,20 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <ClientLoginChecker>{children}</ClientLoginChecker> <Toaster />
+          <SidebarProvider>
+            <div className="flex h-screen">
+              <Sidebar />
+              <div className="flex-1 flex flex-col overflow-hidden">
+                <Header>
+                  <SidebarToggle />
+                </Header>
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background">
+                  {children}
+                </main>
+              </div>
+            </div>
+          </SidebarProvider>
+          <Toaster />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

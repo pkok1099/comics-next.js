@@ -9,10 +9,9 @@ import { TabsComponent } from '@/ChapterList/TabsComponent';
 import { ChapterListComponent } from '@/ChapterList/ChapterListComponent';
 import { InfoBox } from '@/ChapterList/InfoBox';
 import { SkeletonLoader } from '@/ChapterList/SkeletonLoader';
-import { getChapterUrl } from '@/ChapterList/getChapterUrl';
 
 // Utility function to fetch Komik data
-const fetchKomikData = async (id, setKomikData) => {
+const fetchKomikData = async (id, setKomikData, setLoading) => {
   try {
     const response = await fetch(
       `/api/komikindo/info/${decodeURIComponent(id)}`,
@@ -21,41 +20,30 @@ const fetchKomikData = async (id, setKomikData) => {
     setKomikData(komik);
   } catch (error) {
     console.error('Error fetching komik data:', error);
-  }
-};
-
-// Utility function to fetch chapters
-const fetchChapters = async (id, setChapters, setLoading) => {
-  try {
-    const response = await fetch(`/api/komikindo/${id}/chapters`);
-    const data = await response.json();
-    setChapters(data);
-    setLoading(false);
-  } catch (error) {
-    console.error('Error fetching chapters:', error);
+  } finally {
     setLoading(false);
   }
 };
 
 const ChapterList = () => {
   const { id } = useParams();
-  const [chapters, setChapters] = useState([]);
   const [komikData, setKomikData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('judul');
 
   useEffect(() => {
     if (id) {
-      fetchKomikData(id, setKomikData);
-      fetchChapters(id, setChapters, setLoading);
+      fetchKomikData(id, setKomikData, setLoading); // Pass setLoading here
     }
   }, [id]);
 
-  if (loading) return <SkeletonLoader />;
+  if (loading || !komikData) return <SkeletonLoader />;
 
-  const lastChapterUrl = chapters[0] ? getChapterUrl(chapters[0]) : null;
-  const chapter1Url = chapters[chapters.length - 1]
-    ? getChapterUrl(chapters[chapters.length - 1])
+  const lastChapterUrl = komikData.chapterList[0]
+    ? komikData.chapterList[0].url
+    : null;
+  const chapter1Url = komikData.chapterList[komikData.chapterList.length - 1]
+    ? komikData.chapterList[komikData.chapterList.length - 1].url
     : null;
 
   return (
@@ -88,7 +76,7 @@ const ChapterList = () => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <ChapterListComponent chapters={chapters} id={id} />
+      <ChapterListComponent chapters={komikData.chapterList} id={id} />
     </div>
   );
 };
