@@ -3,7 +3,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import localFont from 'next/font/local';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
-import ClientLoginChecker from '@/components/ClientLoginChecker'; // Komponen untuk login check
 import { Toaster } from '@/components/ui/toaster';
 import Sidebar from './components/sidebar'; // Perbaiki path impor
 import Header from './components/header';
@@ -57,7 +56,6 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <ClientLoginChecker>
             <SidebarProvider>
               <div className='flex h-screen'>
                 <Sidebar />
@@ -71,7 +69,6 @@ export default function RootLayout({ children }) {
                 </div>
               </div>
             </SidebarProvider>
-          </ClientLoginChecker>
           <Toaster />
         </ThemeProvider>
         <Analytics />

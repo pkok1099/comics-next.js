@@ -8,8 +8,6 @@ import { motion } from 'framer-motion';
 import ComicGrid from '../components/comic-grid';
 import { Comic } from '@/utils/types';
 
-export const dynamic = 'force-dynamic';
-
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams?.get('q') || '';
@@ -20,15 +18,11 @@ export default function SearchPage() {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      if (searchQuery) {
-        performSearch(searchQuery, currentPage);
-      } else {
-        setSearchResults([]);
-      }
-    }, 300); // Debounce 300ms untuk mengurangi beban API
-
-    return () => clearTimeout(handler);
+    if (searchQuery) {
+      performSearch(searchQuery, currentPage);
+    } else {
+      setSearchResults([]);
+    }
   }, [searchQuery, currentPage]);
 
   const performSearch = async (query: string, page: number) => {
@@ -94,11 +88,7 @@ export default function SearchPage() {
         </div>
       </form>
       <ComicGrid comics={searchResults} loading={loading} />
-      {!loading && searchResults.length === 0 && searchQuery && (
-        <div className='text-custom-pink'>
-          No results found for `{searchQuery}`.
-        </div>
-      )}
+
       <div className='mt-6 flex justify-between'>
         <Button
           onClick={() => handlePagination('prev')}
