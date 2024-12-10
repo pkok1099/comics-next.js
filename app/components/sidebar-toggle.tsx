@@ -11,7 +11,7 @@ export function SidebarToggle() {
     <Button
       variant='ghost'
       size='icon'
-      className='text-custom-pink ml-2 bg-gray-700'
+      className='text-custom-pink ml-0 bg-gray-700'
       onClick={toggleSidebar}
       aria-label='Toggle Sidebar'
     >

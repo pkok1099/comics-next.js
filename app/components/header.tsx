@@ -26,7 +26,7 @@ export default function Header() {
         <SidebarToggle />
         <div className='mr-4 hidden md:flex'>
           <Link href='/' className='mr-6 flex items-center space-x-2'>
-            <span className='hidden font-bold sm:inline-block'>OnLasdan</span>
+            <span className='hidden font-bold sm:inline-block ml-2'>OnLasdan</span>
           </Link>
         </div>
         <div className='ml-2 flex flex-1 items-center justify-between space-x-2 bg-gray-700 md:justify-end'>
