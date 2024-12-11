@@ -21,32 +21,31 @@ export default function Header() {
   };
 
   return (
-    <header className='sticky top-0 z-50 w-full border-b bg-background/95 bg-gray-700 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
-      <div className='flex h-14 max-w-full items-center justify-between bg-gray-700 px-4'>
+    <header className='sticky top-0 z-50 w-full bg-background/95 bg-gray-700 backdrop-blur supports-[backdrop-filter]:bg-background/60'>
+      <div className='flex h-14 max-w-full items-center justify-between bg-gray-900 px-4'>
         <SidebarToggle />
         <div className='mr-4 hidden md:flex'>
           <Link href='/' className='mr-6 flex items-center space-x-2'>
-            <span className='ml-2 hidden font-bold sm:inline-block'>
+            <span className='ml-2 hidden font-bold text-cyan-200 sm:inline-block'>
               OnLasdan
             </span>
           </Link>
         </div>
-        <div className='ml-2 flex flex-1 items-center justify-between space-x-2 bg-gray-700 md:justify-end'>
+        <div className='ml-2 flex flex-1 items-center justify-between space-x-2 bg-gray-900 md:justify-end'>
           <form
             onSubmit={handleSearch}
-            className='w-full max-w-lg rounded-lg border-2 border-[#FBDEFF]'
+            className='w-full max-w-lg rounded-lg'
           >
             <div className='relative'>
               <Search className='absolute left-2 top-2.5 h-4 w-4 text-muted-foreground' />
               <Input
-                placeholder='Search comics...'
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className='text-custom-pink pl-8'
+                className='pl-8 text-cyan-200'
               />
             </div>
           </form>
-          <nav className='text-custom-pink flex items-center bg-gray-700'>
+          <nav className='flex items-center bg-gray-900 text-cyan-200'>
             <Button variant='ghost' asChild>
               <Link href='/profile'>Profile</Link>
             </Button>

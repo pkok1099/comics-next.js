@@ -6,7 +6,7 @@ import {
 import bcrypt from 'bcryptjs';
 
 export async function registerUser(username: string, password: string) {
-  const { db, client } = await connectToDatabase();
+  const { db } = await connectToDatabase();
   const collection = db.collection('users');
 
   try {
@@ -18,13 +18,14 @@ export async function registerUser(username: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const userId = await createUser(collection, username, hashedPassword);
     return { message: 'User registered successfully', userId };
-  } finally {
-    await client.close();
+  } catch (error) {
+    console.error('Error during registration:', error);
+    throw error;
   }
 }
 
 export async function loginUser(username: string, password: string) {
-  const { db, client } = await connectToDatabase();
+  const { db } = await connectToDatabase();
   const collection = db.collection('users');
 
   try {
@@ -39,7 +40,8 @@ export async function loginUser(username: string, password: string) {
     }
 
     return { message: 'Login successful', userId: user._id };
-  } finally {
-    await client.close();
+  } catch (error) {
+    console.error('Error during login:', error);
+    throw error;
   }
 }

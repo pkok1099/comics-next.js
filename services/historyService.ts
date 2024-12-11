@@ -1,17 +1,8 @@
 import { MongoClient, ObjectId } from 'mongodb';
-
-async function connectToDatabase() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    throw new Error('MONGODB_URI environment variable not set');
-  }
-  const client = new MongoClient(uri);
-  const db = client.db();
-  return { db, client };
-}
+import { connectToDatabase } from '../utils/mongodb';
 
 export async function getHistoryByUser(user: string) {
-  const { db, client } = await connectToDatabase();
+  const { db } = await connectToDatabase();
   const collection = db.collection('history');
   try {
     const history = await collection
@@ -19,8 +10,9 @@ export async function getHistoryByUser(user: string) {
       .sort({ timestamp: -1 })
       .toArray();
     return history;
-  } finally {
-    await client.close();
+  } catch (error) {
+    console.error('Error getting history by user:', error);
+    throw error;
   }
 }
 
@@ -30,7 +22,7 @@ export async function addOrUpdateHistory(
   chapterId: string,
   thumbnailUrl: string,
 ) {
-  const { db, client } = await connectToDatabase();
+  const { db } = await connectToDatabase();
   const collection = db.collection('history');
   try {
     const existingHistory = await collection.findOne({ user, title });
@@ -52,13 +44,14 @@ export async function addOrUpdateHistory(
       });
       return { message: 'History saved successfully' };
     }
-  } finally {
-    await client.close();
+  } catch (error) {
+    console.error('Error adding or updating history:', error);
+    throw error;
   }
 }
 
 export async function deleteHistory(user: string, historyId: string) {
-  const { db, client } = await connectToDatabase();
+  const { db } = await connectToDatabase();
   const collection = db.collection('history');
   try {
     const result = await collection.deleteOne({
@@ -69,7 +62,8 @@ export async function deleteHistory(user: string, historyId: string) {
       throw new Error('History not found or user not authorized');
     }
     return { message: 'History deleted successfully' };
-  } finally {
-    await client.close();
+  } catch (error) {
+    console.error('Error deleting history:', error);
+    throw error;
   }
 }

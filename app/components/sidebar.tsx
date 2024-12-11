@@ -6,20 +6,13 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
-import {
-  LogIn,
-  Home,
-  Bookmark,
-  Search,
-  History,
-  LogOut,
-  X,
-} from 'lucide-react';
+import { LogIn, Home, Bookmark, Search, History, LogOut } from 'lucide-react';
 import { useSidebar } from '../contexts/SidebarContext';
+import { useEffect, useRef } from 'react';
 
 const sidebarItems = [
   { name: 'Home', href: '/', icon: Home },
-  { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
+  // { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
   { name: 'Search', href: '/search', icon: Search },
   { name: 'History', href: '/history', icon: History },
   { name: 'Login', href: '/login', icon: LogIn },
@@ -29,18 +22,43 @@ export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { isOpen, toggleSidebar } = useSidebar();
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+
+  // Menutup sidebar jika di klik di luar kontainer
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const targetElement = event.target as HTMLElement;
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(targetElement) &&
+        !targetElement.closest('[data-ignore-outside-click]') // Elemen dengan atribut khusus
+      ) {
+        toggleSidebar();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, toggleSidebar]);
 
   const handleLogout = async () => {
     await fetch('/api/logout', { method: 'POST' });
     router.push('/login');
+    toggleSidebar(); // Tutup sidebar setelah logout
   };
 
   return (
     <>
       {/* Sidebar untuk layar besar */}
       <div
+        ref={sidebarRef}
         className={cn(
-          'relative left-0 top-0 h-full border-r bg-gray-700 text-white',
+          'relative left-0 top-0 h-full border-r bg-gray-900 text-white',
           isOpen ? 'w-64' : 'w-11',
           'z-50 hidden min-h-screen transition-all duration-300 md:block',
         )}
@@ -89,12 +107,12 @@ export default function Sidebar() {
 
       {/* Sidebar dalam dialog untuk layar kecil */}
       {isOpen && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:hidden'>
+        <div className='text-custom-pink fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:hidden'>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className='relative w-11/12 max-w-sm rounded-lg bg-gray-700 p-4'
+            className='relative w-11/12 max-w-sm rounded-lg bg-gray-900 p-4'
           >
             <motion.div
               initial='hidden'
@@ -121,7 +139,13 @@ export default function Sidebar() {
                   <Button
                     variant={pathname === item.href ? 'secondary' : 'ghost'}
                     asChild
-                    className='flex items-center'
+                    className='flex items-center bg-gray-900 text-cyan-200'
+                    data-ignore-outside-click // Tambahkan ini
+                    onClick={(e) => {
+                      e.stopPropagation(); // Cegah event bubbling ke listener `mousedown`
+                      router.push(item.href);
+                      toggleSidebar();
+                    }}
                   >
                     <Link href={item.href}>
                       <item.icon className='mr-2 h-5 w-5' />

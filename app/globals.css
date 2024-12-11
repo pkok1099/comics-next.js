@@ -17,6 +17,7 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -101,15 +102,4 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-}
-
-.bg-custom-pink {
-  background-color: #fbdeff;
-}
-.text-custom-pink {
-  color: #fbdeff;
-}
-
-.bg-custom-gray {
-  background-color: #374151; /* This is tailwind's gray-700 */
 }

@@ -100,7 +100,7 @@ export default function HistoryPage() {
                 />
               </div>
               <div className='bg-gray-700 p-2'>
-                <h2 className='text-custom-pink title mb-1 line-clamp-2 text-sm font-medium'>
+                <h2 className='title text-custom-pink mb-1 line-clamp-2 text-sm font-medium'>
                   {item.title}
                 </h2>
                 <p className='truncate text-sm text-gray-400'>

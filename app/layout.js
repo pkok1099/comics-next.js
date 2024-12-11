@@ -56,19 +56,19 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-            <SidebarProvider>
-              <div className='flex h-screen'>
-                <Sidebar />
-                <div className='flex flex-1 flex-col overflow-hidden'>
-                  <Header>
-                    <SidebarToggle />
-                  </Header>
-                  <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background'>
-                    <Suspense>{children}</Suspense>
-                  </main>
-                </div>
+          <SidebarProvider>
+            <div className='flex h-screen'>
+              <Sidebar />
+              <div className='flex flex-1 flex-col overflow-hidden'>
+                <Header>
+                  <SidebarToggle />
+                </Header>
+                <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background'>
+                  <Suspense>{children}</Suspense>
+                </main>
               </div>
-            </SidebarProvider>
+            </div>
+          </SidebarProvider>
           <Toaster />
         </ThemeProvider>
         <Analytics />

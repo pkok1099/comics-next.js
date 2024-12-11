@@ -15,11 +15,11 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className='bg-custom-pink flex min-h-screen flex-col items-center justify-center'>
+    <div className='flex min-h-screen flex-col items-center justify-center bg-indigo-200'>
       <h2 className='mb-4 text-2xl font-bold text-gray-700'>
         Something went wrong!
       </h2>
-      <Button onClick={() => reset()} className='text-custom-pink bg-gray-700'>
+      <Button onClick={() => reset()} className='bg-gray-700 text-indigo-600'>
         Try again
       </Button>
     </div>

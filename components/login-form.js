@@ -17,11 +17,17 @@ export function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // Fungsi untuk menangani login melalui API
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return; // Hindari eksekusi ulang jika sedang loading
+
+    setLoading(true); // Aktifkan loading
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -30,21 +36,21 @@ export function LoginForm() {
       });
 
       if (response.ok) {
-        // Menyimpan cookie setelah login sukses
         document.cookie = `user=${username}; max-age=${365 * 24 * 60 * 60}; path=/`;
-        router.push('/'); // Redirect ke halaman utama
+        router.push('/');
       } else {
         const data = await response.json();
         setErrorMessage(data.message || 'Login gagal');
       }
     } catch (error) {
-      console.error('Login error:', error);
       setErrorMessage('Terjadi kesalahan saat mencoba login');
+    } finally {
+      setLoading(false); // Matikan loading
     }
   };
 
   return (
-    <Card className='mx-auto max-w-sm'>
+    <Card className='mx-auto max-w-sm border-[7px]'>
       <CardHeader>
         <CardTitle className='text-2xl'>Login</CardTitle>
         <CardDescription>
@@ -79,8 +85,45 @@ export function LoginForm() {
             {errorMessage && (
               <div className='mt-2 text-sm text-red-500'>{errorMessage}</div>
             )}
-            <Button type='submit' className='w-full'>
-              Login
+            <Button
+              type='submit'
+              className='flex w-full items-center justify-center'
+              disabled={loading}
+            >
+              {loading ? (
+                <div className='flex items-center'>
+                  <svg
+                    className='mr-2 h-5 w-5 animate-spin text-white'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                  >
+                    <circle
+                      className='opacity-25'
+                      cx='12'
+                      cy='12'
+                      r='10'
+                      stroke='currentColor'
+                      strokeWidth='4'
+                    ></circle>
+                    <path
+                      className='opacity-75'
+                      fill='currentColor'
+                      d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z'
+                    ></path>
+                  </svg>
+                  Loading...
+                </div>
+              ) : (
+                'Login'
+              )}
+            </Button>
+            <Button
+              type='button'
+              className='mt-[-5px] w-full'
+              onClick={() => router.push('/register')}
+            >
+              Register
             </Button>
           </div>
         </form>

@@ -80,7 +80,7 @@ export default function SearchPage() {
           />
           <Button
             type='submit'
-            className='text-custom-pink text-custom-pink bg-gray-700'
+            className='text-custom-pink bg-gray-700'
             variant='ghost'
           >
             Search

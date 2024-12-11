@@ -71,7 +71,7 @@ const KomikList: React.FC = () => {
 
   return (
     <div className='flex min-h-screen flex-col items-center bg-gray-800 p-5 text-white'>
-      <div className='grid w-full grid-cols-4 gap-3 lg:grid-cols-5'>
+      <div className='grid w-full grid-cols-4 gap-2 lg:grid-cols-5'>
         {isLoading
           ? Array.from({ length: 12 }).map((_, index) => (
               <SkeletonLoader key={index} />
