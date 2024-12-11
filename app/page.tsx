@@ -45,6 +45,7 @@ const KomikList: React.FC = () => {
     }
   };
 
+  
   useEffect(() => {
     fetchKomik(currentPage);
   }, [currentPage]);
