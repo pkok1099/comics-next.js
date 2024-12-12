@@ -1,14 +1,26 @@
 import { NextApiRequest } from 'next';
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY || 'defaultsecretkey';
 
 export function validateUser(req: NextApiRequest): string {
-  const cookies = req.headers.cookie; // Mendapatkan cookie dari header
-  const userCookie =
-    cookies &&
-    cookies.split(';').find((cookie) => cookie.trim().startsWith('user=')); // Mencari cookie 'user'
+  const cookies = req.headers.cookie || ''; // Mendapatkan cookie dari header, default ke string kosong jika undefined
 
-  if (!userCookie) {
-    throw new Error('User is not logged in'); // Error jika cookie 'user' tidak ditemukan
+  // Memisahkan dan mencari cookie 'user' menggunakan RegExp untuk validasi yang lebih kuat
+  const match = cookies.match(/(?:^|;\s*)user=([^;]*)/);
+  const userToken = match ? match[1] : null;
+
+  if (!userToken) {
+    throw new Error('User is not logged in'); // Error jika token user tidak ditemukan
   }
 
-  return userCookie.split('=')[1]; // Mendapatkan nilai dari cookie 'user'
+  try {
+    // Memverifikasi token dengan secret key
+    const decoded = jwt.verify(userToken, SECRET_KEY);
+
+    // Mengembalikan id dan username dari token yang terdekripsi
+    return decoded as string;
+  } catch (error) {
+    throw new Error('Invalid token or token has expired'); // Error jika token tidak valid atau sudah kedaluwarsa
+  }
 }

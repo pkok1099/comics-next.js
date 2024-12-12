@@ -35,7 +35,15 @@ export default function SearchPage() {
         throw new Error('Search failed');
       }
       const data = await response.json();
-      setSearchResults(data.comics || []);
+      // Menyesuaikan struktur data sesuai dengan response baru
+      setSearchResults(
+        data.comics.map((comic: any) => ({
+          title: comic.title,
+          endpoint: comic.link.split('/').pop(), // Endpoint dapat diambil dari link
+          thumbnail: comic.image,
+          rating: comic.rating,
+        })) || [],
+      );
       setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Error searching comics:', error);

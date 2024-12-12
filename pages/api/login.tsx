@@ -1,5 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import jwt from 'jsonwebtoken';
 import { loginUser } from '../../services/authService';
+
+const SECRET_KEY = process.env.JWT_SECRET_KEY || 'defaultsecretkey';
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,17 +11,33 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const { username, password } = req.body;
-      const result = await loginUser(username, password);
+      const user = await loginUser(username, password);
 
-      // Set cookie user setelah login berhasil
+      // Buat JWT untuk user yang berhasil login tanpa waktu kedaluwarsa
+      const token = jwt.sign(
+        { id: user._id, username: user.username },
+        SECRET_KEY,
+        // Token ini akan bertahan selamanya
+        { expiresIn: '9999y' }, // Token berlaku selama 9999 tahun (asumsi bertahan selamanya)
+      );
+
+      // Set cookie dengan token
       res.setHeader(
         'Set-Cookie',
-        `user=${result.userId}; HttpOnly; Path=/; Max-Age=3600`,
+        `user=${token}; HttpOnly; Path=/; Max-Age=315360000; Secure; SameSite=Strict`,
       );
-      res.status(200).json(result);
+
+      // Respons dengan data user (tanpa password)
+      res.status(200).json({
+        message: 'Login successful',
+        user: { username: user.username, userId: user._id },
+      });
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message === 'User not found') {
+        if (
+          error.message === 'User not found' ||
+          error.message === 'Invalid credentials'
+        ) {
           res.status(401).json({ message: error.message });
         } else {
           console.error('Error during login:', error);

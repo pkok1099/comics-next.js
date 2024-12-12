@@ -1,6 +1,7 @@
+import { NextConfig } from 'next';
+
 /** @type {import('next').NextConfig} */
-const madge = require('madge');
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
     remotePatterns: [
@@ -43,4 +44,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

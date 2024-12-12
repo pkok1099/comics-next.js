@@ -14,7 +14,8 @@ export default async function handler(
     } catch (error) {
       if (error instanceof Error) {
         res.status(401).json({ message: error.message });
-      } else {
+        console.log(error)       
+        } else {
         res.status(401).json({ message: 'Unknown error occurred' });
       }
     }

@@ -8,20 +8,17 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const user = validateUser(req);
-      const { title, chapterId } = req.body;
-      const result = await function addOrUpdateHistory(
-        user: string,
-        title: string,
-        chapterId: string | number,
-        thumbnailUrl?: string,
-      ): void {
-        if (typeof chapterId === 'string') {
-          console.log(`Chapter ID as string: ${chapterId}`);
-        } else if (typeof chapterId === 'number') {
-          console.log(`Chapter ID as number: ${chapterId}`);
-        }
-      };
+      const decodedUser = validateUser(req); // Mendapatkan user yang sudah didekodekan
+      const { title, chapterId, thumbnailUrl } = req.body;
+
+      // Menambahkan atau memperbarui history menggunakan decodedUser yang sudah memiliki informasi dari token
+      const result = await addOrUpdateHistory(
+        decodedUser, // Menggunakan hasil validasi user dari validateUser
+        title,
+        chapterId,
+        thumbnailUrl, // Menyertakan optional thumbnailUrl
+      );
+      
       res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {

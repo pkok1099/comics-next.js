@@ -6,7 +6,16 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
-import { LogIn, Home, Bookmark, Search, History, LogOut } from 'lucide-react';
+import {
+  UserRoundMinus,
+  UserRoundPlus,
+  LogIn,
+  Home,
+  Bookmark,
+  Search,
+  History,
+  LogOut,
+} from 'lucide-react';
 import { useSidebar } from '../contexts/SidebarContext';
 import { useEffect, useRef } from 'react';
 
@@ -14,9 +23,11 @@ const sidebarItems = [
   { name: 'Home', href: '/', icon: Home },
   // { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
   { name: 'Search', href: '/search', icon: Search },
-  { name: 'History', href: '/history', icon: History },
   { name: 'Login', href: '/login', icon: LogIn },
+  { name: 'Register', href: '/register', icon: UserRoundPlus },
 ];
+
+const sidebarItemsPH = [...sidebarItems];
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -112,7 +123,7 @@ export default function Sidebar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className='relative w-11/12 max-w-sm rounded-lg bg-gray-900 p-4'
+            className='relative w-11/12 max-w-sm rounded-lg p-4'
           >
             <motion.div
               initial='hidden'
@@ -128,7 +139,11 @@ export default function Sidebar() {
               }}
               className='flex flex-col gap-2'
             >
-              {sidebarItems.map((item, index) => (
+              {sidebarItemsPH.map((item, index) => (
+              
+              
+              
+              
                 <motion.div
                   key={item.name}
                   variants={{
@@ -153,7 +168,28 @@ export default function Sidebar() {
                     </Link>
                   </Button>
                 </motion.div>
+                
+                
+                
               ))}
+              <motion.div
+  initial={{ opacity: 0, x: -20 }}
+  animate={{ opacity: 1, x: 0 }}
+  className="mt-4"
+>
+  <Button
+    variant="ghost"
+    className="flex items-center bg-gray-900 text-cyan-200"
+    data-ignore-outside-click
+    onClick={(e) => {
+      e.stopPropagation(); // Cegah event bubbling ke listener `mousedown`
+      handleLogout(); // Panggil fungsi logout
+    }}
+  >
+    <LogOut className="mr-2 h-5 w-5" />
+    Logout
+  </Button>
+</motion.div>
             </motion.div>
           </motion.div>
         </div>
