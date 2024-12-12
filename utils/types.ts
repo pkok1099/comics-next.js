@@ -1,6 +1,6 @@
 // types.ts
 export type Comic = {
-  judul: string;
+  title: string;
   thumbnail: string;
   endpoint: string;
   rating: string;
