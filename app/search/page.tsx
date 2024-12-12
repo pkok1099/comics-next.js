@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
@@ -25,11 +25,11 @@ export default function SearchPage() {
     }
   }, [searchQuery, currentPage]);
 
-  const performSearch = async (query: string, page: number) => {
+  async function performSearch(query: string, page: number) {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/komikindo/search/${encodeURIComponent(query)}/${page}`,
+        `/api/komikindo/search/${encodeURIComponent(query)}/${page}`
       );
       if (!response.ok) {
         throw new Error('Search failed');
@@ -39,10 +39,10 @@ export default function SearchPage() {
       setSearchResults(
         data.comics.map((comic: any) => ({
           title: comic.title,
-          endpoint: comic.link.split('/').pop(), // Endpoint dapat diambil dari link
+          endpoint:comic.link.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1'), // Endpoint dapat diambil dari link
           thumbnail: comic.image,
           rating: comic.rating,
-        })) || [],
+        })) || []
       );
       setTotalPages(data.totalPages || 1);
     } catch (error) {
@@ -51,7 +51,7 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

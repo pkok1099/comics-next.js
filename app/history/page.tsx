@@ -9,14 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-interface HistoryItem {
-  _id: string;
-  title: string;
-  chapterId: string;
-  thumbnailUrl: string;
-  timestamp: string;
-}
+import { HistoryItem } from '@/utils/types';
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);

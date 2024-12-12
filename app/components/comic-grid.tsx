@@ -4,13 +4,8 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
-import { Comic } from '@/utils/types';
 import { Star } from 'lucide-react';
-
-type ComicGridProps = {
-  comics: Comic[];
-  loading: boolean;
-};
+import { ComicGridProps } from '@/utils/types';
 
 export default function ComicGrid({ comics, loading }: ComicGridProps) {
   return (
@@ -37,7 +32,7 @@ export default function ComicGrid({ comics, loading }: ComicGridProps) {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <Card className='w-full cursor-pointer hover:shadow-lg'>
-                <Link href={`/komikindo/${comic.endpoint}`}>
+                <Link href={`/komikindo/${comic.endpoint}/chapters`}>
                   <Image
                     src={comic.thumbnail}
                     alt={comic.title}

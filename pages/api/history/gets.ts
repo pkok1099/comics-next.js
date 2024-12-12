@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getHistoryByUser } from '../../../services/historyService';
+import { getHistoryByUser } from '@/services/getHistoryByUser';
 import { validateUser } from '../../../utils/validateUser';
 
 export default async function handler(

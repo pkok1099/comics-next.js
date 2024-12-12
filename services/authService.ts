@@ -6,7 +6,7 @@ import {
 } from '@/utils/mongodb';
 
 // Fungsi untuk registrasi user
-export async function registerUser(username: string, password: string) {
+export async function registerUser(username: string, password: string): Promise<{ message: string; userId: any; }> {
   const { db } = await connectToDatabase();
   const collection = db.collection('users');
 
