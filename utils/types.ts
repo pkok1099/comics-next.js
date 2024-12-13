@@ -1,4 +1,4 @@
-import { Comic } from './types';
+//import { Comic } from './types';
 
 // types.ts
 export type Comic = {
@@ -13,7 +13,7 @@ export interface HistoryItem {
   chapterId: string;
   thumbnailUrl: string;
   timestamp: string;
-}// Definisikan tipe untuk komik dan pagination
+} // Definisikan tipe untuk komik dan pagination
 export interface Komik {
   judul: string;
   link: string;
@@ -26,4 +26,3 @@ export type ComicGridProps = {
   comics: Comic[];
   loading: boolean;
 };
-

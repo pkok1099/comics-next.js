@@ -4,9 +4,15 @@ import {
   createUser,
   findUserByUsername,
 } from '@/utils/mongodb';
-
+interface User {
+  _id: string;
+  username: string;
+}
 // Fungsi untuk registrasi user
-export async function registerUser(username: string, password: string): Promise<{ message: string; userId: any; }> {
+export async function registerUser(
+  username: string,
+  password: string,
+): Promise<User | null> {
   const { db } = await connectToDatabase();
   const collection = db.collection('users');
 
@@ -30,7 +36,10 @@ export async function registerUser(username: string, password: string): Promise<
 }
 
 // Fungsi untuk login user
-export async function loginUser(username: string, password: string) {
+export async function loginUser(
+  username: string,
+  password: string,
+): Promise<User | null> {
   const { db } = await connectToDatabase();
   const collection = db.collection('users');
 

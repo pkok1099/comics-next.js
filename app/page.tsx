@@ -43,38 +43,41 @@ function KomikList() {
     });
   }, [currentPage]);
 
-
   return (
     <div className='flex min-h-screen flex-col items-center p-5'>
       <div className='grid w-full grid-cols-4 gap-2 lg:grid-cols-5'>
         {isLoading
           ? Array.from({ length: 12 }).map((_, index) => (
-            <SkeletonLoader key={index} />
-          ))
+              <SkeletonLoader key={index} />
+            ))
           : komikList.map((komik) => (
-            <KomikCard
-              key={komik.judul}
-              komik={komik}
-              onClick={() => (async (komikLink: string): Promise<void> => {
-                setIsLoading(true);
-                try {
-                  await router.push(
-                    `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`
-                  );
-                } catch (error) {
-                  console.error('Error navigating to komik page:', error);
-                } finally {
-                  setIsLoading(false);
+              <KomikCard
+                key={komik.judul}
+                komik={komik}
+                onClick={() =>
+                  (async (komikLink: string): Promise<void> => {
+                    setIsLoading(true);
+                    try {
+                      await router.push(
+                        `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
+                      );
+                    } catch (error) {
+                      console.error('Error navigating to komik page:', error);
+                    } finally {
+                      setIsLoading(false);
+                    }
+                  })(komik.link)
                 }
-              })(komik.link)} />
-          ))}
+              />
+            ))}
       </div>
 
       {!isLoading && (
         <Pagination
           currentPage={currentPage}
           pagination={pagination}
-          setCurrentPage={setCurrentPage} />
+          setCurrentPage={setCurrentPage}
+        />
       )}
     </div>
   );

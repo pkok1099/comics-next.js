@@ -1,7 +1,10 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import { connectToDatabase } from '../utils/mongodb';
 
-export async function deleteHistory(user: string, historyId: string): Promise<{ message: string; }> {
+export async function deleteHistory(
+  user: string,
+  historyId: string,
+): Promise<{ message: string }> {
   const { db } = await connectToDatabase();
   const collection = db.collection('history');
   try {

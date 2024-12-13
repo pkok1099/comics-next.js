@@ -29,7 +29,7 @@ export default function SearchPage() {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/komikindo/search/${encodeURIComponent(query)}/${page}`
+        `/api/komikindo/search/${encodeURIComponent(query)}/${page}`,
       );
       if (!response.ok) {
         throw new Error('Search failed');
@@ -39,10 +39,10 @@ export default function SearchPage() {
       setSearchResults(
         data.comics.map((comic: any) => ({
           title: comic.title,
-          endpoint:comic.link.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1'), // Endpoint dapat diambil dari link
+          endpoint: comic.link.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1'), // Endpoint dapat diambil dari link
           thumbnail: comic.image,
           rating: comic.rating,
-        })) || []
+        })) || [],
       );
       setTotalPages(data.totalPages || 1);
     } catch (error) {

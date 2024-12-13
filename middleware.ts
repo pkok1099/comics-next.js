@@ -27,5 +27,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', ...PROTECTED_ROUTES, ...AUTH_ROUTES],
+  matcher: ['/', '/history', '/komikindo', '/search', '/login', '/register'],
 };

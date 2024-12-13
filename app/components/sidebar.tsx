@@ -140,10 +140,6 @@ export default function Sidebar() {
               className='flex flex-col gap-2'
             >
               {sidebarItemsPH.map((item, index) => (
-              
-              
-              
-              
                 <motion.div
                   key={item.name}
                   variants={{
@@ -168,28 +164,25 @@ export default function Sidebar() {
                     </Link>
                   </Button>
                 </motion.div>
-                
-                
-                
               ))}
               <motion.div
-  initial={{ opacity: 0, x: -20 }}
-  animate={{ opacity: 1, x: 0 }}
-  className="mt-4"
->
-  <Button
-    variant="ghost"
-    className="flex items-center bg-gray-900 text-cyan-200"
-    data-ignore-outside-click
-    onClick={(e) => {
-      e.stopPropagation(); // Cegah event bubbling ke listener `mousedown`
-      handleLogout(); // Panggil fungsi logout
-    }}
-  >
-    <LogOut className="mr-2 h-5 w-5" />
-    Logout
-  </Button>
-</motion.div>
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className='mt-4'
+              >
+                <Button
+                  variant='ghost'
+                  className='flex items-center bg-gray-900 text-cyan-200'
+                  data-ignore-outside-click
+                  onClick={(e) => {
+                    e.stopPropagation(); // Cegah event bubbling ke listener `mousedown`
+                    handleLogout(); // Panggil fungsi logout
+                  }}
+                >
+                  <LogOut className='mr-2 h-5 w-5' />
+                  Logout
+                </Button>
+              </motion.div>
             </motion.div>
           </motion.div>
         </div>

@@ -2,6 +2,11 @@ import { NextConfig } from 'next';
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
+  logging: {
+    fetches: {
+      fullUrl: false,
+    },
+  },
   reactStrictMode: true,
   images: {
     remotePatterns: [
