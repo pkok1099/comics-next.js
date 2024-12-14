@@ -17,7 +17,7 @@ export function validateUser(req: NextApiRequest): string {
   try {
     // Memverifikasi token dengan secret key
     const decoded = jwt.verify(userToken, SECRET_KEY);
-
+    console.log(decoded)
     // Mengembalikan id dan username dari token yang terdekripsi
     return decoded as string;
   } catch (error) {

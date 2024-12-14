@@ -9,7 +9,7 @@ export default async function handler(
   if (req.method === 'GET') {
     try {
       const user = validateUser(req);
-      const history = await getHistoryByUser(user);
+      const history = await getHistoryByUser(user.username);
       res.status(200).json(history);
     } catch (error) {
       if (error instanceof Error) {

@@ -17,7 +17,7 @@ export async function addOrUpdateHistory(
   try {
     // Cari entri berdasarkan user dan title
     const existingHistory = await collection.findOne({ user, title });
-
+    console.log(existingHistory)
     if (existingHistory) {
       // Validasi agar chapterId lebih besar
       if (parseInt(chapterId) <= parseInt(existingHistory.chapterId)) {

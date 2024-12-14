@@ -13,7 +13,7 @@ export default async function handler(
       if (typeof historyId !== 'string') {
         throw new Error('Invalid historyId');
       }
-      const result = await deleteHistory(user, historyId);
+      const result = await deleteHistory(user.username, historyId);
       res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {

@@ -13,11 +13,11 @@ export default async function handler(
 
       // Menambahkan atau memperbarui history menggunakan decodedUser yang sudah memiliki informasi dari token
       const result = await addOrUpdateHistory(
-        decodedUser,
-        title,
-        chapterId,
-        thumbnailUrl,
-      );
+  decodedUser.username, // Hanya mengirim username
+  title,
+  chapterId,
+  thumbnailUrl,
+);
 
       res.status(200).json(result);
     } catch (error) {
