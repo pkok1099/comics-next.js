@@ -8,12 +8,21 @@ interface User {
   _id: string;
   username: string;
 }
-// Fungsi untuk registrasi user
+
+interface AuthResponse {
+  message: string;
+  userId: string;
+}
+
 export async function registerUser(
   username: string,
   password: string,
 ): Promise<User | null> {
-  const { db } = await connectToDatabase();
+  const connection = await connectToDatabase();
+  if (!connection || !connection.db) {
+    throw new Error('Database connection failed');
+  }
+  const { db } = connection;
   const collection = db.collection('users');
 
   try {
@@ -28,7 +37,9 @@ export async function registerUser(
 
     // Buat user baru
     const userId = await createUser(collection, username, hashedPassword);
-    return { message: 'User registered successfully', userId };
+
+    // Kembalikan data user dengan tipe User
+    return { _id: userId, username };
   } catch (error) {
     console.error('Error during registration:', error);
     throw error;
@@ -39,8 +50,12 @@ export async function registerUser(
 export async function loginUser(
   username: string,
   password: string,
-): Promise<User | null> {
-  const { db } = await connectToDatabase();
+): Promise<User & AuthResponse | null> {
+  const connection = await connectToDatabase();
+  if (!connection || !connection.db) {
+    throw new Error('Database connection failed');
+  }
+  const { db } = connection;
   const collection = db.collection('users');
 
   try {
@@ -56,7 +71,12 @@ export async function loginUser(
       throw new Error('Invalid password');
     }
 
-    return { message: 'Login successful', userId: user._id };
+    return {
+      _id: user._id,
+      username: user.username,
+      message: 'Login successful',
+      userId: user._id,
+    };
   } catch (error) {
     console.error('Error during login:', error);
     throw error;

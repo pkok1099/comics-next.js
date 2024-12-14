@@ -6,7 +6,12 @@ export async function addOrUpdateHistory(
   chapterId: string,
   thumbnailUrl: string,
 ): Promise<{ message: string }> {
-  const { db } = await connectToDatabase();
+  // Memastikan bahwa koneksi ke database berhasil dan memiliki db yang valid
+  const connection = await connectToDatabase();
+  if (!connection || !connection.db) {
+    throw new Error('Database connection failed');
+  }
+  const { db } = connection;
   const collection = db.collection('history');
 
   try {

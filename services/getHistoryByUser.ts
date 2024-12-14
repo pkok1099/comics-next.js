@@ -1,7 +1,11 @@
 import { connectToDatabase } from '../utils/mongodb';
 
 export async function getHistoryByUser(user: string): Promise<any> {
-  const { db } = await connectToDatabase();
+  const connection = await connectToDatabase();
+  if (!connection || !connection.db) {
+    throw new Error('Database connection failed');
+  }
+  const { db } = connection;
   const collection = db.collection('history');
   try {
     const history = await collection

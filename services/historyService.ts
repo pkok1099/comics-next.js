@@ -5,7 +5,11 @@ export async function deleteHistory(
   user: string,
   historyId: string,
 ): Promise<{ message: string }> {
-  const { db } = await connectToDatabase();
+  const connection = await connectToDatabase();
+  if (!connection || !connection.db) {
+    throw new Error('Database connection failed');
+  }
+  const { db } = connection;
   const collection = db.collection('history');
   try {
     const result = await collection.deleteOne({

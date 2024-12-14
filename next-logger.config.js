@@ -1,6 +1,6 @@
-const { createLogger, format, transports } = require('winston')
+const { createLogger, format, transports } = require('winston');
 
-const logger = defaultConfig =>
+const logger = (defaultConfig) =>
   createLogger({
     transports: [
       new transports.Console({
@@ -8,8 +8,8 @@ const logger = defaultConfig =>
         format: format.json(),
       }),
     ],
-  })
+  });
 
 module.exports = {
   logger,
-}
+};

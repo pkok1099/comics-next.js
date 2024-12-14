@@ -19,12 +19,6 @@ export default async function handler(
       const { username, password }: { username: string; password: string } =
         req.body;
 
-      // Validasi input
-      if (!username || !password) {
-        res.status(400).json({ message: 'Username and password are required' });
-        return;
-      }
-
       const user: User | null = await loginUser(username, password);
 
       if (!user) {

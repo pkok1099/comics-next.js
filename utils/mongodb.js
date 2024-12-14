@@ -5,6 +5,7 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   maxPoolSize: 10, // Sesuaikan ukuran pool koneksi jika diperlukan
   socketTimeoutMS: 30000, // Timeout untuk koneksi yang terlalu lama
   serverSelectionTimeoutMS: 5000, // Timeout untuk memilih server
+  retryWrites: true, // Aktifkan retry untuk operasi tulis
 });
 
 // Menyimpan clientPromise untuk memastikan hanya ada satu koneksi untuk seluruh aplikasi
@@ -40,12 +41,32 @@ export async function findUserByUsername(collection, username) {
 }
 
 // Fungsi untuk menghubungkan ke database dengan koneksi yang persisten
+// export async function connectToDatabase() {
+  // try {
+    // const client = await clientPromise; // Mengambil client dari promise
+    // const db = client.db('komik'); // Mengambil database 'komik'
+    // return { db, client }; // Mengembalikan database dan client
+  // } catch (error) {
+    // throw new Error('Error connecting to database: ' + error.message); // Pastikan error dilempar dengan benar
+  // }
+// }
+
+
 export async function connectToDatabase() {
-  try {
-    const client = await clientPromise; // Mengambil client dari promise
-    const db = client.db('komik'); // Mengambil database 'komik'
-    return { db, client }; // Mengembalikan database dan client
-  } catch (error) {
-    throw new Error('Error connecting to database: ' + error.message); // Pastikan error dilempar dengan benar
-  }
+    let retries = 5; // Maksimal percobaan
+    while (retries) {
+        try {
+            const client = await clientPromise; // Mengambil client dari promise
+            const db = client.db("komik"); // Mengambil database 'komik'
+            console.log("Berhasil terhubung ke MongoDB");
+            return { db, client }; // Mengembalikan database dan client
+        } catch (error) {
+            console.error("Error connecting to database:", error.message);
+            retries -= 1;
+            if (!retries) {
+                throw new Error("Gagal terhubung ke database setelah beberapa percobaan.");
+            }
+            await new Promise(res => setTimeout(res, 2000)); // Tunggu 2 detik sebelum mencoba lagi
+        }
+    }
 }
