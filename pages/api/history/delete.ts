@@ -1,19 +1,24 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { deleteHistory } from '../../../services/historyService';
 import { validateUser } from '../../../utils/validateUser';
-
+interface User {
+  id: string;
+  username: string;
+  iat: number;
+  exp: number;
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   if (req.method === 'DELETE') {
     try {
-      const user = validateUser(req);
+      const user : User = validateUser(req);
       const { historyId } = req.query;
       if (typeof historyId !== 'string') {
         throw new Error('Invalid historyId');
       }
-      const result = await deleteHistory(user, historyId);
+      const result = await deleteHistory(user.username, historyId);
       res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {

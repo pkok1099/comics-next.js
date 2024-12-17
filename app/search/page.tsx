@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
@@ -25,7 +25,7 @@ export default function SearchPage() {
     }
   }, [searchQuery, currentPage]);
 
-  const performSearch = async (query: string, page: number) => {
+  async function performSearch(query: string, page: number) {
     setLoading(true);
     try {
       const response = await fetch(
@@ -35,7 +35,15 @@ export default function SearchPage() {
         throw new Error('Search failed');
       }
       const data = await response.json();
-      setSearchResults(data.comics || []);
+      // Menyesuaikan struktur data sesuai dengan response baru
+      setSearchResults(
+        data.comics.map((comic: any) => ({
+          title: comic.title,
+          endpoint: comic.link.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1'), // Endpoint dapat diambil dari link
+          thumbnail: comic.image,
+          rating: comic.rating,
+        })) || [],
+      );
       setTotalPages(data.totalPages || 1);
     } catch (error) {
       console.error('Error searching comics:', error);
@@ -43,7 +51,7 @@ export default function SearchPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

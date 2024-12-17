@@ -1,27 +1,29 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { addOrUpdateHistory } from '../../../services/historyService';
+import { addOrUpdateHistory } from '@/services/addOrUpdateHistory';
 import { validateUser } from '../../../utils/validateUser';
-
+interface User {
+  id: string;
+  username: string;
+  iat: number;
+  exp: number;
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
   if (req.method === 'POST') {
     try {
-      const user = validateUser(req);
-      const { title, chapterId } = req.body;
-      const result = await function addOrUpdateHistory(
-        user: string,
-        title: string,
-        chapterId: string | number,
-        thumbnailUrl?: string,
-      ): void {
-        if (typeof chapterId === 'string') {
-          console.log(`Chapter ID as string: ${chapterId}`);
-        } else if (typeof chapterId === 'number') {
-          console.log(`Chapter ID as number: ${chapterId}`);
-        }
-      };
+      const decodedUser : User = validateUser(req); // Mendapatkan user yang sudah didekodekan
+      const { title, chapterId, thumbnailUrl } = req.body;
+
+      // Menambahkan atau memperbarui history menggunakan decodedUser yang sudah memiliki informasi dari token
+      const result = await addOrUpdateHistory(
+  decodedUser.username, // Hanya mengirim username
+  title,
+  chapterId,
+  thumbnailUrl,
+);
+
       res.status(200).json(result);
     } catch (error) {
       if (error instanceof Error) {
