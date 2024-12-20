@@ -5,8 +5,8 @@ import Pagination from '@/components/ui/Pagination';
 import { useRouter } from 'next/navigation';
 import { KomikCard } from '@/components/komikindo/KomikCard';
 import { SkeletonLoader } from '@/components/komikindo/SkeletonLoader';
-import { Komik } from '@/utils/types';
-import { PaginationData } from '@/utils/types';
+// import { Komik } from '@/utils/global';
+// import { PaginationData } from '@/utils/global';
 
 function KomikList() {
   const [komikList, setKomikList] = useState<Komik[]>([]);
