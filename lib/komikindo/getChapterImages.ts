@@ -1,14 +1,14 @@
-const fetchWithTimeout = require('../utils/fetchWithTimeout');
-const validateEnv = require('../utils/validateEnv');
+import fetchWithTimeout from '../utils/fetchWithTimeout';
+import validateEnv from '../utils/validateEnv';
 
-async function getChapterImages(komik, chapter) {
+async function getChapterImages(komik: string, chapter: string): Promise<string[]> {
   const chapterUrl = `${validateEnv('URL_KOMIK')}/${komik}-chapter-${chapter}/`;
   try {
     const $ = await fetchWithTimeout(chapterUrl, {
       method: 'GET',
     });
 
-    const imageUrls = [];
+    const imageUrls: string[] = [];
     $('.img-landmine img').each((_, img) => {
       let src = $(img).attr('src');
       if (src) {
@@ -24,4 +24,5 @@ async function getChapterImages(komik, chapter) {
     throw new Error('Failed to fetch chapter images.');
   }
 }
-module.exports = getChapterImages;
+
+export default getChapterImages;

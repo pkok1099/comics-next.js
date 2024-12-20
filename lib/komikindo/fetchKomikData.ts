@@ -1,12 +1,23 @@
-const commonHeaders = require('../commonHeaders');
-const fetchWithTimeout = require('../utils/fetchWithTimeout');
-const isValidUrl = require('../utils/isValidUrl');
-const validateEnv = require('../utils/validateEnv');
+import commonHeaders from '../commonHeaders';
+import fetchWithTimeout from '../utils/fetchWithTimeout';
+import isValidUrl from '../utils/isValidUrl';
+import validateEnv from '../utils/validateEnv';
 
-async function fetchKomikData(page = 1) {
+interface Komik {
+  judul: string;
+  thumbnail: string | null | undefined; // Allow undefined
+  link: string | undefined;
+}
+
+interface FetchKomikDataResponse {
+  komikList: Komik[];
+  pagination: number[];
+}
+
+async function fetchKomikData(page: number = 1): Promise<FetchKomikDataResponse> {
   try {
-    if (typeof page !== 'number' && !isNaN(page)) {
-      throw new error('page harus number');
+    if (typeof page !== 'number' || isNaN(page)) {
+      throw new Error('page harus number');
     }
 
     const url = validateEnv('URL_KOMIK');
@@ -20,7 +31,7 @@ async function fetchKomikData(page = 1) {
     );
 
     // Parsing data komik
-    const komikList = $('.animepost')
+    const komikList: Komik[] = $('.animepost')
       .map((_, element) => {
         const $el = $(element); // Cache elemen saat iterasi
         const thumbnail = $el.find('img').attr('src');
@@ -34,16 +45,17 @@ async function fetchKomikData(page = 1) {
       .filter((komik) => komik.thumbnail); // Hanya ambil data dengan thumbnail yang valid
 
     // Parsing pagination
-    const pagination = $('.pagination .page-numbers')
+    const pagination: number[] = $('.pagination .page-numbers')
       .map((_, element) => parseInt($(element).text().trim(), 10))
       .get()
       .filter((pageNumber) => !isNaN(pageNumber)); // Hanya ambil angka yang valid
 
     return { komikList, pagination };
   } catch (error) {
-    console.error('Error fetching komik data:', error.message);
-    throw error;
+    const err = error as Error; // Type assertion
+    console.error('Error fetching komik data:', err.message);
+    throw err;
   }
 }
 
-module.exports = fetchKomikData;
+export default fetchKomikData;

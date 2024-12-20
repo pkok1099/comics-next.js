@@ -1,9 +1,9 @@
-const isValidUrl = require('../utils/isValidUrl');
-const fetchWithTimeout = require('../utils/fetchWithTimeout');
-const validateEnv = require('../utils/validateEnv');
+import isValidUrl from '../utils/isValidUrl';
+import fetchWithTimeout from '../utils/fetchWithTimeout';
+import validateEnv from '../utils/validateEnv';
 
 // Fungsi untuk mengambil gambar berdasarkan chapter dan index
-async function getImageByIndex(judul, chapter, index) {
+async function getImageByIndex(judul: string, chapter: string, index: number): Promise<string> {
   if (!judul || !chapter || !index || isNaN(index)) {
     throw new Error("Parameter 'judul', 'chapter', dan 'index' harus valid.");
   }
@@ -36,4 +36,4 @@ async function getImageByIndex(judul, chapter, index) {
   }
 }
 
-module.exports = getImageByIndex;
+export default getImageByIndex;
