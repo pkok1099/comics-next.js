@@ -1,7 +1,7 @@
 import commonHeaders from '../commonHeaders';
 import fetchWithTimeout from '../utils/fetchWithTimeout';
 import isValidUrl from '../utils/isValidUrl';
-import validateEnv from '../utils/validateEnv';
+import { CustomError, constructUrl } from './utils';
 
 interface Komik {
   judul: string;
@@ -17,18 +17,14 @@ interface FetchKomikDataResponse {
 async function fetchKomikData(page: number = 1): Promise<FetchKomikDataResponse> {
   try {
     if (typeof page !== 'number' || isNaN(page)) {
-      throw new Error('page harus number');
+      throw new CustomError('page harus number');
     }
 
-    const url = validateEnv('URL_KOMIK');
-    console.log(url);
-    const $ = await fetchWithTimeout(
-      `${validateEnv('URL_KOMIK')}/komik-terbaru/page/${page}/`,
-      {
-        headers: commonHeaders,
-        method: 'GET',
-      },
-    );
+    const url = constructUrl(`/komik-terbaru/page/${page}/`);
+    const $ = await fetchWithTimeout(url, {
+      headers: commonHeaders,
+      method: 'GET',
+    });
 
     // Parsing data komik
     const komikList: Komik[] = $('.animepost')
@@ -52,7 +48,7 @@ async function fetchKomikData(page: number = 1): Promise<FetchKomikDataResponse>
 
     return { komikList, pagination };
   } catch (error) {
-    const err = error as Error; // Type assertion
+    const err = error as CustomError; // Type assertion
     console.error('Error fetching komik data:', err.message);
     throw err;
   }

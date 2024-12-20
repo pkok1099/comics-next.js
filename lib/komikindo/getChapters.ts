@@ -1,5 +1,5 @@
 import fetchWithTimeout from '../utils/fetchWithTimeout';
-import validateEnv from '../utils/validateEnv';
+import { CustomError, constructUrl } from './utils';
 
 interface Chapter {
   title: string;
@@ -8,7 +8,11 @@ interface Chapter {
 }
 
 const getChapters = async (judul: string): Promise<Chapter[]> => {
-  const baseUrl = `${validateEnv('URL_KOMIK')}/komik/${decodeURIComponent(judul)}/`;
+  if (!judul) {
+    throw new CustomError("Parameter 'judul' harus valid.");
+  }
+
+  const baseUrl = constructUrl(`/komik/${decodeURIComponent(judul)}/`);
 
   try {
     const $ = await fetchWithTimeout(decodeURIComponent(baseUrl), {
@@ -37,8 +41,8 @@ const getChapters = async (judul: string): Promise<Chapter[]> => {
       return chapterB - chapterA; // Urutkan dari chapter terbesar
     });
   } catch (error) {
-    const err = error as Error; // Type assertion
-    throw new Error(`Error scraping komik chapters: ${err.message}`);
+    const err = error as CustomError; // Type assertion
+    throw new CustomError(`Error scraping komik chapters: ${err.message}`);
   }
 };
 

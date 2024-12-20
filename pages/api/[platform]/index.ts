@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { doujindesu, komikindo } from '@/f/index'; // Sesuaikan dengan penamaan platform kecil
+import { doujindesu, komikindo } from 'f/index'; // Sesuaikan dengan penamaan platform kecil
 
 type AvailablePlatforms = 'doujindesu' | 'komikindo';
 
@@ -20,9 +20,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Panggil fungsi `fetchKomikData` sesuai platform
     const pageNumber = Array.isArray(page) ? parseInt(page[0]) : parseInt(page as string);
-    const { komikList, pagination } = await availablePlatforms[
-      platform
-    ].fetchKomikData(parseInt(page as string));
+
+    if (isNaN(pageNumber)) {
+      return res.status(400).json({ message: 'Invalid page number' });
+    }
+
+    const { komikList, pagination } = await availablePlatforms[platform].fetchKomikData(pageNumber);
 
     // Kirimkan hasil data komik
     return res.status(200).json({ komikList, pagination });

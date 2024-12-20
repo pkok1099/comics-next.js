@@ -1,18 +1,16 @@
 import isValidUrl from '../utils/isValidUrl';
 import fetchWithTimeout from '../utils/fetchWithTimeout';
-import validateEnv from '../utils/validateEnv';
+import { CustomError, constructUrl } from './utils';
 
 // Fungsi untuk mengambil gambar berdasarkan chapter dan index
 async function getImageByIndex(judul: string, chapter: string, index: number): Promise<string> {
   if (!judul || !chapter || !index || isNaN(index)) {
-    throw new Error("Parameter 'judul', 'chapter', dan 'index' harus valid.");
+    throw new CustomError("Parameter 'judul', 'chapter', dan 'index' harus valid.");
   }
   try {
     // Ambil URL chapter
-    const $ = await fetchWithTimeout(
-      `${validateEnv('URL_KOMIK')}/${encodeURIComponent(judul)}-chapter-${chapter}/#page_${index}`,
-      { method: 'GET' },
-    );
+    const url = constructUrl(`/${encodeURIComponent(judul)}-chapter-${chapter}/#page_${index}`);
+    const $ = await fetchWithTimeout(url, { method: 'GET' });
     let imgSrc = $(`.img-landmine > img:nth-child(${index})`).attr('src');
 
     if (imgSrc) {
@@ -28,11 +26,12 @@ async function getImageByIndex(judul: string, chapter: string, index: number): P
       }
       return imgSrc;
     } else {
-      throw new Error('Image not found.');
+      throw new CustomError('Image not found.');
     }
   } catch (error) {
-    console.error('Error fetching image:', error);
-    throw new Error('Failed to fetch image.');
+    const err = error as CustomError; // Type assertion
+    console.error('Error fetching image:', err.message);
+    throw new CustomError('Failed to fetch image.');
   }
 }
 

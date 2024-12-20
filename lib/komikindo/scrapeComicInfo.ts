@@ -1,5 +1,5 @@
 import fetchWithTimeout from '../utils/fetchWithTimeout';
-import validateEnv from '../utils/validateEnv';
+import { CustomError, constructUrl } from './utils';
 
 interface Recommendation {
   title: string;
@@ -29,11 +29,13 @@ interface ComicInfo {
 }
 
 const scrapeComicInfo = async (komik: string): Promise<ComicInfo> => {
+  if (!komik) {
+    throw new CustomError("Parameter 'komik' harus valid.");
+  }
+
   try {
-    const $ = await fetchWithTimeout(
-      `${validateEnv('URL_KOMIK')}/komik/${encodeURIComponent(komik)}/`,
-      { method: 'GET' },
-    );
+    const url = constructUrl(`/komik/${encodeURIComponent(komik)}/`);
+    const $ = await fetchWithTimeout(url, { method: 'GET' });
 
     const data: ComicInfo = {} as ComicInfo;
 
@@ -130,7 +132,7 @@ const scrapeComicInfo = async (komik: string): Promise<ComicInfo> => {
       .filter(Boolean) || ['No spoiler images found'];
 
     // Mendapatkan Chapter List
-    const chapterBaseUrl = `${validateEnv('URL_KOMIK')}/komik/${encodeURIComponent(komik)}/`;
+    const chapterBaseUrl = constructUrl(`/komik/${encodeURIComponent(komik)}/`);
     const chapterList: { title: string; url: string; lastUpdated: string }[] = [];
 
     const $chapters = await fetchWithTimeout(
@@ -161,8 +163,9 @@ const scrapeComicInfo = async (komik: string): Promise<ComicInfo> => {
 
     return data;
   } catch (error) {
-    console.error(`Error occurred while scraping comic info: ${(error as Error).message}`);
-    throw error;
+    const err = error as CustomError; // Type assertion
+    console.error(`Error occurred while scraping comic info: ${err.message}`);
+    throw new CustomError('Failed to scrape comic info.');
   }
 };
 
