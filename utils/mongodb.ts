@@ -1,6 +1,10 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, Collection, InsertOneResult, Document } from 'mongodb';
 
 // Membuat client MongoDB untuk koneksi yang persisten
+if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI environment variable is not defined.");
+}
+
 const client = new MongoClient(process.env.MONGODB_URI, {
   maxPoolSize: 10, // Sesuaikan ukuran pool koneksi jika diperlukan
   socketTimeoutMS: 30000, // Timeout untuk koneksi yang terlalu lama
@@ -9,12 +13,12 @@ const client = new MongoClient(process.env.MONGODB_URI, {
 });
 
 // Menyimpan clientPromise untuk memastikan hanya ada satu koneksi untuk seluruh aplikasi
-let clientPromise; // Tidak perlu tipe eksplisit jika menggunakan JavaScript biasa
+let clientPromise: Promise<MongoClient>; // Tipe eksplisit untuk clientPromise
 
 // Menggunakan global._mongoClientPromise untuk pengembangan agar koneksi tidak dibuat ulang
 if (process.env.NODE_ENV === 'development') {
   if (!global._mongoClientPromise) {
-    global._mongoClientPromise = client.connect();
+const globalAny = global as unknown as NodeJS.Global;
   }
   clientPromise = global._mongoClientPromise;
 } else {
@@ -22,37 +26,26 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Fungsi untuk membuat user baru
-export async function createUser(collection, username, password) {
+export async function createUser(collection: Collection<Document>, username: string, password: string): Promise<string> {
   try {
-    const result = await collection.insertOne({ username, password });
-    return result.insertedId;
+    const result: InsertOneResult<Document> = await collection.insertOne({ username, password });
+    return result.insertedId.toString();
   } catch (error) {
-    throw new Error('Error creating user: ' + error.message); // Pastikan error dilempar dengan benar
+    throw new Error('Error creating user: ' + (error as Error).message); // Type assertion for error
   }
 }
 
 // Fungsi untuk mencari user berdasarkan username
-export async function findUserByUsername(collection, username) {
+export async function findUserByUsername(collection: Collection<Document>, username: string): Promise<Document | null> {
   try {
     return await collection.findOne({ username });
   } catch (error) {
-    throw new Error('Error finding user: ' + error.message); // Pastikan error dilempar dengan benar
+    throw new Error('Error finding user: ' + (error as Error).message); // Type assertion for error
   }
 }
 
 // Fungsi untuk menghubungkan ke database dengan koneksi yang persisten
-// export async function connectToDatabase() {
-  // try {
-    // const client = await clientPromise; // Mengambil client dari promise
-    // const db = client.db('komik'); // Mengambil database 'komik'
-    // return { db, client }; // Mengembalikan database dan client
-  // } catch (error) {
-    // throw new Error('Error connecting to database: ' + error.message); // Pastikan error dilempar dengan benar
-  // }
-// }
-
-
-export async function connectToDatabase() {
+export async function connectToDatabase(): Promise<{ db: any; client: MongoClient }> {
     let retries = 5; // Maksimal percobaan
     while (retries) {
         try {
@@ -61,7 +54,7 @@ export async function connectToDatabase() {
             console.log("Berhasil terhubung ke MongoDB");
             return { db, client }; // Mengembalikan database dan client
         } catch (error) {
-            console.error("Error connecting to database:", error.message);
+            console.error("Error connecting to database:", (error as Error).message); // Type assertion for error
             retries -= 1;
             if (!retries) {
                 throw new Error("Gagal terhubung ke database setelah beberapa percobaan.");
@@ -69,4 +62,5 @@ export async function connectToDatabase() {
             await new Promise(res => setTimeout(res, 2000)); // Tunggu 2 detik sebelum mencoba lagi
         }
     }
+    throw new Error("Gagal terhubung ke database."); // Ensure a return statement
 }
