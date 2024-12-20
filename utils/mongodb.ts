@@ -12,18 +12,8 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   retryWrites: true, // Aktifkan retry untuk operasi tulis
 });
 
-// Menyimpan clientPromise untuk memastikan hanya ada satu koneksi untuk seluruh aplikasi
-let clientPromise: Promise<MongoClient>; // Tipe eksplisit untuk clientPromise
-
-// Menggunakan global._mongoClientPromise untuk pengembangan agar koneksi tidak dibuat ulang
-if (process.env.NODE_ENV === 'development') {
-  if (!global._mongoClientPromise) {
-const globalAny = global as unknown as NodeJS.Global;
-  }
-  clientPromise = global._mongoClientPromise;
-} else {
-  clientPromise = client.connect();
-}
+// Menggunakan koneksi langsung tanpa pengaturan khusus untuk pengembangan
+const clientPromise: Promise<MongoClient> = client.connect();
 
 // Fungsi untuk membuat user baru
 export async function createUser(collection: Collection<Document>, username: string, password: string): Promise<string> {
