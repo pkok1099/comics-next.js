@@ -1,7 +1,10 @@
 import fetchWithTimeout from '../utils/fetchWithTimeout';
 import validateEnv from '../utils/validateEnv';
 
-async function getChapterImages(komik: string, chapter: string): Promise<string[]> {
+async function getChapterImages(
+  komik: string,
+  chapter: string,
+): Promise<string[]> {
   const chapterUrl = `${validateEnv('URL_KOMIK')}/${komik}-chapter-${chapter}/`;
   try {
     const $ = await fetchWithTimeout(chapterUrl, {

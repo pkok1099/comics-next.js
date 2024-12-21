@@ -51,7 +51,9 @@ interface FetchKomikDataResponse {
   pagination: number[];
 }
 
-async function fetchKomikData(page: number = 1): Promise<FetchKomikDataResponse> {
+async function fetchKomikData(
+  page: number = 1,
+): Promise<FetchKomikDataResponse> {
   try {
     if (typeof page !== 'number' || isNaN(page)) {
       throw new CustomError('page harus number');

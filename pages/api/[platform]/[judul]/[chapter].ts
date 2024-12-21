@@ -3,7 +3,10 @@ import { komikindo } from '@/f/index';
 
 type AvailablePlatforms = 'komikindo'; // Define available platforms
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const {
     query: { platform, judul, chapter },
     method,
@@ -26,10 +29,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const cleanedTitle = judul.replace(/^\d{6}-/, '');
 
       // Dapatkan URL gambar dari platform yang sesuai
-      const imageUrls = await availablePlatforms[platform as AvailablePlatforms].getChapterImages(
-        cleanedTitle,
-        chapter as string,
-      );
+      const imageUrls = await availablePlatforms[
+        platform as AvailablePlatforms
+      ].getChapterImages(cleanedTitle, chapter as string);
 
       // Gunakan proxy endpoint untuk mengarahkan permintaan gambar
       const protocol = req.headers['x-forwarded-proto'] || 'http';

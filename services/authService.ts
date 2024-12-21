@@ -50,7 +50,7 @@ export async function registerUser(
 export async function loginUser(
   username: string,
   password: string,
-): Promise<User & AuthResponse | null> {
+): Promise<(User & AuthResponse) | null> {
   const connection = await connectToDatabase();
   if (!connection || !connection.db) {
     throw new Error('Database connection failed');

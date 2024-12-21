@@ -123,7 +123,8 @@ const scrapeComicInfo = async (komik: string): Promise<ComicInfo> => {
     data.spoilerImages = $('.spoiler .spoiler-img img')
       .map((_, img) => {
         let src = $(img).attr('src');
-        if (src && !src.startsWith('http')) { // Check if src is defined
+        if (src && !src.startsWith('http')) {
+          // Check if src is defined
           src = `https:${src}`;
         }
         return src;
@@ -133,7 +134,8 @@ const scrapeComicInfo = async (komik: string): Promise<ComicInfo> => {
 
     // Mendapatkan Chapter List
     const chapterBaseUrl = constructUrl(`/komik/${encodeURIComponent(komik)}/`);
-    const chapterList: { title: string; url: string; lastUpdated: string }[] = [];
+    const chapterList: { title: string; url: string; lastUpdated: string }[] =
+      [];
 
     const $chapters = await fetchWithTimeout(
       decodeURIComponent(chapterBaseUrl),

@@ -1,6 +1,9 @@
 import cheerio from 'cheerio';
 
-async function fetchWithTimeout(resource: string, options: RequestInit & { timeout?: number } = {}): Promise<cheerio.CheerioAPI> {
+async function fetchWithTimeout(
+  resource: string,
+  options: RequestInit & { timeout?: number } = {},
+): Promise<cheerio.CheerioAPI> {
   const { timeout = 5000 } = options;
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);

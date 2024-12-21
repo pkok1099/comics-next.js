@@ -15,7 +15,10 @@ interface FetchComicsResult {
 }
 
 // Fungsi utama untuk mengambil daftar komik dari halaman
-async function fetchComicsFromPage(query: string = '', page: number = 1): Promise<FetchComicsResult> {
+async function fetchComicsFromPage(
+  query: string = '',
+  page: number = 1,
+): Promise<FetchComicsResult> {
   try {
     const $ = await fetchWithTimeout(
       `${validateEnv('URL_KOMIK')}/page/${page}/?s=${query}`,
@@ -49,7 +52,7 @@ async function fetchComicsFromPage(query: string = '', page: number = 1): Promis
 
       if (image && !isValidUrl(image)) {
         console.warn(`imgage tidak ada: ${image}`);
-      image = undefined;
+        image = undefined;
       }
       if (link && !isValidUrl(link)) {
         console.warn(`link tidak ada: ${link}`);

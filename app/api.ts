@@ -1,4 +1,6 @@
-export const fetchKomik = async (page: number): Promise<{ komikList: Komik[]; pagination: PaginationData }> => {
+export const fetchKomik = async (
+  page: number,
+): Promise<{ komikList: Komik[]; pagination: PaginationData }> => {
   try {
     const response = await fetch(`/api/komikindo?page=${page}`);
     const data = await response.json();

@@ -17,18 +17,18 @@ function KomikList() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
 
-const loadKomik = async (page: number): Promise<void> => {
-  setIsLoading(true);
-  try {
-    const data = await fetchKomik(page);
-    setKomikList(data.komikList);
-    setPagination(data.pagination);
-  } catch (error) {
-    console.error('Error loading komik data:', error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+  const loadKomik = async (page: number): Promise<void> => {
+    setIsLoading(true);
+    try {
+      const data = await fetchKomik(page);
+      setKomikList(data.komikList);
+      setPagination(data.pagination);
+    } catch (error) {
+      console.error('Error loading komik data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     loadKomik(currentPage);

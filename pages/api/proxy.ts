@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   const { url, head } = req.query; // Ambil URL dan parameter `head`
 
   if (!url) {
@@ -28,7 +29,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         break;
     }
   } catch (error) {
-    console.error(`Failed to load headers for head=${head}:`, (error as any).message);
+    console.error(
+      `Failed to load headers for head=${head}:`,
+      (error as any).message,
+    );
     return res.status(500).json({
       message: `Failed to load headers for head=${head}`,
     });
@@ -51,9 +55,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const imageBuffer = await response.arrayBuffer(); // Baca buffer gambar
 
     if (contentType) {
-        res.setHeader('Content-Type', contentType); // Set tipe konten pada respon
+      res.setHeader('Content-Type', contentType); // Set tipe konten pada respon
     } else {
-        res.setHeader('Content-Type', 'application/octet-stream'); // Fallback content type
+      res.setHeader('Content-Type', 'application/octet-stream'); // Fallback content type
     }
     res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache selama 1 hari
     res.send(Buffer.from(imageBuffer)); // Kirim gambar ke klien

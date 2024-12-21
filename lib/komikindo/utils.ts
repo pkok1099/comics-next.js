@@ -3,7 +3,7 @@ import validateEnv from '../utils/validateEnv';
 class CustomError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "CustomError";
+    this.name = 'CustomError';
   }
 }
 

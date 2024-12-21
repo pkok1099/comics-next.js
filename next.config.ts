@@ -2,8 +2,8 @@ import { NextConfig } from 'next';
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
   logging: {
     fetches: {

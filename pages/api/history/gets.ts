@@ -15,7 +15,7 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     try {
-      const user : User = validateUser(req); // Pastikan validateUser mengembalikan objek User
+      const user: User = validateUser(req); // Pastikan validateUser mengembalikan objek User
       const history = await getHistoryByUser(user.username);
       res.status(200).json(history);
     } catch (error) {

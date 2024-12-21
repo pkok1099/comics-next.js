@@ -18,7 +18,8 @@ export function middleware(req: NextRequest) {
   const isProtectedRoute = PROTECTED_ROUTES.some(
     (route) => currentPath === route,
   );
-  if (!user && isProtectedRoute) { // Check if the current path is a protected route
+  if (!user && isProtectedRoute) {
+    // Check if the current path is a protected route
     return NextResponse.redirect(new URL('/login', req.url));
   }
 

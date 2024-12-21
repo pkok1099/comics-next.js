@@ -1,4 +1,3 @@
-
 function validateEnv(key: string): string {
   const envValue = process.env[key];
 

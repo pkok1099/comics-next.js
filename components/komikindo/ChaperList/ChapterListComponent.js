@@ -10,7 +10,7 @@ import { getChapterUrl } from './getChapterUrl';
 
 // Chapter List Component
 export const ChapterListComponent = ({ chapters, id }) => (
-  <Collapsible className='mt-8' >
+  <Collapsible className='mt-8'>
     <CollapsibleTrigger className='flex cursor-pointer items-center justify-between rounded-md bg-gray-800 px-6 py-2'>
       <span className='text-lg font-bold text-gray-300'>Daftar Chapters</span>
     </CollapsibleTrigger>

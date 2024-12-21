@@ -20,55 +20,55 @@ interface AuthHook {
 export const useAuth = (): AuthHook => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const router = useRouter();
 
   const toggleMode = () => {
     setIsLogin(!isLogin);
-    setErrorMessage(""); // Hapus pesan error saat ganti mode
+    setErrorMessage(''); // Hapus pesan error saat ganti mode
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (loading) return; // Hindari eksekusi ulang jika loading aktif
-    setErrorMessage(""); // Reset pesan error
+    setErrorMessage(''); // Reset pesan error
     setLoading(true);
 
     if (!isLogin && password !== confirmPassword) {
-      setErrorMessage("Password dan konfirmasi password tidak cocok");
+      setErrorMessage('Password dan konfirmasi password tidak cocok');
       setLoading(false);
       return;
     }
 
     try {
-      const endpoint = isLogin ? "/api/login" : "/api/register";
+      const endpoint = isLogin ? '/api/login' : '/api/register';
       const body = JSON.stringify({ username, password });
 
       const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body,
       });
 
       if (response.ok) {
         if (isLogin) {
           document.cookie = `user=${username}; max-age=${365 * 24 * 60 * 60}; path=/`;
-          router.push("/"); // Redirect ke halaman utama
+          router.push('/'); // Redirect ke halaman utama
         } else {
-          router.push("/login"); // Redirect ke halaman login setelah register
+          router.push('/login'); // Redirect ke halaman login setelah register
         }
       } else {
         const data = await response.json();
-        setErrorMessage(data.message || "Proses gagal");
+        setErrorMessage(data.message || 'Proses gagal');
       }
     } catch (error) {
       console.error(error);
-      setErrorMessage("Terjadi kesalahan saat memproses permintaan");
+      setErrorMessage('Terjadi kesalahan saat memproses permintaan');
     } finally {
       setLoading(false);
     }
