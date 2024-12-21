@@ -30,7 +30,7 @@ export default function Header({ children }: HeaderProps) {
         <SidebarToggle />
         <div className='mr-4 hidden md:flex'>
           <Link href='/' className='mr-6 flex items-center space-x-2'>
-            <span className='ml-2 hidden font-bold text-cyan-200 sm:inline-block'>
+            <span className='ml-2 hidden font-bold sm:inline-block'>
               OnLasdan
             </span>
           </Link>
@@ -42,11 +42,11 @@ export default function Header({ children }: HeaderProps) {
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className='pl-8 text-cyan-200'
+                className='pl-8'
               />
             </div>
           </form>
-          <nav className='flex items-center text-cyan-200'>
+          <nav className='flex items-center '>
             <Button variant='ghost' asChild>
               <Link href='/history'>History</Link>
             </Button>

@@ -1,5 +1,5 @@
 // pages/api/doujindesu/komik/info/[judul]/
-import { Doujindesu } from '@/f/index.js';
+import { Doujindesu } from '@/f/index';
 
 export default async function handler(req, res) {
   const { judul } = req.query; // Mengambil parameter `judul` dari URL

@@ -1,3 +1,4 @@
+
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
@@ -39,7 +40,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <Sidebar />
               <div className='flex flex-1 flex-col overflow-hidden'>
                 <Header>
-                  <SidebarToggle />
                 </Header>
                 <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background'>
                   <Suspense>{children}</Suspense>

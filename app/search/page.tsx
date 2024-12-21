@@ -19,13 +19,13 @@ export default function SearchPage() {
 
   useEffect(() => {
     if (searchQuery) {
-      performSearch(searchQuery, currentPage);
+      performSearch({ query: searchQuery, page: currentPage });
     } else {
       setSearchResults([]);
     }
   }, [searchQuery, currentPage]);
 
-  async function performSearch(query: string, page: number) {
+  async function performSearch({ query, page }: { query: string; page: number; }): Promise<void> {
     setLoading(true);
     try {
       const response = await fetch(
@@ -56,7 +56,7 @@ export default function SearchPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentPage(1);
-    performSearch(searchQuery, 1);
+    performSearch({ query: searchQuery, page: 1 });
   };
 
   const handlePagination = (direction: 'next' | 'prev') => {
