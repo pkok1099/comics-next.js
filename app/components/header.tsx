@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,11 @@ import { ModeToggle } from '@/components/mode-toggle';
 import { Search } from 'lucide-react';
 import { SidebarToggle } from './sidebar-toggle';
 
-export default function Header() {
+interface HeaderProps {
+  children?: ReactNode;
+}
+
+export default function Header({ children }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
@@ -50,6 +54,7 @@ export default function Header() {
           </nav>
         </div>
       </div>
+      {children}
     </header>
   );
 }

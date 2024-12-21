@@ -3,10 +3,10 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 // import Image from 'next/image';
 const ChapterDetail = () => {
-  const { id, chapterId } = useParams(); // Get id and chapterId from URL
+  const { id, chapterId } = useParams() as { id: string; chapterId: string }; // Get id and chapterId from URL
   const router = useRouter(); // For navigation
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [chapterList, setChapterList] = useState([]);
   const [pages, setPages] = useState([]); // Store loaded pages
   const [buttonVisible, setButtonVisible] = useState(true); // For next button visibility
@@ -14,7 +14,7 @@ const ChapterDetail = () => {
   const [lastScrollY, setLastScrollY] = useState(0); // Menyimpan posisi scroll terakhir
   // Fetch images for the chapter
   const fetchChapterImages = useCallback(
-    async (chapterId) => {
+    async (chapterId: string) => {
       try {
         const response = await fetch(
           `/api/komikindo/${decodeURIComponent(id)}/${chapterId}/`,
@@ -24,7 +24,7 @@ const ChapterDetail = () => {
         const data = await response.json();
         return data; // Return image data
       } catch (err) {
-        setError(err.message); // Handle error
+        setError((err as Error).message); // Handle error
         return [];
       }
     },
@@ -32,7 +32,7 @@ const ChapterDetail = () => {
   ); // Menambahkan id sebagai dependensi
 
   const loadChapterImages = useCallback(
-    async (chapterId) => {
+    async (chapterId: string) => {
       setLoading(true);
       setError(null); // Reset error
 
@@ -49,7 +49,7 @@ const ChapterDetail = () => {
     [fetchChapterImages],
   ); // Menambahkan fetchChapterImages sebagai dependensi
 
-  const saveHistory = async (chapterId, title) => {
+  const saveHistory = async (chapterId: string, title: string) => {
     const response = await fetch('/api/history/save', {
       method: 'POST',
       headers: {
@@ -98,7 +98,7 @@ const ChapterDetail = () => {
       const data = await response.json();
       setChapterList(data); // Set chapter list
     } catch (err) {
-      setError(err.message); // Handle error
+      setError((err as Error).message); // Handle error
     }
   }, [id]); // Menambahkan id sebagai dependensi
 

@@ -1,27 +1,39 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+// import { ScrollArea } from '@/components/ui/scroll-area';
 import Pagination from '@/components/ui/Pagination';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { KomikCard } from '@/components/komikindo/KomikCard';
 import { SkeletonLoader } from '@/components/komikindo/SkeletonLoader';
 
-const KomikList = () => {
-  const [komikList, setKomikList] = useState([]);
-  const [pagination, setPagination] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+interface Komik {
+  judul: string;
+  link: string;
+  // Add other properties as needed
+}
+
+interface PaginationData {
+  currentPage: number;
+  totalPages: number;
+  // Add other properties as needed
+}
+
+const KomikList: React.FC = () => {
+  const [komikList, setKomikList] = useState<Komik[]>([]);
+  const [pagination, setPagination] = useState<PaginationData | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  const fetchKomik = async (page) => {
+  const fetchKomik = async (page: number) => {
     setIsLoading(true);
     try {
       const response = await fetch(`/api/komikindo?page=${page}`);
       const data = await response.json();
       setKomikList(data.komikList || []);
-      setPagination(data.pagination || []);
+      setPagination(data.pagination || null);
     } catch (error) {
       console.error('Error fetching komik data:', error);
     } finally {
@@ -40,10 +52,10 @@ const KomikList = () => {
     });
   }, [currentPage]);
 
-  const handleKomikClick = async (komikLink) => {
+  const handleKomikClick = async (komikLink: string) => {
     setIsLoading(true);
     try {
-      await router.push(
+      router.push(
         `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
       );
     } catch (error) {
@@ -69,7 +81,7 @@ const KomikList = () => {
             ))}
       </div>
 
-      {!isLoading && (
+      {!isLoading && pagination && (
         <Pagination
           currentPage={currentPage}
           pagination={pagination}

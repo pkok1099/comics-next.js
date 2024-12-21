@@ -1,3 +1,5 @@
+import { console } from 'inspector';
+import commonHeaders from '../commonHeaders';
 import fetchWithTimeout from '../utils/fetchWithTimeout';
 import validateEnv from '../utils/validateEnv';
 
@@ -6,10 +8,16 @@ async function getChapterImages(
   chapter: string,
 ): Promise<string[]> {
   const chapterUrl = `${validateEnv('URL_KOMIK')}/${komik}-chapter-${chapter}/`;
+  console.log(chapterUrl);
   try {
     const $ = await fetchWithTimeout(chapterUrl, {
+      headers: commonHeaders,
       method: 'GET',
     });
+
+    if (!$) {
+      throw new Error('Failed to fetch chapter images.');
+    }
 
     const imageUrls: string[] = [];
     $('.img-landmine img').each((_, img) => {
