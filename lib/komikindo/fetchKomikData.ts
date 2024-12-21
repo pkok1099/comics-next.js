@@ -1,3 +1,40 @@
+/**
+ * Fetches comic data from the specified page.
+ *
+ * @param {number} [page=1] - The page number to fetch data from. Defaults to 1.
+ * @returns {Promise<FetchKomikDataResponse>} A promise that resolves to an object containing the list of comics and pagination data.
+ * @throws {CustomError} Throws a custom error if the page parameter is not a valid number or if there is an error during fetching.
+ *
+ * @example
+ * ```typescript
+ * fetchKomikData(1).then(response => {
+ *   console.log(response.komikList);
+ *   console.log(response.pagination);
+ * }).catch(error => {
+ *   console.error(error.message);
+ * });
+ * ```
+ *
+ * @example
+ * Sample result:
+ * ```json
+ * {
+ *   "komikList": [
+ *     {
+ *       "judul": "Comic Title 1",
+ *       "thumbnail": "https://example.com/thumbnail1.jpg",
+ *       "link": "https://example.com/comic1"
+ *     },
+ *     {
+ *       "judul": "Comic Title 2",
+ *       "thumbnail": "https://example.com/thumbnail2.jpg",
+ *       "link": "https://example.com/comic2"
+ *     }
+ *   ],
+ *   "pagination": [1, 2, 3, 4, 5]
+ * }
+ * ```
+ */
 import commonHeaders from '../commonHeaders';
 import fetchWithTimeout from '../utils/fetchWithTimeout';
 import isValidUrl from '../utils/isValidUrl';
@@ -33,7 +70,7 @@ async function fetchKomikData(page: number = 1): Promise<FetchKomikDataResponse>
         const thumbnail = $el.find('img').attr('src');
         return {
           judul: $el.find('h4').text().trim(),
-          thumbnail: isValidUrl(thumbnail) ? thumbnail : null, // Validasi URL thumbnail
+          thumbnail: thumbnail && isValidUrl(thumbnail) ? thumbnail : null, // Validasi URL thumbnail
           link: $el.find('a').attr('href'),
         };
       })

@@ -16,8 +16,7 @@ export default async function handler(
 ): Promise<void> {
   if (req.method === 'POST') {
     try {
-      const { username, password }: { username: string; password: string } =
-        req.body;
+      const { username, password } = req.body;
 
       const user: User | null = await loginUser(username, password);
 
@@ -38,7 +37,7 @@ export default async function handler(
       // Set cookie dengan token
       res.setHeader(
         'Set-Cookie',
-        `user=${token}; HttpOnly; Path=/; Max-Age=315360000; Secure; SameSite=Strict`,
+        `user=${token}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 365 * 9999}; Secure; SameSite=Strict`,
       );
 
       // Respons dengan data user (tanpa password)

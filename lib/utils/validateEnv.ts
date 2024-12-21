@@ -1,6 +1,5 @@
-const isValidUrl = require('./isValidUrl');
 
-function validateEnv(key) {
+function validateEnv(key: string): string {
   const envValue = process.env[key];
 
   if (!envValue) {
@@ -12,4 +11,4 @@ function validateEnv(key) {
   return envValue;
 }
 
-module.exports = validateEnv;
+export default validateEnv;
