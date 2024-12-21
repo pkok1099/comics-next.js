@@ -1,15 +1,24 @@
-const fetchWithTimeout = require('../utils/fetchWithTimeout');
-const validateEnv = require('../utils/validateEnv');
+import fetchWithTimeout from '../utils/fetchWithTimeout';
+import { CustomError, constructUrl } from './utils';
 
-const getChapters = async (judul) => {
-  const baseUrl = `${validateEnv('URL_KOMIK')}/komik/${decodeURIComponent(judul)}/`;
+interface Chapter {
+  title: string;
+  url: string;
+  lastUpdated: string; // Optional if needed
+}
+
+const getChapters = async (judul: string): Promise<Chapter[]> => {
+  if (!judul) {
+    throw new CustomError("Parameter 'judul' harus valid.");
+  }
+
+  const baseUrl = constructUrl(`/komik/${decodeURIComponent(judul)}/`);
 
   try {
     const $ = await fetchWithTimeout(decodeURIComponent(baseUrl), {
       method: 'GET',
-      // headers: commonHeaders,
     });
-    const chapters = [];
+    const chapters: Chapter[] = [];
 
     $('.eps_lst .listeps ul li').each((_, element) => {
       const chapterUrl = $(element).find('.lchx a').attr('href');
@@ -32,8 +41,9 @@ const getChapters = async (judul) => {
       return chapterB - chapterA; // Urutkan dari chapter terbesar
     });
   } catch (error) {
-    throw new Error(`Error scraping komik chapters: ${error.message}`);
+    const err = error as CustomError; // Type assertion
+    throw new CustomError(`Error scraping komik chapters: ${err.message}`);
   }
 };
 
-module.exports = getChapters;
+export default getChapters;

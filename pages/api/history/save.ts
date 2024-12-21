@@ -13,16 +13,16 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const decodedUser : User = validateUser(req); // Mendapatkan user yang sudah didekodekan
+      const decodedUser: User = validateUser(req); // Mendapatkan user yang sudah didekodekan
       const { title, chapterId, thumbnailUrl } = req.body;
 
       // Menambahkan atau memperbarui history menggunakan decodedUser yang sudah memiliki informasi dari token
       const result = await addOrUpdateHistory(
-  decodedUser.username, // Hanya mengirim username
-  title,
-  chapterId,
-  thumbnailUrl,
-);
+        decodedUser.username, // Hanya mengirim username
+        title,
+        chapterId,
+        thumbnailUrl,
+      );
 
       res.status(200).json(result);
     } catch (error) {

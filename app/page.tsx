@@ -5,8 +5,7 @@ import Pagination from '@/components/ui/Pagination';
 import { useRouter } from 'next/navigation';
 import { KomikCard } from '@/components/komikindo/KomikCard';
 import { SkeletonLoader } from '@/components/komikindo/SkeletonLoader';
-import { Komik } from '@/utils/types';
-import { PaginationData } from '@/utils/types';
+import { fetchKomik } from './api';
 
 function KomikList() {
   const [komikList, setKomikList] = useState<Komik[]>([]);
@@ -18,22 +17,21 @@ function KomikList() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  const fetchKomik = async (page: number): Promise<void> => {
+  const loadKomik = async (page: number): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/komikindo?page=${page}`);
-      const data = await response.json();
-      setKomikList(data.komikList || []);
-      setPagination(data.pagination || { currentPage: 1, totalPages: 1 });
+      const data = await fetchKomik(page);
+      setKomikList(data.komikList);
+      setPagination(data.pagination);
     } catch (error) {
-      console.error('Error fetching komik data:', error);
+      console.error('Error loading komik data:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchKomik(currentPage);
+    loadKomik(currentPage);
   }, [currentPage]);
 
   useEffect(() => {

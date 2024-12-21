@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import ComicGrid from '../components/comic-grid';
-import { Comic } from '@/utils/types';
+// import { Comic } from '@/utils/global';
 
 export default function SearchPage() {
   const searchParams = useSearchParams();

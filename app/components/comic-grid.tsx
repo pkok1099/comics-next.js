@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
-import { ComicGridProps } from '@/utils/types';
+// import { ComicGridProps } from '@/utils/global';
 
 export default function ComicGrid({ comics, loading }: ComicGridProps) {
   return (

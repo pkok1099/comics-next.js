@@ -1,7 +1,9 @@
-// const axios = require('axios');
-const cheerio = require('cheerio');
+import cheerio from 'cheerio';
 
-async function fetchWithTimeout(resource, options = {}) {
+async function fetchWithTimeout(
+  resource: string,
+  options: RequestInit & { timeout?: number } = {},
+): Promise<cheerio.CheerioAPI> {
   const { timeout = 5000 } = options;
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
@@ -12,12 +14,12 @@ async function fetchWithTimeout(resource, options = {}) {
       signal: controller.signal,
     });
 
-    // Cek jika response tidak ok
-    if (!response.status === 200) {
+    // Check if response is not ok
+    if (!response.ok) {
       throw new Error('Failed to fetch resource');
     }
 
-    // Menggunakan cheerio untuk memparsing HTML
+    // Using cheerio to parse HTML
     const html = await response.text();
     const $ = cheerio.load(html);
     return $;
@@ -28,4 +30,4 @@ async function fetchWithTimeout(resource, options = {}) {
   }
 }
 
-module.exports = fetchWithTimeout;
+export default fetchWithTimeout;

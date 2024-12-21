@@ -1,9 +1,24 @@
-const fetchWithTimeout = require('../utils/fetchWithTimeout');
-const isValidUrl = require('../utils/isValidUrl');
-const validateEnv = require('../utils/validateEnv');
+import fetchWithTimeout from '../utils/fetchWithTimeout';
+import isValidUrl from '../utils/isValidUrl';
+import validateEnv from '../utils/validateEnv';
+
+interface Comic {
+  title: string;
+  link: string;
+  image: string | undefined;
+  rating: string;
+}
+
+interface FetchComicsResult {
+  comics: Comic[];
+  totalPages: number;
+}
 
 // Fungsi utama untuk mengambil daftar komik dari halaman
-async function fetchComicsFromPage(query = '', page = 1) {
+async function fetchComicsFromPage(
+  query: string = '',
+  page: number = 1,
+): Promise<FetchComicsResult> {
   try {
     const $ = await fetchWithTimeout(
       `${validateEnv('URL_KOMIK')}/page/${page}/?s=${query}`,
@@ -11,7 +26,7 @@ async function fetchComicsFromPage(query = '', page = 1) {
     );
 
     // Data komik
-    const comics = [];
+    const comics: Comic[] = [];
 
     // Menghitung total halaman
     const pagination = $('.pagination');
@@ -32,12 +47,12 @@ async function fetchComicsFromPage(query = '', page = 1) {
     $('.animepost').each((_, element) => {
       const title = $(element).find('h4').text().trim();
       const link = $(element).find('a[itemprop="url"]').attr('href');
-      const image = $(element).find('img[itemprop="image"]').attr('src');
+      let image = $(element).find('img[itemprop="image"]').attr('src');
       const rating = $(element).find('.rating i').text().trim();
 
       if (image && !isValidUrl(image)) {
         console.warn(`imgage tidak ada: ${image}`);
-        image = null;
+        image = undefined;
       }
       if (link && !isValidUrl(link)) {
         console.warn(`link tidak ada: ${link}`);
@@ -55,9 +70,9 @@ async function fetchComicsFromPage(query = '', page = 1) {
 
     return { comics, totalPages };
   } catch (error) {
-    console.error(`Error fetching comics: ${error.message}`);
+    console.error(`Error fetching comics: ${(error as Error).message}`);
     return { comics: [], totalPages: 1 };
   }
 }
 
-module.exports = fetchComicsFromPage;
+export default fetchComicsFromPage;

@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { HistoryItem } from '@/utils/types';
+// import { HistoryItem } from '@/utils/global';
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<HistoryItem[]>([]);

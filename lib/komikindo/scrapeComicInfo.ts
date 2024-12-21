@@ -1,14 +1,43 @@
-const fetchWithTimeout = require('../utils/fetchWithTimeout');
-const validateEnv = require('../utils/validateEnv');
+import fetchWithTimeout from '../utils/fetchWithTimeout';
+import { CustomError, constructUrl } from './utils';
 
-const scrapeComicInfo = async (komik) => {
+interface Recommendation {
+  title: string;
+  link: string;
+}
+
+interface ComicInfo {
+  title: string;
+  thumbnail: string;
+  chapterAwal: string;
+  chapterBaru: string;
+  rating: string;
+  alternativeTitles: string[];
+  status: string;
+  author: string;
+  illustrator: string;
+  graphics: string;
+  theme: string[];
+  type: string;
+  officialSource: string;
+  lastUpdated: string;
+  synopsis: string;
+  recommendations: Recommendation[];
+  spoilerImages: string[];
+  chapterList: { title: string; url: string; lastUpdated: string }[];
+  [key: string]: any; // Allow dynamic property access
+}
+
+const scrapeComicInfo = async (komik: string): Promise<ComicInfo> => {
+  if (!komik) {
+    throw new CustomError("Parameter 'komik' harus valid.");
+  }
+
   try {
-    const $ = await fetchWithTimeout(
-      `${validateEnv('URL_KOMIK')}/komik/${encodeURIComponent(komik)}/`,
-      { method: 'GET' },
-    );
+    const url = constructUrl(`/komik/${encodeURIComponent(komik)}/`);
+    const $ = await fetchWithTimeout(url, { method: 'GET' });
 
-    const data = {};
+    const data: ComicInfo = {} as ComicInfo;
 
     // Cache elemen yang sering digunakan
     const speElements = $('.spe span');
@@ -85,16 +114,17 @@ const scrapeComicInfo = async (komik) => {
     )
       .map((_, el) => {
         const title = $(el).find('.leftseries h4 a').text().trim();
-        const link = $(el).find('.leftseries h4 a').attr('href');
+        const link = $(el).find('.leftseries h4 a').attr('href') || ''; // Provide a default empty string
         return { title, link };
       })
-      .get() || ['No recommendations found'];
+      .get() || [{ title: 'No recommendations found', link: '' }]; // Ensure the return type matches Recommendation
 
     // Gambar Spoiler
     data.spoilerImages = $('.spoiler .spoiler-img img')
       .map((_, img) => {
         let src = $(img).attr('src');
-        if (!src.startsWith('http')) {
+        if (src && !src.startsWith('http')) {
+          // Check if src is defined
           src = `https:${src}`;
         }
         return src;
@@ -103,8 +133,9 @@ const scrapeComicInfo = async (komik) => {
       .filter(Boolean) || ['No spoiler images found'];
 
     // Mendapatkan Chapter List
-    const chapterBaseUrl = `${validateEnv('URL_KOMIK')}/komik/${encodeURIComponent(komik)}/`;
-    const chapterList = [];
+    const chapterBaseUrl = constructUrl(`/komik/${encodeURIComponent(komik)}/`);
+    const chapterList: { title: string; url: string; lastUpdated: string }[] =
+      [];
 
     const $chapters = await fetchWithTimeout(
       decodeURIComponent(chapterBaseUrl),
@@ -134,9 +165,10 @@ const scrapeComicInfo = async (komik) => {
 
     return data;
   } catch (error) {
-    console.error(`Error occurred while scraping comic info: ${error.message}`);
-    throw error;
+    const err = error as CustomError; // Type assertion
+    console.error(`Error occurred while scraping comic info: ${err.message}`);
+    throw new CustomError('Failed to scrape comic info.');
   }
 };
 
-module.exports = scrapeComicInfo;
+export default scrapeComicInfo;
