@@ -1,32 +1,30 @@
 'use client';
-
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
+// import Image from 'next/image';
 const ChapterDetail = () => {
-  const { id, chapterId } = useParams(); // Get id and chapterId from URL
+  const { id, chapterId } = useParams() as { id: string; chapterId: string }; // Get id and chapterId from URL
   const router = useRouter(); // For navigation
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [chapterList, setChapterList] = useState([]);
   const [pages, setPages] = useState([]); // Store loaded pages
   const [buttonVisible, setButtonVisible] = useState(true); // For next button visibility
   const [isFetching, setIsFetching] = useState(false); // For fetching state
   const [lastScrollY, setLastScrollY] = useState(0); // Menyimpan posisi scroll terakhir
-
   // Fetch images for the chapter
   const fetchChapterImages = useCallback(
-    async (chapterId) => {
+    async (chapterId: string) => {
       try {
         const response = await fetch(
-          `/api/komik/doujindesu/${decodeURIComponent(id)}/chapter/${chapterId}/images`,
+          `/api/komikindo/${decodeURIComponent(id)}/${chapterId}/`,
         );
         if (!response.ok) throw new Error('Failed to fetch images');
 
         const data = await response.json();
         return data; // Return image data
       } catch (err) {
-        setError(err.message); // Handle error
+        setError((err as Error).message); // Handle error
         return [];
       }
     },
@@ -34,7 +32,7 @@ const ChapterDetail = () => {
   ); // Menambahkan id sebagai dependensi
 
   const loadChapterImages = useCallback(
-    async (chapterId) => {
+    async (chapterId: string) => {
       setLoading(true);
       setError(null); // Reset error
 
@@ -50,6 +48,23 @@ const ChapterDetail = () => {
     },
     [fetchChapterImages],
   ); // Menambahkan fetchChapterImages sebagai dependensi
+
+  const saveHistory = async (chapterId: string, title: string) => {
+    const response = await fetch('/api/history/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ chapterId, title }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      // console.log('History saved:', data.message);
+    } else {
+      // console.error('Failed to save history:', data.message);
+    }
+  };
 
   // Handle scroll to hide/show the next button
   useEffect(() => {
@@ -76,46 +91,34 @@ const ChapterDetail = () => {
   const fetchChapterList = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/komik/doujindesu/info${decodeURIComponent(id)}/`,
+        `/api/komikindo/info/${decodeURIComponent(id)}`,
       );
       if (!response.ok) throw new Error('Failed to fetch chapters');
 
       const data = await response.json();
-      setChapterList(data?.chapters); // Set chapter list
-      console.log(data);
+      setChapterList(data); // Set chapter list
     } catch (err) {
-      setError(err.message); // Handle error
+      setError((err as Error).message); // Handle error
     }
   }, [id]); // Menambahkan id sebagai dependensi
 
   // Navigate to the next chapter
   const goToNextChapter = () => {
     router.push(
-      `/komik/doujindesu/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) + 1}`,
+      `/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) + 1}`,
     );
   };
-
-  // useEffect(() => {
-  // if (chapterId) {
-  // loadChapterImages(chapterId);
-  // }
-  // }, [id, chapterId]);
 
   useEffect(() => {
     if (chapterId) {
       loadChapterImages(chapterId);
+      saveHistory(chapterId, id);
     }
   }, [id, chapterId, loadChapterImages]); // Menambahkan loadChapterImages
 
   useEffect(() => {
     fetchChapterList();
   }, [id, fetchChapterList]); // Menambahkan fetchChapterList
-
-  console.log(id, chapterId);
-  // Fetch chapter list once when the component mounts
-  // useEffect(() => {
-  // fetchChapterList();
-  // }, [id]);
 
   if (loading) {
     return (
@@ -134,10 +137,9 @@ const ChapterDetail = () => {
       </div>
     );
   }
-
   return (
     <div className='chapter-container relative'>
-      <h2 className='truncate py-4 text-center text-2xl font-bold'>
+      <h2 className='line-clamp-2 truncate py-4 text-center text-2xl font-bold'>
         {id && chapterId ? `${id} - Chapter ${chapterId}` : 'Chapter Not Found'}
       </h2>
 
@@ -147,7 +149,7 @@ const ChapterDetail = () => {
           <p>No images available for this chapter.</p>
         ) : (
           pages.map((img, imgIndex) => (
-            <Image
+            <img
               key={imgIndex}
               src={img}
               alt={`Page ${imgIndex + 1} of Chapter ${chapterId}`}
@@ -165,7 +167,7 @@ const ChapterDetail = () => {
           <button
             onClick={() =>
               router.push(
-                `/komik/doujindesu/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) - 1}`,
+                `/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) - 1}`,
               )
             }
             className={`hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10 ${isFetching ? 'hidden' : ''}`}

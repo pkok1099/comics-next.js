@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from 'components/ui/input';
+import { Button } from 'components/ui/button';
 import { motion } from 'framer-motion';
 import ComicGrid from '../components/comic-grid';
-// import { Comic } from '@/utils/global';
+import { searchComics } from "../api";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -19,23 +19,16 @@ export default function SearchPage() {
 
   useEffect(() => {
     if (searchQuery) {
-      performSearch(searchQuery, currentPage);
+      performSearch({ query: searchQuery, page: currentPage });
     } else {
       setSearchResults([]);
     }
   }, [searchQuery, currentPage]);
 
-  async function performSearch(query: string, page: number) {
+  async function performSearch({ query, page }: { query: string; page: number; }): Promise<void> {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/komikindo/search/${encodeURIComponent(query)}/${page}`,
-      );
-      if (!response.ok) {
-        throw new Error('Search failed');
-      }
-      const data = await response.json();
-      // Menyesuaikan struktur data sesuai dengan response baru
+      const data = await searchComics(query, page);
       setSearchResults(
         data.comics.map((comic: any) => ({
           title: comic.title,
@@ -56,7 +49,7 @@ export default function SearchPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setCurrentPage(1);
-    performSearch(searchQuery, 1);
+    performSearch({ query: searchQuery, page: 1 });
   };
 
   const handlePagination = (direction: 'next' | 'prev') => {

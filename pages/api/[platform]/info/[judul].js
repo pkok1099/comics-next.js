@@ -1,4 +1,4 @@
-import { komikindo } from '@/f/index.js';
+import { komikindo } from '@/f/index';
 
 export default async function handler(req, res) {
   const { platform, judul } = req.query; // Mengambil platform dan judul dari URL

@@ -1,16 +1,21 @@
+
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
-import Sidebar from './components/sidebar'; // Perbaiki path impor
+import Sidebar from './components/sidebar';
 import Header from './components/header';
 import { SidebarProvider } from './contexts/SidebarContext';
 import { SidebarToggle } from './components/sidebar-toggle';
-import { Suspense } from 'react';
+import { Suspense, ReactNode } from 'react';
 import { geistSans, geistMono } from './font';
 import { metadata, generateViewport } from './metaConfig';
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
@@ -35,7 +40,6 @@ export default function RootLayout({ children }) {
               <Sidebar />
               <div className='flex flex-1 flex-col overflow-hidden'>
                 <Header>
-                  <SidebarToggle />
                 </Header>
                 <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background'>
                   <Suspense>{children}</Suspense>

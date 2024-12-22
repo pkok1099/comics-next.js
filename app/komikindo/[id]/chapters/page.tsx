@@ -10,8 +10,18 @@ import { ChapterListComponent } from '@/ChapterList/ChapterListComponent';
 import { InfoBox } from '@/ChapterList/InfoBox';
 import { SkeletonLoader } from '@/ChapterList/SkeletonLoader';
 
+interface KomikData {
+  thumbnail?: string;
+  title?: string;
+  chapterList: { url: string }[];
+}
+
 // Utility function to fetch Komik data
-const fetchKomikData = async (id, setKomikData, setLoading) => {
+const fetchKomikData = async (
+  id: string,
+  setKomikData: React.Dispatch<React.SetStateAction<KomikData | null>>,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
   try {
     const response = await fetch(
       `/api/komikindo/info/${decodeURIComponent(id)}`,
@@ -25,26 +35,24 @@ const fetchKomikData = async (id, setKomikData, setLoading) => {
   }
 };
 
-const ChapterList = () => {
-  const { id } = useParams();
-  const [komikData, setKomikData] = useState(null);
+const ChapterList: React.FC = () => {
+  const params = useParams<{ id: string }>();
+  const id = params?.id;
+  const [komikData, setKomikData] = useState<KomikData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('judul');
 
   useEffect(() => {
     if (id) {
-      fetchKomikData(id, setKomikData, setLoading); // Pass setLoading here
+      fetchKomikData(id, setKomikData, setLoading);
     }
   }, [id]);
 
   if (loading || !komikData) return <SkeletonLoader />;
 
-  const lastChapterUrl = komikData.chapterList[0]
-    ? komikData.chapterList[0].url
-    : null;
-  const chapter1Url = komikData.chapterList[komikData.chapterList.length - 1]
-    ? komikData.chapterList[komikData.chapterList.length - 1].url
-    : null;
+  const lastChapterUrl = komikData.chapterList[0]?.url || null;
+  const chapter1Url =
+    komikData.chapterList[komikData.chapterList.length - 1]?.url || null;
 
   return (
     <div className='min-h-screen bg-gray-900 p-4 text-white'>

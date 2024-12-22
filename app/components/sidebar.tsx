@@ -69,7 +69,7 @@ export default function Sidebar() {
       <div
         ref={sidebarRef}
         className={cn(
-          'relative left-0 top-0 h-full border-r bg-gray-900 text-white',
+          'relative left-0 top-0 h-full border-r',
           isOpen ? 'w-64' : 'w-11',
           'z-50 hidden min-h-screen transition-all duration-300 md:block',
         )}
@@ -81,7 +81,7 @@ export default function Sidebar() {
               {sidebarItems.map((item) => (
                 <Button
                   key={item.name}
-                  variant={pathname === item.href ? 'secondary' : 'ghost'}
+                  variant={pathname === item.href ? 'secondary' : 'default'}
                   className={cn(
                     'relative w-full justify-start pl-3',
                     pathname === item.href && 'bg-primary font-semibold',
@@ -105,7 +105,7 @@ export default function Sidebar() {
           </ScrollArea>
           <div className='p-4'>
             <Button
-              variant='ghost'
+              variant='default'
               className='w-full justify-start'
               onClick={handleLogout}
             >
@@ -118,7 +118,7 @@ export default function Sidebar() {
 
       {/* Sidebar dalam dialog untuk layar kecil */}
       {isOpen && (
-        <div className='text-custom-pink fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:hidden'>
+        <div className=' fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:hidden'>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -148,9 +148,9 @@ export default function Sidebar() {
                   }}
                 >
                   <Button
-                    variant={pathname === item.href ? 'secondary' : 'ghost'}
+                    variant={pathname === item.href ? 'secondary' : 'default'}
                     asChild
-                    className='flex items-center bg-gray-900 text-cyan-200'
+                    className='flex items-center '
                     data-ignore-outside-click // Tambahkan ini
                     onClick={(e) => {
                       e.stopPropagation(); // Cegah event bubbling ke listener `mousedown`
@@ -171,8 +171,8 @@ export default function Sidebar() {
                 className='mt-4'
               >
                 <Button
-                  variant='ghost'
-                  className='flex items-center bg-gray-900 text-cyan-200'
+                  variant='default'
+                  className='flex items-center'
                   data-ignore-outside-click
                   onClick={(e) => {
                     e.stopPropagation(); // Cegah event bubbling ke listener `mousedown`

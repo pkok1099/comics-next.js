@@ -13,25 +13,40 @@ import getChaptersKomikindo from './komikindo/getChapters';
 import scrapeComicInfoKomikindo from './komikindo/scrapeComicInfo';
 import SearchComicsPageKomikindo from './komikindo/SearchComicsPage';
 
-const komiku = {
+interface Komiku {
+  fetchKomikData: typeof fetchKomikDataKomiku;
+  getChapters: typeof getChaptersKomiku;
+}
+
+interface Doujindesu {
+  fetchKomikData: typeof fetchKomikDataDoujindesu;
+  getChapters: typeof getChaptersDoujindesu;
+  scrapeComicInfo: typeof scrapeComicInfoDoujindesu;
+  getChapterImages: typeof getChapterImagesDoujindesu;
+}
+
+interface Komikindo {
+  getChapterImages: typeof getChapterImagesKomikindo;
+  getImageByIndex: typeof getImageByIndexKomikindo;
+  fetchKomikData: typeof fetchKomikDataKomikindo;
+  getChapters: typeof getChaptersKomikindo;
+  scrapeComicInfo: typeof scrapeComicInfoKomikindo;
+  SearchComicsPage: typeof SearchComicsPageKomikindo;
+}
+
+const komiku: Komiku = {
   fetchKomikData: fetchKomikDataKomiku,
   getChapters: getChaptersKomiku,
 };
 
-const Doujindesu = {
-  fetchKomikData: fetchKomikDataDoujindesu,
-  getChapters: getChaptersDoujindesu,
-  scrapeComicInfo: scrapeComicInfoDoujindesu,
-  getChapterImages: getChapterImagesDoujindesu,
-};
-const doujindesu = {
+const doujindesu: Doujindesu = {
   fetchKomikData: fetchKomikDataDoujindesu,
   getChapters: getChaptersDoujindesu,
   scrapeComicInfo: scrapeComicInfoDoujindesu,
   getChapterImages: getChapterImagesDoujindesu,
 };
 
-const komikindo = {
+const komikindo: Komikindo = {
   getChapterImages: getChapterImagesKomikindo,
   getImageByIndex: getImageByIndexKomikindo,
   fetchKomikData: fetchKomikDataKomikindo,
@@ -40,4 +55,4 @@ const komikindo = {
   SearchComicsPage: SearchComicsPageKomikindo,
 };
 
-export { komiku, Doujindesu, komikindo, doujindesu };
+export { komiku, doujindesu, komikindo };

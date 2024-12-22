@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,11 @@ import { ModeToggle } from '@/components/mode-toggle';
 import { Search } from 'lucide-react';
 import { SidebarToggle } from './sidebar-toggle';
 
-export default function Header() {
+interface HeaderProps {
+  children?: ReactNode;
+}
+
+export default function Header({ children }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
@@ -26,7 +30,7 @@ export default function Header() {
         <SidebarToggle />
         <div className='mr-4 hidden md:flex'>
           <Link href='/' className='mr-6 flex items-center space-x-2'>
-            <span className='ml-2 hidden font-bold text-cyan-200 sm:inline-block'>
+            <span className='ml-2 hidden font-bold sm:inline-block'>
               OnLasdan
             </span>
           </Link>
@@ -38,11 +42,11 @@ export default function Header() {
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className='pl-8 text-cyan-200'
+                className='pl-8'
               />
             </div>
           </form>
-          <nav className='flex items-center text-cyan-200'>
+          <nav className='flex items-center '>
             <Button variant='ghost' asChild>
               <Link href='/history'>History</Link>
             </Button>
@@ -50,6 +54,7 @@ export default function Header() {
           </nav>
         </div>
       </div>
+      {children}
     </header>
   );
 }
