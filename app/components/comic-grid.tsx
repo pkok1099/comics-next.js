@@ -32,7 +32,7 @@ export default function ComicGrid({ comics, loading }: ComicGridProps) {
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <Card className='w-full cursor-pointer hover:shadow-lg'>
-                <Link href={`/komikindo/${comic.endpoint}/chapters`}>
+                <Link href={`/komikindo/${comic.endpoint}`}>
                   <Image
                     src={comic.thumbnail}
                     alt={comic.title}

@@ -1,7 +1,8 @@
 'use client';
 import { Skeleton } from '@/components/ui/skeleton';
+import React from 'react';
 
-export const SkeletonLoader = () => {
+export const SkeletonLoader: React.FC = () => {
   return (
     <div className='min-h-screen bg-gray-900 p-4 text-white'>
       {/* Skeleton untuk Thumbnail */}

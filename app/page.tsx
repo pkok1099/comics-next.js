@@ -57,7 +57,7 @@ function KomikList() {
                     setIsLoading(true);
                     try {
                       await router.push(
-                        `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}/chapters`,
+                        `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}`,
                       );
                     } catch (error) {
                       console.error('Error navigating to komik page:', error);

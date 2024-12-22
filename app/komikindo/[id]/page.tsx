@@ -9,7 +9,7 @@ import { TabsComponent } from '@/ChapterList/TabsComponent';
 import { ChapterListComponent } from '@/ChapterList/ChapterListComponent';
 import { InfoBox } from '@/ChapterList/InfoBox';
 import { SkeletonLoader } from '@/ChapterList/SkeletonLoader';
-
+import { fetchKomikData as fetchKomikDataFromApi } from '@/app/api';
 interface KomikData {
   thumbnail?: string;
   title?: string;
@@ -17,16 +17,13 @@ interface KomikData {
 }
 
 // Utility function to fetch Komik data
-const fetchKomikData = async (
+const fetchKomikDataFromComponent = async (
   id: string,
   setKomikData: React.Dispatch<React.SetStateAction<KomikData | null>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   try {
-    const response = await fetch(
-      `/api/komikindo/info/${decodeURIComponent(id)}`,
-    );
-    const komik = await response.json();
+    const komik = await fetchKomikDataFromApi(id); // await response.json();
     setKomikData(komik);
   } catch (error) {
     console.error('Error fetching komik data:', error);
@@ -44,7 +41,7 @@ const ChapterList: React.FC = () => {
 
   useEffect(() => {
     if (id) {
-      fetchKomikData(id, setKomikData, setLoading);
+      fetchKomikDataFromComponent(id, setKomikData, setLoading);
     }
   }, [id]);
 
