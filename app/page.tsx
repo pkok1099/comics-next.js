@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Pagination from '@/components/ui/Pagination';
+import Pagination from 'components/ui/Pagination';
 import { useRouter } from 'next/navigation';
-import { KomikCard } from '@/components/komikindo/KomikCard';
-import { SkeletonLoader } from '@/components/komikindo/SkeletonLoader';
+import { KomikCard } from 'components/komikindo/KomikCard';
+import { SkeletonLoader } from 'components/komikindo/SkeletonLoader';
 import { fetchKomik } from './api';
 
 function KomikList() {

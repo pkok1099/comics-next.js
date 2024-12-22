@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from 'components/ui/input';
+import { Button } from 'components/ui/button';
 import { motion } from 'framer-motion';
 import ComicGrid from '../components/comic-grid';
-// import { Comic } from '@/utils/global';
+import { searchComics } from "../api";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -28,14 +28,7 @@ export default function SearchPage() {
   async function performSearch({ query, page }: { query: string; page: number; }): Promise<void> {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/komikindo/search/${encodeURIComponent(query)}/${page}`,
-      );
-      if (!response.ok) {
-        throw new Error('Search failed');
-      }
-      const data = await response.json();
-      // Menyesuaikan struktur data sesuai dengan response baru
+      const data = await searchComics(query, page);
       setSearchResults(
         data.comics.map((comic: any) => ({
           title: comic.title,
