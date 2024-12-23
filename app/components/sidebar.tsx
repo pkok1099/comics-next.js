@@ -118,7 +118,7 @@ export default function Sidebar() {
 
       {/* Sidebar dalam dialog untuk layar kecil */}
       {isOpen && (
-        <div className=' fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:hidden'>
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 md:hidden'>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -150,7 +150,7 @@ export default function Sidebar() {
                   <Button
                     variant={pathname === item.href ? 'secondary' : 'default'}
                     asChild
-                    className='flex items-center '
+                    className='flex items-center'
                     data-ignore-outside-click // Tambahkan ini
                     onClick={(e) => {
                       e.stopPropagation(); // Cegah event bubbling ke listener `mousedown`

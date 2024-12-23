@@ -5,6 +5,7 @@ import Image from 'next/image';
 interface Komik {
   judul: string;
   thumbnail: string;
+  link: string;
 }
 
 interface KomikCardProps {

@@ -10,10 +10,13 @@ import { ChapterListComponent } from '@/ChapterList/ChapterListComponent';
 import { InfoBox } from '@/ChapterList/InfoBox';
 import { SkeletonLoader } from '@/ChapterList/SkeletonLoader';
 import { fetchKomikData as fetchKomikDataFromApi } from '@/app/api';
+
 interface KomikData {
-  thumbnail?: string;
-  title?: string;
-  chapterList: { url: string }[];
+  [key: string]: any;
+}
+
+interface Chapter {
+  [key: string]: any;
 }
 
 // Utility function to fetch Komik data
@@ -34,7 +37,7 @@ const fetchKomikDataFromComponent = async (
 
 const ChapterList: React.FC = () => {
   const params = useParams<{ id: string }>();
-  const id = params?.id;
+  const id = params?.id ?? '';
   const [komikData, setKomikData] = useState<KomikData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('judul');
@@ -46,10 +49,6 @@ const ChapterList: React.FC = () => {
   }, [id]);
 
   if (loading || !komikData) return <SkeletonLoader />;
-
-  const lastChapterUrl = komikData.chapterList[0]?.url || null;
-  const chapter1Url =
-    komikData.chapterList[komikData.chapterList.length - 1]?.url || null;
 
   return (
     <div className='min-h-screen bg-gray-900 p-4 text-white'>
@@ -77,11 +76,11 @@ const ChapterList: React.FC = () => {
 
       <InfoBox komikData={komikData} />
       <TabsComponent
-        komikData={komikData}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        komikData={komikData}
       />
-      <ChapterListComponent chapters={komikData.chapterList} id={id} />
+      <ChapterListComponent chapters={komikData.chapterList || []} id={id} />
     </div>
   );
 };

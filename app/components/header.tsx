@@ -46,7 +46,7 @@ export default function Header({ children }: HeaderProps) {
               />
             </div>
           </form>
-          <nav className='flex items-center '>
+          <nav className='flex items-center'>
             <Button variant='ghost' asChild>
               <Link href='/history'>History</Link>
             </Button>

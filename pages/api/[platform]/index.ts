@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { doujindesu, komikindo } from '@/f/index'; // Sesuaikan dengan penamaan platform kecil
+import { komikindo } from '@/f/index'; // Sesuaikan dengan penamaan platform kecil
 
 type AvailablePlatforms = 'doujindesu' | 'komikindo';
 
@@ -17,7 +17,10 @@ export default async function handler(
   }; // Mengambil params dari URL
 
   try {
-    const availablePlatforms = { doujindesu, komikindo };
+    const availablePlatforms: { [key in AvailablePlatforms]?: any } = {
+      // doujindesu,
+      komikindo,
+    };
 
     // Validasi platform
     if (!platform || !availablePlatforms[platform]) {

@@ -6,7 +6,7 @@ import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
 import { motion } from 'framer-motion';
 import ComicGrid from '../components/comic-grid';
-import { searchComics } from "../api";
+import { searchComics } from '../api';
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -25,7 +25,13 @@ export default function SearchPage() {
     }
   }, [searchQuery, currentPage]);
 
-  async function performSearch({ query, page }: { query: string; page: number; }): Promise<void> {
+  async function performSearch({
+    query,
+    page,
+  }: {
+    query: string;
+    page: number;
+  }): Promise<void> {
     setLoading(true);
     try {
       const data = await searchComics(query, page);

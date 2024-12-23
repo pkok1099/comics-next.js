@@ -12,7 +12,12 @@ import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 
-const HistoryList = ({ history, loading, onHistoryClick, onDeleteHistory }) => {
+const HistoryList: React.FC<HistoryListProps> = ({
+  history,
+  loading,
+  onHistoryClick,
+  onDeleteHistory,
+}) => {
   return (
     <div className='mt-5 grid grid-cols-4 gap-2 sm:grid-cols-4 lg:grid-cols-5'>
       {loading ? (
@@ -46,7 +51,9 @@ const HistoryList = ({ history, loading, onHistoryClick, onDeleteHistory }) => {
                 <DropdownMenuContent align='end'>
                   <DropdownMenuLabel>Option</DropdownMenuLabel>
                   <DropdownMenuItem
-                    onClick={() => onHistoryClick(item.title, item.chapterId)}
+                    onClick={() =>
+                      onHistoryClick(item.title, Number(item.chapterId))
+                    }
                   >
                     Open Chapter
                   </DropdownMenuItem>
@@ -72,7 +79,9 @@ const HistoryList = ({ history, loading, onHistoryClick, onDeleteHistory }) => {
             <div className='p-1'>
               <h2
                 className='line-clamp-2 cursor-pointer text-center text-lg font-semibold hover:underline'
-                onClick={() => onHistoryClick(item.title, item.chapterId)}
+                onClick={() =>
+                  onHistoryClick(item.title, Number(item.chapterId))
+                }
               >
                 {item.title}
               </h2>

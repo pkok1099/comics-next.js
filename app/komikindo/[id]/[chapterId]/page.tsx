@@ -43,9 +43,9 @@ const ChapterDetail = () => {
 
     const data = await response.json();
     // if (response.ok) {
-      // console.log('History saved:', data.message);
+    // console.log('History saved:', data.message);
     // } else {
-      // console.error('Failed to save history:', data.message);
+    // console.error('Failed to save history:', data.message);
     // }
   };
 
