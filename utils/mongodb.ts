@@ -85,10 +85,10 @@ export async function connectToDatabase(): Promise<{
   throw new Error('Failed to connect to database');
 }
 
-export async function closeConnection() {
-  if (cachedClient) {
-    await cachedClient.close();
-    cachedClient = null;
-    cachedDb = null;
-  }
-}
+// export async function closeConnection() {
+  // if (cachedClient) {
+    // await cachedClient.close();
+    // cachedClient = null;
+    // cachedDb = null;
+  // }
+// }
