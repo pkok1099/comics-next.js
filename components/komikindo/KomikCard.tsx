@@ -19,7 +19,7 @@ export const KomikCard: FC<KomikCardProps> = ({ komik, onClick }) => (
     className='cursor-pointer hover:shadow-lg'
     onClick={onClick}
   >
-    <Image
+    <img
       src={komik.thumbnail}
       alt={komik.judul}
       width={200}

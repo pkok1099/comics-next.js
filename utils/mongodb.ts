@@ -86,9 +86,9 @@ export async function connectToDatabase(): Promise<{
 }
 
 // export async function closeConnection() {
-  // if (cachedClient) {
-    // await cachedClient.close();
-    // cachedClient = null;
-    // cachedDb = null;
-  // }
+// if (cachedClient) {
+// await cachedClient.close();
+// cachedClient = null;
+// cachedDb = null;
+// }
 // }

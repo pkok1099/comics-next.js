@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 import { Card } from '@/components/ui/card';
 import { TabsComponent } from '@/ChapterList/TabsComponent';
@@ -55,7 +55,7 @@ const ChapterList: React.FC = () => {
       <div className='mt-[40px] flex h-full items-center justify-center bg-gray-900'>
         <Card className='h-[400px] w-[300px] flex-shrink-0'>
           {komikData?.thumbnail ? (
-            <Image
+            <img
               src={komikData.thumbnail}
               alt='Thumbnail'
               width={300}

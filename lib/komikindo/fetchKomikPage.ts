@@ -99,7 +99,7 @@ function extractLatest($: cheerio.CheerioAPI): LatestUpdate[] {
         .map((_, ch) => ({
           chapter: $(ch).text().trim(),
           url: $(ch).attr('href') || '',
-          updatedAt: '', 
+          updatedAt: '',
         }))
         .get();
 
