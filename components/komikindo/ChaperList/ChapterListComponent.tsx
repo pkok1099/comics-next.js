@@ -8,8 +8,22 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getChapterUrl } from './getChapterUrl';
 
+interface Chapter {
+  title: string;
+  lastUpdated: string;
+  url: string;
+}
+
+interface ChapterListComponentProps {
+  chapters: Chapter[];
+  id: string;
+}
+
 // Chapter List Component
-export const ChapterListComponent = ({ chapters, id }) => (
+export const ChapterListComponent: React.FC<ChapterListComponentProps> = ({
+  chapters,
+  id,
+}) => (
   <Collapsible className='mt-8'>
     <CollapsibleTrigger className='flex cursor-pointer items-center justify-between rounded-md bg-gray-800 px-6 py-2'>
       <span className='text-lg font-bold text-gray-300'>Daftar Chapters</span>
@@ -17,7 +31,7 @@ export const ChapterListComponent = ({ chapters, id }) => (
     <CollapsibleContent>
       <ScrollArea className='h-[300px] w-full overflow-y-scroll'>
         {chapters.length > 0 ? (
-          chapters.map((chapter, index) => (
+          chapters.map((chapter) => (
             <div
               key={chapter.title}
               className='mt-2 flex items-center justify-between border-b border-gray-600 p-4'
@@ -29,7 +43,7 @@ export const ChapterListComponent = ({ chapters, id }) => (
                 </span>
               </div>
               <Link
-                href={`/komikindo/${id}/chapters/${getChapterUrl(chapter)}`}
+                href={`/komikindo/${id}/${getChapterUrl(chapter)}`}
                 className='ml-2 inline-block rounded-lg bg-gray-800 px-6 py-3 text-gray-400 hover:bg-gray-700'
               >
                 Baca Chapter

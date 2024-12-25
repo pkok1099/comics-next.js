@@ -18,6 +18,7 @@ declare global {
   interface Komik {
     judul: string;
     link: string;
+    thumbnail: string;
   }
 
   interface PaginationData {
@@ -29,6 +30,20 @@ declare global {
     comics: Comic[];
     loading: boolean;
   };
+
+  interface HistoryItem {
+    _id: string;
+    title: string;
+    chapterId: number;
+    imageUrl?: string;
+  }
+
+  interface HistoryListProps {
+    history: HistoryItem[];
+    loading: boolean;
+    onHistoryClick: (title: string, chapterId: number) => void;
+    onDeleteHistory: (id: string) => void;
+  }
 }
 
 // Menambahkan ekspor kosong agar TypeScript mengenali file ini sebagai modul.

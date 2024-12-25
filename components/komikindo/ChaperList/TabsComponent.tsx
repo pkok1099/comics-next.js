@@ -2,7 +2,23 @@
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export const TabsComponent = ({ komikData, activeTab, setActiveTab }) => {
+interface KomikData {
+  alternativeTitles?: string[];
+  synopsis?: string;
+  spoilerImages?: string[];
+}
+
+interface TabsComponentProps {
+  komikData: KomikData;
+  activeTab: string;
+  setActiveTab: (value: string) => void;
+}
+
+export const TabsComponent: React.FC<TabsComponentProps> = ({
+  komikData,
+  activeTab,
+  setActiveTab,
+}) => {
   return (
     <Tabs
       defaultValue={activeTab}
@@ -31,8 +47,8 @@ export const TabsComponent = ({ komikData, activeTab, setActiveTab }) => {
       </TabsList>
       <TabsContent value='judul'>
         <div className='text-xl font-bold'>
-          {komikData?.alternativeTitles?.length > 0
-            ? komikData.alternativeTitles.map((title, index) => (
+          {(komikData.alternativeTitles ?? []).length > 0
+            ? (komikData.alternativeTitles ?? []).map((title, index) => (
                 <span key={index}>{title}</span>
               ))
             : 'Alternative Titles tidak ditemukan.'}

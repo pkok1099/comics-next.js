@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { fetchChapterImages } from '@/app/api';
 // import Image from 'next/image';
 const ChapterDetail = () => {
   const { id, chapterId } = useParams() as { id: string; chapterId: string }; // Get id and chapterId from URL
@@ -8,28 +9,10 @@ const ChapterDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [chapterList, setChapterList] = useState([]);
-  const [pages, setPages] = useState([]); // Store loaded pages
+  const [pages, setPages] = useState<string[]>([]); // Store loaded pages
   const [buttonVisible, setButtonVisible] = useState(true); // For next button visibility
   const [isFetching, setIsFetching] = useState(false); // For fetching state
   const [lastScrollY, setLastScrollY] = useState(0); // Menyimpan posisi scroll terakhir
-  // Fetch images for the chapter
-  const fetchChapterImages = useCallback(
-    async (chapterId: string) => {
-      try {
-        const response = await fetch(
-          `/api/komikindo/${decodeURIComponent(id)}/${chapterId}/`,
-        );
-        if (!response.ok) throw new Error('Failed to fetch images');
-
-        const data = await response.json();
-        return data; // Return image data
-      } catch (err) {
-        setError((err as Error).message); // Handle error
-        return [];
-      }
-    },
-    [id],
-  ); // Menambahkan id sebagai dependensi
 
   const loadChapterImages = useCallback(
     async (chapterId: string) => {
@@ -38,7 +21,7 @@ const ChapterDetail = () => {
 
       try {
         // Fetch images for the current chapter
-        const chapterImages = await fetchChapterImages(chapterId);
+        const chapterImages = await fetchChapterImages(id, chapterId);
         setPages(chapterImages); // Set pages data
       } catch (err) {
         setError('Error loading chapter images');
@@ -59,11 +42,11 @@ const ChapterDetail = () => {
     });
 
     const data = await response.json();
-    if (response.ok) {
-      // console.log('History saved:', data.message);
-    } else {
-      // console.error('Failed to save history:', data.message);
-    }
+    // if (response.ok) {
+    // console.log('History saved:', data.message);
+    // } else {
+    // console.error('Failed to save history:', data.message);
+    // }
   };
 
   // Handle scroll to hide/show the next button
@@ -105,7 +88,7 @@ const ChapterDetail = () => {
   // Navigate to the next chapter
   const goToNextChapter = () => {
     router.push(
-      `/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) + 1}`,
+      `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) + 1}`,
     );
   };
 
@@ -167,7 +150,7 @@ const ChapterDetail = () => {
           <button
             onClick={() =>
               router.push(
-                `/komikindo/${decodeURIComponent(id)}/chapters/${parseInt(chapterId) - 1}`,
+                `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) - 1}`,
               )
             }
             className={`hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10 ${isFetching ? 'hidden' : ''}`}

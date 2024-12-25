@@ -1,9 +1,8 @@
-'use client';
-import React from 'react';
+import { FC } from 'react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export const SkeletonLoader = () => (
+export const SkeletonLoader: FC = () => (
   <Card className='cursor-pointer'>
     <Skeleton className='aspect-[3/4] w-full rounded-lg' />
     <CardHeader className='p-2'>

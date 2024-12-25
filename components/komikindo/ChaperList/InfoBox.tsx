@@ -1,8 +1,22 @@
 'use client';
 import { FaStar, FaUser, FaPen, FaBook, FaGamepad } from 'react-icons/fa';
 
+interface KomikData {
+  type?: string;
+  rating?: string;
+  author?: string;
+  illustrator?: string;
+  status?: string;
+  graphics?: string;
+  theme?: string[];
+}
+
+interface InfoBoxProps {
+  komikData?: KomikData;
+}
+
 // InfoBox Component
-export const InfoBox = ({ komikData }) => (
+export const InfoBox: React.FC<InfoBoxProps> = ({ komikData }) => (
   <div className='mb-6 ml-6 space-y-4'>
     <div className='grid grid-cols-1 gap-3'>
       <div className='flex items-center space-x-2'>

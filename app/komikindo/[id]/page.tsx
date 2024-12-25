@@ -9,24 +9,24 @@ import { TabsComponent } from '@/ChapterList/TabsComponent';
 import { ChapterListComponent } from '@/ChapterList/ChapterListComponent';
 import { InfoBox } from '@/ChapterList/InfoBox';
 import { SkeletonLoader } from '@/ChapterList/SkeletonLoader';
+import { fetchKomikData as fetchKomikDataFromApi } from '@/app/api';
 
 interface KomikData {
-  thumbnail?: string;
-  title?: string;
-  chapterList: { url: string }[];
+  [key: string]: any;
+}
+
+interface Chapter {
+  [key: string]: any;
 }
 
 // Utility function to fetch Komik data
-const fetchKomikData = async (
+const fetchKomikDataFromComponent = async (
   id: string,
   setKomikData: React.Dispatch<React.SetStateAction<KomikData | null>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   try {
-    const response = await fetch(
-      `/api/komikindo/info/${decodeURIComponent(id)}`,
-    );
-    const komik = await response.json();
+    const komik = await fetchKomikDataFromApi(id); // await response.json();
     setKomikData(komik);
   } catch (error) {
     console.error('Error fetching komik data:', error);
@@ -37,22 +37,18 @@ const fetchKomikData = async (
 
 const ChapterList: React.FC = () => {
   const params = useParams<{ id: string }>();
-  const id = params?.id;
+  const id = params?.id ?? '';
   const [komikData, setKomikData] = useState<KomikData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('judul');
 
   useEffect(() => {
     if (id) {
-      fetchKomikData(id, setKomikData, setLoading);
+      fetchKomikDataFromComponent(id, setKomikData, setLoading);
     }
   }, [id]);
 
   if (loading || !komikData) return <SkeletonLoader />;
-
-  const lastChapterUrl = komikData.chapterList[0]?.url || null;
-  const chapter1Url =
-    komikData.chapterList[komikData.chapterList.length - 1]?.url || null;
 
   return (
     <div className='min-h-screen bg-gray-900 p-4 text-white'>
@@ -80,11 +76,11 @@ const ChapterList: React.FC = () => {
 
       <InfoBox komikData={komikData} />
       <TabsComponent
-        komikData={komikData}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        komikData={komikData}
       />
-      <ChapterListComponent chapters={komikData.chapterList} id={id} />
+      <ChapterListComponent chapters={komikData.chapterList || []} id={id} />
     </div>
   );
 };
