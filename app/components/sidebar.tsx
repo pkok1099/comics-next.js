@@ -81,7 +81,7 @@ export default function Sidebar() {
               {sidebarItems.map((item) => (
                 <Button
                   key={item.name}
-                  variant={pathname === item.href ? 'secondary' : 'default'}
+                  variant={pathname === item.href ? 'secondary' : 'ghost'}
                   className={cn(
                     'relative w-full justify-start pl-3',
                     pathname === item.href && 'bg-primary font-semibold',

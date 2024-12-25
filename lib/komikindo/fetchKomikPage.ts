@@ -1,4 +1,4 @@
-import { CheerioAPI } from 'cheerio';
+import * as cheerio from 'cheerio';
 import commonHeaders from '../commonHeaders';
 import fetchWithTimeout from '../utils/fetchWithTimeout';
 import isValidUrl from '../utils/isValidUrl';
@@ -50,13 +50,17 @@ async function fetchKomikPage(): Promise<HomePageResponse> {
       latest: extractLatest($),
     };
   } catch (error) {
-    const err = error as CustomError;
-    console.error('Error fetching home page:', err.message);
-    throw err;
+    if (error instanceof CustomError) {
+      console.error('Error fetching home page:', error.message, error);
+      throw error;
+    } else {
+      console.error('Unexpected error:', error);
+      throw new CustomError('Unexpected error occurred');
+    }
   }
 }
 
-function extractPopular($: CheerioAPI): PopularComic[] {
+function extractPopular($: cheerio.CheerioAPI): PopularComic[] {
   return $('.mangapopuler .animepost')
     .map((_, el) => {
       const item = $(el);
@@ -82,7 +86,7 @@ function extractPopular($: CheerioAPI): PopularComic[] {
     .filter((item): item is PopularComic => item !== null);
 }
 
-function extractLatest($: CheerioAPI): LatestUpdate[] {
+function extractLatest($: cheerio.CheerioAPI): LatestUpdate[] {
   return $('.chapterbaru .animepost')
     .map((_, el) => {
       const item = $(el);
@@ -95,7 +99,7 @@ function extractLatest($: CheerioAPI): LatestUpdate[] {
         .map((_, ch) => ({
           chapter: $(ch).text().trim(),
           url: $(ch).attr('href') || '',
-          updatedAt: '', // No date available in the provided HTML
+          updatedAt: '', 
         }))
         .get();
 
