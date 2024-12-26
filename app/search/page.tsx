@@ -36,7 +36,7 @@ export default function SearchPage() {
     try {
       const data = await searchComics(query, page);
       setSearchResults(
-        data.comics.map((comic: any) => ({
+        data.comics.map((comic: ComicData) => ({
           title: comic.title,
           endpoint: comic.link.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1'), // Endpoint dapat diambil dari link
           thumbnail: comic.image,

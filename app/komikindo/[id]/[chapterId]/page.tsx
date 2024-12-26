@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchChapterImages, fetchChapterList, saveHistory } from '@/app/api';
 import { Button } from '@/components/ui/button';
+import { getChapterUrl } from '@/ChapterList/getChapterUrl';
 // import Image from 'next/image';
 
 export default function ChapterDetail() {
@@ -10,7 +11,7 @@ export default function ChapterDetail() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [chapterList, setChapterList] = useState([]);
+  const [chapterList, setChapterList] = useState<Chapter[]>([]);
   const [pages, setPages] = useState<string[]>([]);
   const [buttonVisible, setButtonVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -25,7 +26,7 @@ export default function ChapterDetail() {
       try {
         const chapterImages = await fetchChapterImages(id, chapterId);
         setPages(chapterImages);
-      } catch (err) {
+      } catch {
         setError('Error loading chapter images');
       } finally {
         setLoading(false);
@@ -157,8 +158,21 @@ const ChapterImages = ({
     )}
   </div>
 );
-
-const NavigationButtons = ({
+interface PageProps {
+  id: string;
+  chapterId: string;
+  goToNextChapter: () => void;
+  setIsDropdownOpen: (open: boolean) => void;
+  isDropdownOpen: boolean; // Add this line
+  chapterList: Chapter[]; // Change this line
+  router: ReturnType<typeof useRouter>;
+}
+interface Chapter {
+  title: string;
+  url: string;
+  lastUpdated: string;
+}
+const NavigationButtons: React.FC<PageProps> = ({
   id,
   chapterId,
   goToNextChapter,
@@ -166,14 +180,6 @@ const NavigationButtons = ({
   setIsDropdownOpen,
   chapterList,
   router,
-}: {
-  id: string;
-  chapterId: string;
-  goToNextChapter: () => void;
-  isDropdownOpen: boolean;
-  setIsDropdownOpen: (open: boolean) => void;
-  chapterList: any[];
-  router: any;
 }) => (
   <div className='fixed right-2 top-1/2 z-50 flex -translate-y-1/2 transform flex-col gap-4 sm:right-4 md:right-8'>
     <Button
@@ -210,18 +216,17 @@ const NavigationButtons = ({
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
         >
-          {chapterList.map((chapter: any) => (
+          {chapterList.map((chapter) => (
             <Button
               key={chapter.title}
               onClick={() => {
                 router.push(
-                  `/komikindo/${decodeURIComponent(id)}/${chapter.url}`,
+                  `/komikindo/${decodeURIComponent(id)}/${getChapterUrl(chapter)}`,
                 );
                 setIsDropdownOpen(false);
               }}
               variant='ghost'
               size='default'
-              className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
             >
               {chapter.title}
             </Button>

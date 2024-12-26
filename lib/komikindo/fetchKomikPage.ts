@@ -60,7 +60,7 @@ async function fetchKomikPage(): Promise<HomePageResponse> {
   }
 }
 
-function extractPopular($: cheerio.CheerioAPI): PopularComic[] {
+function extractPopular($: cheerio.Root): PopularComic[] {
   return $('.mangapopuler .animepost')
     .map((_, el) => {
       const item = $(el);
@@ -86,7 +86,7 @@ function extractPopular($: cheerio.CheerioAPI): PopularComic[] {
     .filter((item): item is PopularComic => item !== null);
 }
 
-function extractLatest($: cheerio.CheerioAPI): LatestUpdate[] {
+function extractLatest($: cheerio.Root): LatestUpdate[] {
   return $('.chapterbaru .animepost')
     .map((_, el) => {
       const item = $(el);

@@ -44,6 +44,20 @@ declare global {
     onHistoryClick: (title: string, chapterId: number) => void;
     onDeleteHistory: (id: string) => void;
   }
+
+  interface ComicData {
+    title: string;
+    link: string;
+    image: string;
+    rating: number;
+  }
+
+  interface Comic {
+    title: string;
+    endpoint: string;
+    thumbnail: string;
+    rating: number;
+  }
 }
 
 // Menambahkan ekspor kosong agar TypeScript mengenali file ini sebagai modul.

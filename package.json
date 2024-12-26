@@ -1,18 +1,25 @@
 {
   "name": "comic-galleri",
-  "version": "0.1.0",
+  "version": "3.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "preview": "next build && next start",
     "lint": "next lint",
-    "format": "prettier --write .",
+    "lint:fix": "next lint --fix",
+    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
+    "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "find:unused": "knip",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "typecheck": "tsc --noEmit"
   },
   "prettier": {
+    "endOfLine": "auto",
+    "jsxSingleQuote": false,
+    "trailingComma": "none",
     "singleQuote": true,
     "jsxSingleQuote": true,
     "trailingComma": "all",

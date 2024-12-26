@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 interface Komik {
   judul: string;
