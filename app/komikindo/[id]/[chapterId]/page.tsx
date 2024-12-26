@@ -1,91 +1,66 @@
 'use client';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchChapterImages } from '@/app/api';
+import { fetchChapterImages, fetchChapterList, saveHistory } from '@/app/api';
+import { Button } from '@/components/ui/button';
 // import Image from 'next/image';
+
 export default function ChapterDetail() {
-  const { id, chapterId } = useParams() as { id: string; chapterId: string }; // Get id and chapterId from URL
-  const router = useRouter(); // For navigation
+  const { id, chapterId } = useParams() as { id: string; chapterId: string };
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [chapterList, setChapterList] = useState([]);
-  const [pages, setPages] = useState<string[]>([]); // Store loaded pages
-  const [buttonVisible, setButtonVisible] = useState(true); // For next button visibility
-  const [isFetching, setIsFetching] = useState(false); // For fetching state
-  const [lastScrollY, setLastScrollY] = useState(0); // Menyimpan posisi scroll terakhir
+  const [pages, setPages] = useState<string[]>([]);
+  const [buttonVisible, setButtonVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const loadChapterImages = useCallback(
     async (chapterId: string) => {
       setLoading(true);
-      setError(null); // Reset error
+      setError(null);
 
       try {
-        // Fetch images for the current chapter
         const chapterImages = await fetchChapterImages(id, chapterId);
-        setPages(chapterImages); // Set pages data
+        setPages(chapterImages);
       } catch (err) {
         setError('Error loading chapter images');
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     },
-    [id], // Menambahkan id sebagai dependensi
-  ); // Menambahkan fetchChapterImages sebagai dependensi
+    [id],
+  );
 
-  const saveHistory = async (chapterId: string, title: string) => {
-    const response = await fetch('/api/history/save', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ chapterId, title }),
-    });
+  const handleScroll = () => {
+    const currentScroll = window.scrollY;
+    const scrollDelta = currentScroll - lastScrollY;
 
-    const data = await response.json();
-    // if (response.ok) {
-    // console.log('History saved:', data.message);
-    // } else {
-    // console.error('Failed to save history:', data.message);
-    // }
+    if (Math.abs(scrollDelta) > 5) {
+      setButtonVisible(scrollDelta < 0);
+    }
+    setLastScrollY(currentScroll);
   };
 
-  // Handle scroll to hide/show the next button
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        // Jika scroll ke bawah
-        setButtonVisible(false);
-      } else {
-        // Jika scroll ke atas
-        setButtonVisible(true);
-      }
-      setLastScrollY(window.scrollY); // Update posisi scroll terakhir
-    };
+  const handleTouchStart = (e: TouchEvent) => {
+    setTouchStart(e.touches[0].clientY);
+  };
 
-    window.addEventListener('scroll', handleScroll);
+  const handleTouchMove = (e: TouchEvent) => {
+    if (touchStart === null) return;
 
-    // Bersihkan event listener ketika komponen di-unmount
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY]); // Dependensi ke lastScrollY untuk mengecek pergerakan scroll
-
-  // Fetch the list of chapters
-  const fetchChapterList = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `/api/komikindo/info/${decodeURIComponent(id)}`,
-      );
-      if (!response.ok) throw new Error('Failed to fetch chapters');
-
-      const data = await response.json();
-      setChapterList(data); // Set chapter list
-    } catch (err) {
-      setError((err as Error).message); // Handle error
+    const touchDelta = touchStart - e.touches[0].clientY;
+    if (Math.abs(touchDelta) > 5) {
+      setButtonVisible(touchDelta < 0);
     }
-  }, [id]); // Menambahkan id sebagai dependensi
+  };
 
-  // Navigate to the next chapter
+  const handleTouchEnd = () => {
+    setTouchStart(null);
+  };
+
   const goToNextChapter = () => {
     router.push(
       `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) + 1}`,
@@ -97,11 +72,25 @@ export default function ChapterDetail() {
       loadChapterImages(chapterId);
       saveHistory(chapterId, id);
     }
-  }, [id, chapterId, loadChapterImages]); // Menambahkan loadChapterImages
+  }, [id, chapterId, loadChapterImages]);
 
   useEffect(() => {
-    fetchChapterList();
-  }, [id, fetchChapterList]); // Menambahkan fetchChapterList
+    fetchChapterList(id).then((data) => setChapterList(data.chapterList));
+  }, [id]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [lastScrollY, touchStart]);
 
   if (loading) {
     return (
@@ -120,55 +109,136 @@ export default function ChapterDetail() {
       </div>
     );
   }
+
   return (
     <div className='chapter-container relative'>
       <h2 className='line-clamp-2 truncate py-4 text-center text-2xl font-bold'>
         {id && chapterId ? `${id} - Chapter ${chapterId}` : 'Chapter Not Found'}
       </h2>
 
-      {/* Chapter images */}
-      <div className='chapter-images flex flex-col items-center'>
-        {pages.length === 0 ? (
-          <p>No images available for this chapter.</p>
-        ) : (
-          pages.map((img, imgIndex) => (
-            <img
-              key={imgIndex}
-              src={img}
-              alt={`Page ${imgIndex + 1} of Chapter ${chapterId}`}
-              width={500} // Tentukan ukuran yang sesuai
-              height={800} // Tentukan ukuran yang sesuai
-              className='chapter-image w-full'
-            />
-          ))
-        )}
-      </div>
+      <ChapterImages pages={pages} chapterId={chapterId} />
 
-      {/* Navigation buttons */}
       {buttonVisible && (
-        <div className='fixed right-2 top-1/2 z-50 flex -translate-y-1/2 transform flex-col gap-4 sm:right-4 md:right-8'>
-          <button
-            onClick={() =>
-              router.push(
-                `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) - 1}`,
-              )
-            }
-            className={`hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10 ${isFetching ? 'hidden' : ''}`}
-          >
-            <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
-              Prev
-            </span>
-          </button>
-          <button
-            onClick={goToNextChapter}
-            className={`hover:rotate-360 flex h-10 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 md:h-14 ${isFetching ? 'hidden' : ''}`}
-          >
-            <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
-              Next
-            </span>
-          </button>
-        </div>
+        <NavigationButtons
+          id={id}
+          chapterId={chapterId}
+          goToNextChapter={goToNextChapter}
+          isDropdownOpen={isDropdownOpen}
+          setIsDropdownOpen={setIsDropdownOpen}
+          chapterList={chapterList}
+          router={router}
+        />
       )}
     </div>
   );
 }
+
+const ChapterImages = ({
+  pages,
+  chapterId,
+}: {
+  pages: string[];
+  chapterId: string;
+}) => (
+  <div className='chapter-images flex flex-col items-center'>
+    {pages.length === 0 ? (
+      <p>No images available for this chapter.</p>
+    ) : (
+      pages.map((img, imgIndex) => (
+        <img
+          key={imgIndex}
+          src={img}
+          alt={`Page ${imgIndex + 1} of Chapter ${chapterId}`}
+          width={500}
+          height={800}
+          className='chapter-image w-full'
+        />
+      ))
+    )}
+  </div>
+);
+
+const NavigationButtons = ({
+  id,
+  chapterId,
+  goToNextChapter,
+  isDropdownOpen,
+  setIsDropdownOpen,
+  chapterList,
+  router,
+}: {
+  id: string;
+  chapterId: string;
+  goToNextChapter: () => void;
+  isDropdownOpen: boolean;
+  setIsDropdownOpen: (open: boolean) => void;
+  chapterList: any[];
+  router: any;
+}) => (
+  <div className='fixed right-2 top-1/2 z-50 flex -translate-y-1/2 transform flex-col gap-4 sm:right-4 md:right-8'>
+    <Button
+      variant='ghost'
+      onClick={() =>
+        router.push(
+          `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) - 1}`,
+        )
+      }
+      size='default'
+      className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
+    >
+      <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
+        Prev
+      </span>
+    </Button>
+
+    <div className='relative'>
+      <Button
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        variant='ghost'
+        size='default'
+        className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
+      >
+        <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
+          Ch
+        </span>
+      </Button>
+
+      {isDropdownOpen && (
+        <div
+          className='absolute right-full top-0 mr-2 max-h-96 w-48 overflow-y-auto rounded-lg bg-gray-800 py-2 shadow-lg'
+          onClick={(e) => e.stopPropagation()}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+        >
+          {chapterList.map((chapter: any) => (
+            <Button
+              key={chapter.title}
+              onClick={() => {
+                router.push(
+                  `/komikindo/${decodeURIComponent(id)}/${chapter.url}`,
+                );
+                setIsDropdownOpen(false);
+              }}
+              variant='ghost'
+              size='default'
+              className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
+            >
+              {chapter.title}
+            </Button>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <Button
+      onClick={goToNextChapter}
+      variant='ghost'
+      size='default'
+      className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
+    >
+      <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
+        Next
+      </span>
+    </Button>
+  </div>
+);

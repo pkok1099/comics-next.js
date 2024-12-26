@@ -10,14 +10,7 @@ import { ChapterListComponent } from '@/ChapterList/ChapterListComponent';
 import { InfoBox } from '@/ChapterList/InfoBox';
 import { SkeletonLoader } from '@/ChapterList/SkeletonLoader';
 import { fetchKomikData as fetchKomikDataFromApi } from '@/app/api';
-
-interface KomikData {
-  [key: string]: any;
-}
-
-interface Chapter {
-  [key: string]: any;
-}
+import { KomikData } from '@/types/komik';
 
 // Utility function to fetch Komik data
 const fetchKomikDataFromComponent = async (

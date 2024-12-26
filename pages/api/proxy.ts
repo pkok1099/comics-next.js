@@ -31,7 +31,7 @@ export default async function handler(
   } catch (error) {
     console.error(
       `Failed to load headers for head=${head}:`,
-      (error as any).message,
+      error instanceof Error ? error.message : String(error),
     );
     return res.status(500).json({
       message: `Failed to load headers for head=${head}`,
@@ -62,7 +62,10 @@ export default async function handler(
     res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache selama 1 hari
     res.send(Buffer.from(imageBuffer)); // Kirim gambar ke klien
   } catch (error) {
-    console.error('Error in proxy:', (error as any).message);
+    console.error(
+      'Error in proxy:',
+      error instanceof Error ? error.message : String(error),
+    );
     res.status(500).json({ message: 'Failed to proxy image' });
   }
 }

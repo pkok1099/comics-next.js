@@ -6,16 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
-import {
-  UserRoundMinus,
-  UserRoundPlus,
-  LogIn,
-  Home,
-  Bookmark,
-  Search,
-  History,
-  LogOut,
-} from 'lucide-react';
+import { UserRoundPlus, LogIn, Home, Search, LogOut } from 'lucide-react';
 import { useSidebar } from '../contexts/SidebarContext';
 import { useEffect, useRef } from 'react';
 
@@ -139,7 +130,7 @@ export default function Sidebar() {
               }}
               className='flex flex-col gap-2'
             >
-              {sidebarItemsPH.map((item, index) => (
+              {sidebarItemsPH.map((item) => (
                 <motion.div
                   key={item.name}
                   variants={{

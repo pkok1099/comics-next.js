@@ -25,7 +25,7 @@ interface ComicInfo {
   recommendations: Recommendation[];
   spoilerImages: string[];
   chapterList: { title: string; url: string; lastUpdated: string }[];
-  [key: string]: any; // Allow dynamic property access
+  [key: string]: unknown;
 }
 
 const scrapeComicInfo = async (komik: string): Promise<ComicInfo> => {

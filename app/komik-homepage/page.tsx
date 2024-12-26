@@ -20,11 +20,11 @@ interface Komik {
   link: string;
 }
 
-interface KomikCardData {
-  judul: string;
-  thumbnail: string;
-  link: string;
-}
+// interface KomikCardData {
+//   judul: string;
+//   thumbnail: string;
+//   link: string;
+// }
 
 interface KomikHomeState {
   popular: Komik[];

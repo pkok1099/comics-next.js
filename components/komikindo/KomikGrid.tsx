@@ -1,10 +1,12 @@
 import React from 'react';
 import { KomikCard } from 'components/komikindo/KomikCard';
+import { NextRouter } from 'next/router';
+
 // Import or define the Komik type
 
 interface KomikGridProps {
   komikList: Komik[];
-  router: any;
+  router: NextRouter;
   setIsLoading: (isLoading: boolean) => void;
 }
 

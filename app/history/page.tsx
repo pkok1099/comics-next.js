@@ -26,7 +26,7 @@ export default function HistoryPage() {
         }
         const data = await response.json();
         setHistory(data);
-      } catch (err) {
+      } catch {
         setError('Failed to load history');
       } finally {
         setLoading(false);
@@ -48,7 +48,7 @@ export default function HistoryPage() {
         throw new Error('Failed to delete history item');
       }
       setHistory(history.filter((item) => item._id !== historyId));
-    } catch (err) {
+    } catch {
       setError('Failed to delete history item');
     }
   };

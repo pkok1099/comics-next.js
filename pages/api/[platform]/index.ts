@@ -17,7 +17,15 @@ export default async function handler(
   }; // Mengambil params dari URL
 
   try {
-    const availablePlatforms: { [key in AvailablePlatforms]?: any } = {
+    interface PlatformFunction {
+      fetchKomikData: (
+        page: number,
+      ) => Promise<{ komikList: unknown; pagination: unknown }>;
+    }
+
+    const availablePlatforms: {
+      [key in AvailablePlatforms]?: PlatformFunction;
+    } = {
       // doujindesu,
       komikindo,
     };

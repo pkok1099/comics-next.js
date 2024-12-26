@@ -1,9 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { komikindo } from '@/f/index';
 
+interface ComicInfo {
+  title: string;
+  description?: string;
+  coverImage?: string;
+  chapters?: Array<{ number: number; url: string }>;
+}
+
 interface PlatformScrapers {
   [key: string]: {
-    scrapeComicInfo: (judul: string) => Promise<any>;
+    scrapeComicInfo: (judul: string) => Promise<ComicInfo>;
   };
 }
 
