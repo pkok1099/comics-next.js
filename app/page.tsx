@@ -7,7 +7,7 @@ import { fetchKomik } from './api';
 import KomikGrid from '@/components/komikindo/KomikGrid';
 import KomikLoader from '@/components/komikindo/KomikLoader';
 
-function KomikList() {
+export default function KomikList() {
   const [komikList, setKomikList] = useState<Komik[]>([]);
   const [pagination, setPagination] = useState<PaginationData>({
     currentPage: 1,
@@ -69,5 +69,3 @@ function KomikList() {
     </div>
   );
 }
-
-export default KomikList;

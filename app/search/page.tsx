@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
 import { motion } from 'framer-motion';

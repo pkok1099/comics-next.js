@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchChapterImages } from '@/app/api';
 // import Image from 'next/image';
-const ChapterDetail = () => {
+export default function ChapterDetail() {
   const { id, chapterId } = useParams() as { id: string; chapterId: string }; // Get id and chapterId from URL
   const router = useRouter(); // For navigation
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ const ChapterDetail = () => {
         setLoading(false); // Set loading to false after fetching
       }
     },
-    [fetchChapterImages],
+    [id], // Menambahkan id sebagai dependensi
   ); // Menambahkan fetchChapterImages sebagai dependensi
 
   const saveHistory = async (chapterId: string, title: string) => {
@@ -171,6 +171,4 @@ const ChapterDetail = () => {
       )}
     </div>
   );
-};
-
-export default ChapterDetail;
+}
