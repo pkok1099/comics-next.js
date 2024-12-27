@@ -1,3 +1,4 @@
+import { Chapter } from './../types/komik';
 // global.d.ts
 declare global {
   type Comic = {
@@ -57,6 +58,12 @@ declare global {
     endpoint: string;
     thumbnail: string;
     rating: number;
+  }
+
+  interface Chapter {
+    title: string;
+    url: string;
+    lastUpdated: string;
   }
 }
 

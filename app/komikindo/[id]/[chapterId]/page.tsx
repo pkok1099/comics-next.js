@@ -4,7 +4,12 @@ import { useParams, useRouter } from 'next/navigation';
 import { fetchChapterImages, fetchChapterList, saveHistory } from '@/app/api';
 import { Button } from '@/components/ui/button';
 import { getChapterUrl } from '@/ChapterList/getChapterUrl';
-// import Image from 'next/image';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 
 export default function ChapterDetail() {
   const { id, chapterId } = useParams() as { id: string; chapterId: string };
@@ -16,7 +21,6 @@ export default function ChapterDetail() {
   const [buttonVisible, setButtonVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const loadChapterImages = useCallback(
     async (chapterId: string) => {
@@ -32,39 +36,22 @@ export default function ChapterDetail() {
         setLoading(false);
       }
     },
-    [id],
+    [id]
   );
 
   const handleScroll = () => {
     const currentScroll = window.scrollY;
     const scrollDelta = currentScroll - lastScrollY;
 
-    if (Math.abs(scrollDelta) > 5) {
+    if (!isDropdownOpen && Math.abs(scrollDelta) > 5 && !isDropdownOpen) {
       setButtonVisible(scrollDelta < 0);
     }
     setLastScrollY(currentScroll);
   };
 
-  const handleTouchStart = (e: TouchEvent) => {
-    setTouchStart(e.touches[0].clientY);
-  };
-
-  const handleTouchMove = (e: TouchEvent) => {
-    if (touchStart === null) return;
-
-    const touchDelta = touchStart - e.touches[0].clientY;
-    if (Math.abs(touchDelta) > 5) {
-      setButtonVisible(touchDelta < 0);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setTouchStart(null);
-  };
-
   const goToNextChapter = () => {
     router.push(
-      `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) + 1}`,
+      `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) + 1}`
     );
   };
 
@@ -81,17 +68,11 @@ export default function ChapterDetail() {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [lastScrollY, touchStart]);
+  }, [lastScrollY, isDropdownOpen]);
 
   if (loading) {
     return (
@@ -136,7 +117,7 @@ export default function ChapterDetail() {
 
 const ChapterImages = ({
   pages,
-  chapterId,
+  chapterId
 }: {
   pages: string[];
   chapterId: string;
@@ -158,35 +139,38 @@ const ChapterImages = ({
     )}
   </div>
 );
+
 interface PageProps {
   id: string;
   chapterId: string;
   goToNextChapter: () => void;
   setIsDropdownOpen: (open: boolean) => void;
-  isDropdownOpen: boolean; // Add this line
-  chapterList: Chapter[]; // Change this line
+  isDropdownOpen: boolean;
+  chapterList: Chapter[];
   router: ReturnType<typeof useRouter>;
 }
+
 interface Chapter {
   title: string;
   url: string;
   lastUpdated: string;
 }
+
 const NavigationButtons: React.FC<PageProps> = ({
   id,
   chapterId,
   goToNextChapter,
-  isDropdownOpen,
-  setIsDropdownOpen,
   chapterList,
-  router,
+  setIsDropdownOpen,
+  isDropdownOpen,
+  router
 }) => (
   <div className='fixed right-2 top-1/2 z-50 flex -translate-y-1/2 transform flex-col gap-4 sm:right-4 md:right-8'>
     <Button
       variant='ghost'
       onClick={() =>
         router.push(
-          `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) - 1}`,
+          `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) - 1}`
         )
       }
       size='default'
@@ -198,41 +182,38 @@ const NavigationButtons: React.FC<PageProps> = ({
     </Button>
 
     <div className='relative'>
-      <Button
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        variant='ghost'
-        size='default'
-        className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
-      >
-        <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
-          Ch
-        </span>
-      </Button>
-
-      {isDropdownOpen && (
-        <div
-          className='absolute right-full top-0 mr-2 max-h-96 w-48 overflow-y-auto rounded-lg bg-gray-800 py-2 shadow-lg'
-          onClick={(e) => e.stopPropagation()}
-          onWheel={(e) => e.stopPropagation()}
-          onTouchMove={(e) => e.stopPropagation()}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant='ghost'
+            size='default'
+            className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
+              Ch
+            </span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align='center'
+          className='max-h-[300px] w-48 overflow-y-auto'
         >
           {chapterList.map((chapter) => (
-            <Button
+            <DropdownMenuItem
               key={chapter.title}
               onClick={() => {
                 router.push(
-                  `/komikindo/${decodeURIComponent(id)}/${getChapterUrl(chapter)}`,
+                  `/komikindo/${decodeURIComponent(id)}/${getChapterUrl(chapter)}`
                 );
                 setIsDropdownOpen(false);
               }}
-              variant='ghost'
-              size='default'
             >
               {chapter.title}
-            </Button>
+            </DropdownMenuItem>
           ))}
-        </div>
-      )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
 
     <Button

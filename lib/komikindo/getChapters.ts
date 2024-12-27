@@ -1,12 +1,6 @@
 import fetchWithTimeout from '../utils/fetchWithTimeout';
 import { CustomError, constructUrl } from './utils';
 
-interface Chapter {
-  title: string;
-  url: string;
-  lastUpdated: string; // Optional if needed
-}
-
 const getChapters = async (judul: string): Promise<Chapter[]> => {
   if (!judul) {
     throw new CustomError("Parameter 'judul' harus valid.");
@@ -16,7 +10,7 @@ const getChapters = async (judul: string): Promise<Chapter[]> => {
 
   try {
     const $ = await fetchWithTimeout(decodeURIComponent(baseUrl), {
-      method: 'GET',
+      method: 'GET'
     });
     const chapters: Chapter[] = [];
 
@@ -29,15 +23,15 @@ const getChapters = async (judul: string): Promise<Chapter[]> => {
         chapters.push({
           title: chapterTitle,
           url: chapterUrl,
-          lastUpdated, // Bisa menyimpan tanggal, jika tetap diperlukan
+          lastUpdated // Bisa menyimpan tanggal, jika tetap diperlukan
         });
       }
     });
 
     // Urutkan berdasarkan chapter title, asumsi judul chapter bisa berupa nomor atau format urutan
-    return chapters.sort((a, b) => {
-      const chapterA = parseInt(a.title.replace(/\D/g, ''), 10); // Ambil angka dari title chapter
-      const chapterB = parseInt(b.title.replace(/\D/g, ''), 10);
+    return chapters.sort((ChapterA, ChapterB) => {
+      const chapterA = parseInt(ChapterA.title.replace(/\D/g, ''), 10); // Ambil angka dari title chapter
+      const chapterB = parseInt(ChapterB.title.replace(/\D/g, ''), 10);
       return chapterB - chapterA; // Urutkan dari chapter terbesar
     });
   } catch (error) {

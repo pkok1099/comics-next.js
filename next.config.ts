@@ -3,27 +3,25 @@ import { NextConfig } from 'next';
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === 'production'
   },
   logging: {
     fetches: {
-      fullUrl: false,
-    },
+      fullUrl: false
+    }
   },
   reactStrictMode: true,
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: '**'
       },
       {
         protocol: 'http',
-        hostname: '**',
-      },
-    ],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+        hostname: '**'
+      }
+    ]
   },
   async headers() {
     return [
@@ -31,25 +29,34 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'no-store, must-revalidate',
-          },
-          {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'DENY'
           },
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            value: 'nosniff'
           },
           {
             key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
+            value: 'strict-origin-when-cross-origin'
           },
-        ],
-      },
+          {
+            key: 'Cache-Control',
+            value:
+              'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache'
+          },
+          {
+            key: 'Expires',
+            value: '0'
+          }
+        ]
+      }
     ];
-  },
+  }
 };
 
 export default nextConfig;

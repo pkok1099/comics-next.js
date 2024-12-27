@@ -18,11 +18,9 @@
   },
   "prettier": {
     "endOfLine": "auto",
-    "jsxSingleQuote": false,
     "trailingComma": "none",
     "singleQuote": true,
     "jsxSingleQuote": true,
-    "trailingComma": "all",
     "semi": true,
     "printWidth": 80,
     "tabWidth": 2,
