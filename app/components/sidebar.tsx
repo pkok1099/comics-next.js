@@ -6,14 +6,14 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
-import { UserRoundPlus, LogIn, Home, Search, LogOut } from 'lucide-react';
+import { UserRoundPlus, LogIn, Home, Search, LogOut, Bookmark } from 'lucide-react';
 import { useSidebar } from '../contexts/SidebarContext';
 import { useEffect, useRef } from 'react';
 
 const sidebarItems = [
   { name: 'Home', href: '/', icon: Home },
-  // { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
   { name: 'Search', href: '/search', icon: Search },
+  { name: 'History', href: '/history', icon: Bookmark },
   { name: 'Login', href: '/login', icon: LogIn },
   { name: 'Register', href: '/register', icon: UserRoundPlus },
 ];

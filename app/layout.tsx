@@ -37,8 +37,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <div className='flex h-screen'>
               <Sidebar />
               <div className='flex flex-1 flex-col overflow-hidden'>
-                <Header></Header>
-                <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background'>
+                <Header />
+                <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background pt-14'>
                   <Suspense>{children}</Suspense>
                 </main>
               </div>

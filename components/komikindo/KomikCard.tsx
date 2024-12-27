@@ -25,10 +25,10 @@ export const KomikCard: FC<KomikCardProps> = ({ komik, onClick }) => (
       width={200}
       height={250}
       loading='lazy'
-      className='border-1 aspect-[3/4] w-full rounded-xl border-cyan-200'
+      className='aspect-[3/4] w-full rounded-xl'
     />
-    <CardHeader className='p-2'>
-      <CardTitle className='drop-shadow-full line-clamp-2 rounded-full text-center font-raleway text-base leading-tight'>
+    <CardHeader className='p-1'>
+      <CardTitle className='drop-shadow-full line-clamp-2 text-center text-base'>
         {komik.judul}
       </CardTitle>
     </CardHeader>

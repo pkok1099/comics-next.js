@@ -43,7 +43,7 @@ export default function ChapterDetail() {
     const currentScroll = window.scrollY;
     const scrollDelta = currentScroll - lastScrollY;
 
-    if (!isDropdownOpen && Math.abs(scrollDelta) > 5 && !isDropdownOpen) {
+    if (Math.abs(scrollDelta) > 5 && !isDropdownOpen) {
       setButtonVisible(scrollDelta < 0);
     }
     setLastScrollY(currentScroll);
