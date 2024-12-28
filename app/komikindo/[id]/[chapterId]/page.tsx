@@ -1,94 +1,32 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchChapterImages } from '@/app/api';
-// import Image from 'next/image';
-const ChapterDetail = () => {
-  const { id, chapterId } = useParams() as { id: string; chapterId: string }; // Get id and chapterId from URL
-  const router = useRouter(); // For navigation
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [chapterList, setChapterList] = useState([]);
-  const [pages, setPages] = useState<string[]>([]); // Store loaded pages
-  const [buttonVisible, setButtonVisible] = useState(true); // For next button visibility
-  const [isFetching, setIsFetching] = useState(false); // For fetching state
-  const [lastScrollY, setLastScrollY] = useState(0); // Menyimpan posisi scroll terakhir
+import { fetchChapterList, saveHistory } from '@/app/api';
+import { ChapterImages } from './components/ChapterImages';
+import { NavigationButtons } from './components/NavigationButtons';
+import { useChapterImages } from './hooks/useChapterImages';
+import useScrollVisibility from './hooks/useScrollVisibility';
 
-  const loadChapterImages = useCallback(
-    async (chapterId: string) => {
-      setLoading(true);
-      setError(null); // Reset error
+interface Chapter {
+  title: string;
+  url: string;
+  lastUpdated: string;
+}
 
-      try {
-        // Fetch images for the current chapter
-        const chapterImages = await fetchChapterImages(id, chapterId);
-        setPages(chapterImages); // Set pages data
-      } catch (err) {
-        setError('Error loading chapter images');
-      } finally {
-        setLoading(false); // Set loading to false after fetching
-      }
-    },
-    [fetchChapterImages],
-  ); // Menambahkan fetchChapterImages sebagai dependensi
+export default function ChapterDetail() {
+  const { id, chapterId } = useParams() as { id: string; chapterId: string };
+  const router = useRouter();
+  const [chapterList, setChapterList] = useState<Chapter[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const saveHistory = async (chapterId: string, title: string) => {
-    const response = await fetch('/api/history/save', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ chapterId, title }),
-    });
+  const { loading, error, pages, loadChapterImages } = useChapterImages(id);
+  const { buttonVisible } = useScrollVisibility(isDropdownOpen);
 
-    const data = await response.json();
-    // if (response.ok) {
-    // console.log('History saved:', data.message);
-    // } else {
-    // console.error('Failed to save history:', data.message);
-    // }
-  };
-
-  // Handle scroll to hide/show the next button
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        // Jika scroll ke bawah
-        setButtonVisible(false);
-      } else {
-        // Jika scroll ke atas
-        setButtonVisible(true);
-      }
-      setLastScrollY(window.scrollY); // Update posisi scroll terakhir
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    // Bersihkan event listener ketika komponen di-unmount
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY]); // Dependensi ke lastScrollY untuk mengecek pergerakan scroll
-
-  // Fetch the list of chapters
-  const fetchChapterList = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `/api/komikindo/info/${decodeURIComponent(id)}`,
-      );
-      if (!response.ok) throw new Error('Failed to fetch chapters');
-
-      const data = await response.json();
-      setChapterList(data); // Set chapter list
-    } catch (err) {
-      setError((err as Error).message); // Handle error
-    }
-  }, [id]); // Menambahkan id sebagai dependensi
-
-  // Navigate to the next chapter
   const goToNextChapter = () => {
     router.push(
-      `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) + 1}`,
+      `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) + 1}`
+>>>>>>> d3c4434 (Save changes before pulling)
     );
   };
 
@@ -97,11 +35,19 @@ const ChapterDetail = () => {
       loadChapterImages(chapterId);
       saveHistory(chapterId, id);
     }
+<<<<<<< HEAD
   }, [id, chapterId, loadChapterImages]); // Menambahkan loadChapterImages
 
   useEffect(() => {
     fetchChapterList();
   }, [id, fetchChapterList]); // Menambahkan fetchChapterList
+=======
+  }, [id, chapterId, loadChapterImages]);
+
+  useEffect(() => {
+    fetchChapterList(id).then((data) => setChapterList(data.chapterList));
+  }, [id]);
+>>>>>>> d3c4434 (Save changes before pulling)
 
   if (loading) {
     return (
@@ -120,6 +66,7 @@ const ChapterDetail = () => {
       </div>
     );
   }
+<<<<<<< HEAD
   return (
     <div className='chapter-container relative'>
       <h2 className='line-clamp-2 truncate py-4 text-center text-2xl font-bold'>
@@ -174,3 +121,28 @@ const ChapterDetail = () => {
 };
 
 export default ChapterDetail;
+=======
+
+  return (
+    <div className='chapter-container relative'>
+      <h2 className='mx-4 break-words py-2 text-center text-xl font-bold sm:text-2xl'>
+        {id && chapterId ? `${id} - Chapter ${chapterId}` : 'Chapter Not Found'}
+      </h2>
+
+      <ChapterImages pages={pages} chapterId={chapterId} />
+
+      {buttonVisible && (
+        <NavigationButtons
+          id={id}
+          chapterId={chapterId}
+          goToNextChapter={goToNextChapter}
+          isDropdownOpen={isDropdownOpen}
+          setIsDropdownOpen={setIsDropdownOpen}
+          chapterList={chapterList}
+          router={router}
+        />
+      )}
+    </div>
+  );
+}
+>>>>>>> d3c4434 (Save changes before pulling)
