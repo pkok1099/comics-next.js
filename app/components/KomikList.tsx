@@ -1,49 +1,27 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Pagination from '@/components/ui/Pagination';
+import React, { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { fetchKomik } from '@/app/api';
+import Pagination from '@/components/ui/Pagination';
 import KomikGrid from 'components/komikindo/KomikGrid';
 import KomikLoader from 'components/komikindo/KomikLoader';
+import { useKomikList } from '@/app/hooks/useKomikList';
+import { scrollToTop } from '@/app/utils/scroll';
 
 export default function KomikList() {
-  const [komikList, setKomikList] = useState<Komik[]>([]);
-  const [pagination, setPagination] = useState<PaginationData>({
-    currentPage: 1,
-    totalPages: 1,
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialPage = parseInt(searchParams?.get('page') || '1', 10); // Handle nullability
+  const initialPage = parseInt(searchParams?.get('page') || '1', 10);
 
-  const loadKomik = async (page: number): Promise<void> => {
-    setIsLoading(true);
-    try {
-      const data = await fetchKomik(page);
-      setKomikList(data.komikList);
-      setPagination(data.pagination);
-    } catch (error) {
-      console.error('Error loading komik data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { komikList, pagination, isLoading, setIsLoading, loadKomik } =
+    useKomikList(initialPage);
 
   useEffect(() => {
-    loadKomik(initialPage);
-  }, [initialPage]);
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    scrollToTop();
   }, [initialPage]);
 
   const handlePageChange = (page: number) => {
-    router.push(`?page=${page}`); // Corrected arguments
+    router.push(`?page=${page}`);
     loadKomik(page);
   };
 

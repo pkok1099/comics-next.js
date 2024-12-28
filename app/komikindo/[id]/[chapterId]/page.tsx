@@ -1,53 +1,26 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchChapterImages, fetchChapterList, saveHistory } from '@/app/api';
-import { Button } from '@/components/ui/button';
-import { getChapterUrl } from '@/ChapterList/getChapterUrl';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+import { fetchChapterList, saveHistory } from '@/app/api';
+import { ChapterImages } from './components/ChapterImages';
+import { NavigationButtons } from './components/NavigationButtons';
+import { useChapterImages } from './hooks/useChapterImages';
+import useScrollVisibility from './hooks/useScrollVisibility';
+
+interface Chapter {
+  title: string;
+  url: string;
+  lastUpdated: string;
+}
 
 export default function ChapterDetail() {
   const { id, chapterId } = useParams() as { id: string; chapterId: string };
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [chapterList, setChapterList] = useState<Chapter[]>([]);
-  const [pages, setPages] = useState<string[]>([]);
-  const [buttonVisible, setButtonVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const loadChapterImages = useCallback(
-    async (chapterId: string) => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const chapterImages = await fetchChapterImages(id, chapterId);
-        setPages(chapterImages);
-      } catch {
-        setError('Error loading chapter images');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [id]
-  );
-
-  const handleScroll = () => {
-    const currentScroll = window.scrollY;
-    const scrollDelta = currentScroll - lastScrollY;
-
-    if (Math.abs(scrollDelta) > 5 && !isDropdownOpen) {
-      setButtonVisible(scrollDelta < 0);
-    }
-    setLastScrollY(currentScroll);
-  };
+  const { loading, error, pages, loadChapterImages } = useChapterImages(id);
+  const { buttonVisible } = useScrollVisibility(isDropdownOpen);
 
   const goToNextChapter = () => {
     router.push(
@@ -65,14 +38,6 @@ export default function ChapterDetail() {
   useEffect(() => {
     fetchChapterList(id).then((data) => setChapterList(data.chapterList));
   }, [id]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [lastScrollY, isDropdownOpen]);
 
   if (loading) {
     return (
@@ -94,7 +59,7 @@ export default function ChapterDetail() {
 
   return (
     <div className='chapter-container relative'>
-      <h2 className='line-clamp-2 truncate py-4 text-center text-2xl font-bold'>
+      <h2 className='mx-4 break-words py-2 text-center text-xl font-bold sm:text-2xl'>
         {id && chapterId ? `${id} - Chapter ${chapterId}` : 'Chapter Not Found'}
       </h2>
 
@@ -114,117 +79,3 @@ export default function ChapterDetail() {
     </div>
   );
 }
-
-const ChapterImages = ({
-  pages,
-  chapterId
-}: {
-  pages: string[];
-  chapterId: string;
-}) => (
-  <div className='chapter-images flex flex-col items-center'>
-    {pages.length === 0 ? (
-      <p>No images available for this chapter.</p>
-    ) : (
-      pages.map((img, imgIndex) => (
-        <img
-          key={imgIndex}
-          src={img}
-          alt={`Page ${imgIndex + 1} of Chapter ${chapterId}`}
-          width={500}
-          height={800}
-          className='chapter-image w-full'
-        />
-      ))
-    )}
-  </div>
-);
-
-interface PageProps {
-  id: string;
-  chapterId: string;
-  goToNextChapter: () => void;
-  setIsDropdownOpen: (open: boolean) => void;
-  isDropdownOpen: boolean;
-  chapterList: Chapter[];
-  router: ReturnType<typeof useRouter>;
-}
-
-interface Chapter {
-  title: string;
-  url: string;
-  lastUpdated: string;
-}
-
-const NavigationButtons: React.FC<PageProps> = ({
-  id,
-  chapterId,
-  goToNextChapter,
-  chapterList,
-  setIsDropdownOpen,
-  isDropdownOpen,
-  router
-}) => (
-  <div className='fixed right-2 top-1/2 z-50 flex -translate-y-1/2 transform flex-col gap-4 sm:right-4 md:right-8'>
-    <Button
-      variant='ghost'
-      onClick={() =>
-        router.push(
-          `/komikindo/${decodeURIComponent(id)}/${parseInt(chapterId) - 1}`
-        )
-      }
-      size='default'
-      className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
-    >
-      <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
-        Prev
-      </span>
-    </Button>
-
-    <div className='relative'>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant='ghost'
-            size='default'
-            className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          >
-            <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
-              Ch
-            </span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align='center'
-          className='max-h-[300px] w-48 overflow-y-auto'
-        >
-          {chapterList.map((chapter) => (
-            <DropdownMenuItem
-              key={chapter.title}
-              onClick={() => {
-                router.push(
-                  `/komikindo/${decodeURIComponent(id)}/${getChapterUrl(chapter)}`
-                );
-                setIsDropdownOpen(false);
-              }}
-            >
-              {chapter.title}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-
-    <Button
-      onClick={goToNextChapter}
-      variant='ghost'
-      size='default'
-      className='hover:rotate-360 flex h-10 w-6 transform items-center justify-center rounded-lg bg-gray-700 text-white opacity-75 shadow-lg transition-transform duration-500 hover:opacity-80 sm:h-12 sm:w-8 md:h-14 md:w-10'
-    >
-      <span className='rotate-360 text-xs [writing-mode:vertical-rl] sm:text-sm md:text-base lg:text-lg'>
-        Next
-      </span>
-    </Button>
-  </div>
-);
