@@ -1,3 +1,16 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "background.fullscreen": {
+    "images": [
+      // "https://raw.githubusercontent.com/Blackdm910/kons/refs/heads/main/20241012_224704.png",
+      "https://raw.githubusercontent.com/Blackdm910/kons/refs/heads/main/32b9ceecbb006c4996037f62e4e3c15d.png"
+    ],
+    "opacity": 0.1,
+    "size": "cover",
+    "position": "center",
+    "interval": 0,
+    "random": false
+  },
+  "background.sidebar": {},
+  "background.panel": {}
 }

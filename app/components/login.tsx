@@ -1,8 +1,7 @@
 'use client';
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { CardFooter } from '@/components/ui/card';
-import { useAuth } from '@/utils/handleSubmit'; // Import hook custom
+import { useAuth } from '@/utils/handleSubmit';
 import { RegisterForm } from './RegisterForm';
 import { LoginForm } from './LoginForm';
 

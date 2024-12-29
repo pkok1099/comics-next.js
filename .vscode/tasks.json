@@ -1,0 +1,74 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "option": "watch",
+      "problemMatcher": ["$tsc-watch"],
+      "group": "build",
+      "label": "tsc: watch - tsconfig.json"
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "label": "npm: build",
+      "detail": "next build"
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [],
+      "label": "npm: dev",
+      "detail": "next dev"
+    },
+    {
+      "type": "npm",
+      "script": "find:unused",
+      "problemMatcher": [],
+      "label": "npm: find:unused",
+      "detail": "knip"
+    },
+    {
+      "type": "npm",
+      "script": "format",
+      "problemMatcher": [],
+      "label": "npm: format",
+      "detail": "prettier --write ."
+    },
+    {
+      "type": "npm",
+      "script": "install",
+      "group": "none",
+      "problemMatcher": [],
+      "label": "npm: install",
+      "detail": "install dependencies from package"
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": [],
+      "label": "npm: lint",
+      "detail": "next lint"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "label": "npm: start",
+      "detail": "next start"
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "group": "build",
+      "label": "tsc: build - tsconfig.json"
+    }
+  ]
+}

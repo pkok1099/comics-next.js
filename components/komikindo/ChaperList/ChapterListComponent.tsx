@@ -24,7 +24,7 @@ export const ChapterListComponent: React.FC<ChapterListComponentProps> = ({
   chapters,
   id,
 }) => (
-  <Collapsible className='mt-8'>
+  <Collapsible className='mt-8' open={true}>
     <CollapsibleTrigger className='flex cursor-pointer items-center justify-between rounded-md bg-gray-800 px-6 py-2'>
       <span className='text-lg font-bold text-gray-300'>Daftar Chapters</span>
     </CollapsibleTrigger>

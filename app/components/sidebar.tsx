@@ -6,23 +6,14 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { motion } from 'framer-motion';
-import {
-  UserRoundMinus,
-  UserRoundPlus,
-  LogIn,
-  Home,
-  Bookmark,
-  Search,
-  History,
-  LogOut,
-} from 'lucide-react';
+import { UserRoundPlus, LogIn, Home, Search, LogOut, Bookmark } from 'lucide-react';
 import { useSidebar } from '../contexts/SidebarContext';
 import { useEffect, useRef } from 'react';
 
 const sidebarItems = [
   { name: 'Home', href: '/', icon: Home },
-  // { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
   { name: 'Search', href: '/search', icon: Search },
+  { name: 'History', href: '/history', icon: Bookmark },
   { name: 'Login', href: '/login', icon: LogIn },
   { name: 'Register', href: '/register', icon: UserRoundPlus },
 ];
@@ -81,7 +72,7 @@ export default function Sidebar() {
               {sidebarItems.map((item) => (
                 <Button
                   key={item.name}
-                  variant={pathname === item.href ? 'secondary' : 'default'}
+                  variant={pathname === item.href ? 'secondary' : 'ghost'}
                   className={cn(
                     'relative w-full justify-start pl-3',
                     pathname === item.href && 'bg-primary font-semibold',
@@ -139,7 +130,7 @@ export default function Sidebar() {
               }}
               className='flex flex-col gap-2'
             >
-              {sidebarItemsPH.map((item, index) => (
+              {sidebarItemsPH.map((item) => (
                 <motion.div
                   key={item.name}
                   variants={{

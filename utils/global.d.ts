@@ -1,3 +1,4 @@
+import { Chapter } from './../types/komik';
 // global.d.ts
 declare global {
   type Comic = {
@@ -43,6 +44,26 @@ declare global {
     loading: boolean;
     onHistoryClick: (title: string, chapterId: number) => void;
     onDeleteHistory: (id: string) => void;
+  }
+
+  interface ComicData {
+    title: string;
+    link: string;
+    image: string;
+    rating: number;
+  }
+
+  interface Comic {
+    title: string;
+    endpoint: string;
+    thumbnail: string;
+    rating: number;
+  }
+
+  interface Chapter {
+    title: string;
+    url: string;
+    lastUpdated: string;
   }
 }
 

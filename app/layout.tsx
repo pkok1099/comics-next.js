@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import Sidebar from './components/sidebar';
 import Header from './components/header';
 import { SidebarProvider } from './contexts/SidebarContext';
-import { SidebarToggle } from './components/sidebar-toggle';
 import { Suspense, ReactNode } from 'react';
 import { geistSans, geistMono } from './font';
 import { metadata, generateViewport } from './metaConfig';
@@ -38,8 +37,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <div className='flex h-screen'>
               <Sidebar />
               <div className='flex flex-1 flex-col overflow-hidden'>
-                <Header></Header>
-                <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background'>
+                <Header />
+                <main className='flex-1 overflow-y-auto overflow-x-hidden bg-background pt-14'>
                   <Suspense>{children}</Suspense>
                 </main>
               </div>

@@ -1,10 +1,12 @@
 import React from 'react';
 import { KomikCard } from 'components/komikindo/KomikCard';
+import { useRouter } from 'next/navigation';
+
 // Import or define the Komik type
 
 interface KomikGridProps {
   komikList: Komik[];
-  router: any;
+  router: ReturnType<typeof useRouter>;
   setIsLoading: (isLoading: boolean) => void;
 }
 
@@ -14,7 +16,7 @@ const KomikGrid: React.FC<KomikGridProps> = ({
   setIsLoading,
 }) => {
   return (
-    <div className='grid w-full grid-cols-4 gap-2 lg:grid-cols-5'>
+    <div className='grid w-full grid-cols-4 gap-1 lg:grid-cols-5'>
       {komikList.map((komik) => (
         <KomikCard
           key={komik.judul}
@@ -23,7 +25,7 @@ const KomikGrid: React.FC<KomikGridProps> = ({
             (async (komikLink: string): Promise<void> => {
               setIsLoading(true);
               try {
-                await router.push(
+                router.push(
                   `/komikindo/${komikLink.replace(/https:\/\/[^]+\/komik\/([^]+)\//, '$1')}`,
                 );
               } catch (error) {
